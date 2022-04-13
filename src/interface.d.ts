@@ -9,6 +9,7 @@ export interface ICode {
   familiar: number,
   note: string,
   hasPeeped: boolean,
+  link: string,
 }
 
 export interface Laws extends Array<Law> { }

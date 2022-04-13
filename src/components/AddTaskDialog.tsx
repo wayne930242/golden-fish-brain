@@ -37,13 +37,14 @@ export const AddTaskDialog = ({
     familiar: null,
     note: '',
     hasPeeped: false,
+    link: '',
   })
 
   const handleClose = () => {
     setOpen(false)
   }
 
-  const handleOnInput = (e: React.ChangeEvent<HTMLInputElement>, key: string) => {
+  const handleOnInput = (e: React.ChangeEvent<HTMLInputElement>, key: keyof ICode) => {
     setNewCode((c) => ({
       ...c,
       [key]: e.target.value,
@@ -145,10 +146,10 @@ export const AddTaskDialog = ({
             </div>
           </div>
           <div className='my-2'>
-            <TextField sx={{ width: '100%' }} label="給自己的叮嚀" size='small' variant="outlined" multiline />
+            <TextField sx={{ width: '100%' }} label="給自己的叮嚀" size='small' variant="outlined" multiline onInput={(e: React.ChangeEvent<HTMLInputElement>) => handleOnInput(e, 'note')} />
           </div>
           <div className='my-2'>
-            <TextField sx={{ width: '100%' }} label="連結" size='small' variant="outlined" />
+            <TextField sx={{ width: '100%' }} label="連結" size='small' variant="outlined" onInput={(e: React.ChangeEvent<HTMLInputElement>) => handleOnInput(e, 'link')}/>
           </div>
           <Divider />
           <div className='my-2 flex flex-row justify-around'>
