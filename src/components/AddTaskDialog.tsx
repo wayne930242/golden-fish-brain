@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 
 import DialogTitle from '@mui/material/DialogTitle'
 import Dialog from '@mui/material/Dialog'
@@ -14,6 +14,8 @@ import Divider from '@mui/material/Divider'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
 import Autocomplete from '@mui/material/Autocomplete'
+import DialogActions from '@mui/material/DialogActions'
+import Button from '@mui/material/Button'
 
 import MoodBadIcon from '@mui/icons-material/MoodBad'
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied'
@@ -21,24 +23,20 @@ import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt
 
 import { LAWS } from '../data/laws'
 import { ICode } from '../interface'
+import { initialCode } from '../App'
 
 export const AddTaskDialog = ({
   open,
   setOpen,
+  newCode,
+  setNewCode,
 }: {
   open: boolean,
   setOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  newCode: ICode,
+  setNewCode: React.Dispatch<React.SetStateAction<ICode>>,
 }) => {
-  const [newCode, setNewCode] = useState<ICode>({
-    title: '',
-    law: '',
-    nums: [],
-    star: 1,
-    familiar: null,
-    note: '',
-    hasPeeped: false,
-    link: '',
-  })
+  
 
   const handleClose = () => {
     setOpen(false)
@@ -96,13 +94,23 @@ export const AddTaskDialog = ({
     }))
   }
 
+  const handleOnSubmit = () => {
+    setNewCode(initialCode)
+    setOpen(false)
+  }
+
+  const handleOnCancel = () => {
+    setNewCode(initialCode)
+    setOpen(false)
+  }
+
   return (
     <Dialog onClose={handleClose} open={open}>
       <div className='flex flex-row justify-between'>
         <DialogTitle>新進度</DialogTitle>
         <div className='mr-4 flex flex-row'>
           {[0, 1, 2, 3, 4].map(n => (
-            <IconButton onClick={() => { handleOnClickStar(n + 1) }} size='small' color='warning'>
+            <IconButton onClick={() => { handleOnClickStar(n + 1) }} size='small' color='warning' key={n}>
               {newCode.star <= n ? <StarOutlineIcon /> : <StarIcon />}
             </IconButton>
           ))}
@@ -119,6 +127,7 @@ export const AddTaskDialog = ({
               options={LAWS}
               getOptionLabel={(option) => option}
               onChange={handleOnChangeLaw}
+              value={newCode.law}
               sx={{ width: '100%' }}
               renderInput={(params) => <TextField {...params} label="法律" size='small' />}
             />
@@ -168,6 +177,15 @@ export const AddTaskDialog = ({
           </div>
         </div>
       </DialogContent>
+      <DialogActions>
+        <Button variant='contained' color='error' onClick={handleOnCancel}>
+          取消
+        </Button>
+        <Button variant='contained' color='primary' onClick={handleOnSubmit}>
+          新增
+        </Button>
+      </DialogActions>
+      
     </Dialog >
   )
 }

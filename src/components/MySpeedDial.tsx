@@ -9,7 +9,7 @@ export const MySpeedDial = ({
 }) => {
 
   return (
-    <Box sx={{ height: 600, transform: 'translateZ(0px)', flexGrow: 1 }}>
+    <Box sx={{ height: '80vh', transform: 'translateZ(0px)', flexGrow: 1 }}>
       <Button
         sx={{ position: 'absolute', bottom: 16, right: 16, width: 64, height: 64, borderRadius: 32 }}
         size="large"
