@@ -1,4 +1,4 @@
-import { useState, createContext } from 'react'
+import React, { useState, createContext } from 'react'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import { Paper } from '@mui/material'
@@ -26,24 +26,32 @@ export const initialCode: ICode = {
   reviewTime: null,
 }
 
-export const GlobalContext = createContext<{ codes: ICode[], dispatch: React.Dispatch<IAction<ICode | ICode[]>>, isFetching: boolean }>({
+export const GlobalContext = createContext<{ codes: ICode[], dispatch: React.Dispatch<IAction<ICode | ICode[]>>, isFetching: boolean, setIsFetching: React.Dispatch<React.SetStateAction<boolean>> }>({
   codes: [],
   dispatch: null,
   isFetching: false,
+  setIsFetching: null,
 })
 
 export default function App() {
   const [openAdd, setOpenAdd] = useState<boolean>(false)
 
-  const handleOnClickSD = () => {
-    setOpenAdd(true)
-  }
-  const { codes, dispatch, isFetching } = useCodes()
+  const { codes, dispatch, isFetching, setIsFetching } = useCodes()
 
   const [newCode, setNewCode] = useState<ICode>(initialCode)
 
+  const handleOnClickSD = () => {
+    setNewCode(c => {
+      return {
+        ...c,
+        id: codes ? codes.length : 0
+      }
+    })
+    setOpenAdd(true)
+  }
+
   return (
-    <GlobalContext.Provider value={{ codes, dispatch, isFetching }}>
+    <GlobalContext.Provider value={{ codes, dispatch, isFetching, setIsFetching }}>
       <Container maxWidth="sm">
         <Paper sx={{ mx: 2 }}>
           <MyAppBar />

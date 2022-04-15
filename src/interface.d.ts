@@ -2,7 +2,7 @@ import { TypeLaws } from "./data/laws";
 
 export interface ICodes extends Array<ICode> { }
 export interface ICode {
-  id: string,
+  id: number,
   title: string,
   law: string,
   nums: string[],

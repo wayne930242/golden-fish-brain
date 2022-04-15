@@ -3,7 +3,7 @@ import { ICode, IAction } from '../interface'
 import { fetchCodes } from '../api/codesApi'
 import { codesReducer } from '../reducer/codesReducer'
 
-export const useCodes = (): { codes: ICode[], dispatch: React.Dispatch<IAction<ICode | ICode[]>>, isFetching: boolean } => {
+export const useCodes = (): { codes: ICode[], dispatch: React.Dispatch<IAction<ICode | ICode[]>>, isFetching: boolean, setIsFetching: React.Dispatch<React.SetStateAction<boolean>> } => {
   const [codes, dispatch] = useReducer(codesReducer, [])
   const [isFetching, setIsFetching] = useState<boolean>(false)
 
@@ -20,5 +20,6 @@ export const useCodes = (): { codes: ICode[], dispatch: React.Dispatch<IAction<I
     codes,
     dispatch,
     isFetching,
+    setIsFetching,
   }
 }

@@ -36,7 +36,9 @@ export const fetchData = async (tableName: string): Promise<any> => {
 export const putData = (tableName: string, data: ICode): Promise<void> => {
 	const params: PutItemCommandInput = {
 		TableName: tableName,
-		Item: marshall(data),
+		Item: marshall({
+			...data,
+		}),
 	}
 	const command = new PutItemCommand(params)
 
@@ -59,9 +61,10 @@ export const patchData = (tableName: string, data: ICode): Promise<void> => {
 	const keyValueExpressions = keys.map(value => `:${value}`)
 	const params: UpdateItemCommandInput = {
 		TableName: tableName,
-		Key: {
-			id: { S: data.id },
-		},
+		Key: marshall({
+			id: data.id,
+			primaryKey: data.id,
+		}),
 		UpdateExpression: "set " + keyNameExpressions
 			.map((nameExpr, idx) => `${nameExpr} = ${keyValueExpressions[idx]}`)
 			.join(", "),
@@ -89,9 +92,10 @@ export const patchData = (tableName: string, data: ICode): Promise<void> => {
 export const delData = (tableName: string, data: ICode): Promise<void> => {
 	const params: DeleteItemCommandInput = {
 		TableName: tableName,
-		Key: {
-			id: { S: data.id },
-		},
+		Key: marshall({
+			id: data.id,
+			primaryKey: data.id,
+		}),
 	}
 
 	const command = new DeleteItemCommand(params)

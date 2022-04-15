@@ -21,6 +21,7 @@ import MoodBadIcon from '@mui/icons-material/MoodBad'
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied'
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 
+import { fetchCodes, putCode } from '../../api/codesApi'
 import { LAWS } from '../../data/laws'
 import { ICode } from '../../interface'
 import { initialCode, GlobalContext } from '../../App'
@@ -36,7 +37,7 @@ export const AddTaskDialog = ({
   newCode: ICode,
   setNewCode: React.Dispatch<React.SetStateAction<ICode>>,
 }) => {
-  const {codes, dispatch} = useContext(GlobalContext)
+  const { codes, dispatch, isFetching, setIsFetching } = useContext(GlobalContext)
 
   const handleClose = () => {
     setOpen(false)
@@ -52,14 +53,16 @@ export const AddTaskDialog = ({
   const [tempNums, setTempNums] = useState<string>('')
   const handleOnChangeChip = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value.match(/,$/)) {
-      setNewCode((c) => {
-        const newNums = [...c.nums]
-        newNums.push(tempNums)
-        return ({
-          ...c,
-          nums: newNums,
+      if (!newCode.nums.includes(tempNums)) {
+        setNewCode((c) => {
+          const newNums = [...c.nums]
+          newNums.push(tempNums)
+          return ({
+            ...c,
+            nums: newNums,
+          })
         })
-      })
+      }
       setTempNums(() => '')
     } else {
       setTempNums(() => e.target.value)
@@ -95,10 +98,19 @@ export const AddTaskDialog = ({
   }
 
   const handleOnSubmit = () => {
-    dispatch({type: 'putCode', payload: newCode})
-
-    setNewCode(initialCode)
-    setOpen(false)
+    (async () => {
+      setIsFetching(true)
+      putCode(newCode)
+        .then(async () => {
+          const data = await fetchCodes()
+          dispatch({ type: 'fetchCodes', payload: data })
+        })
+        .finally(() => {
+          setNewCode(initialCode)
+          setOpen(false)
+        })
+      setIsFetching(false)
+    })()
   }
 
   const handleOnCancel = () => {
@@ -121,7 +133,8 @@ export const AddTaskDialog = ({
       <DialogContent>
         <div className='flex flex-col'>
           <div className='mb-1'>
-            <TextField sx={{ width: '100%' }} label="標題" size='medium' variant="standard" value={newCode.title} onInput={(e: React.ChangeEvent<HTMLInputElement>) => handleOnInput(e, 'title')} />
+            <TextField sx={{ width: '100%' }} label="標題" size='medium' variant="standard" value={newCode.title}
+              onInput={(e: React.ChangeEvent<HTMLInputElement>) => handleOnInput(e, 'title')} />
           </div>
           <div className='my-1'>
             <Autocomplete
@@ -135,14 +148,27 @@ export const AddTaskDialog = ({
             />
           </div>
           <div className='my-2'>
-            <TextField sx={{ width: '100%' }} label="法條編號" size='small' variant="outlined" onChange={handleOnChangeChip} value={tempNums} />
+            <TextField sx={{ width: '100%' }} label="法條編號" size='small' variant="outlined"
+              onChange={handleOnChangeChip} value={tempNums}
+              onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                setNewCode((c) => {
+                  const newNums = [...c.nums]
+                  newNums.push(e.target.value)
+                  return ({
+                    ...c,
+                    nums: newNums,
+                  })
+                })
+                setTempNums(() => '')
+              }}
+            />
             <Typography component='p' variant="caption" align='right'>
               輸入 , 來分隔
             </Typography>
             <div className='my-2'>
               <Stack direction="row" spacing={1}>
                 {newCode.nums.map((ele: string) => (
-                  <Chip label={ele} onDelete={() => {
+                  <Chip label={ele} key={ele} onDelete={() => {
                     setNewCode((c) => {
                       const newNums = [...c.nums]
                       newNums.splice(c.nums.indexOf(ele), 1)
@@ -160,7 +186,7 @@ export const AddTaskDialog = ({
             <TextField sx={{ width: '100%' }} label="給自己的叮嚀" size='small' variant="outlined" multiline onInput={(e: React.ChangeEvent<HTMLInputElement>) => handleOnInput(e, 'note')} />
           </div>
           <div className='my-2'>
-            <TextField sx={{ width: '100%' }} label="連結" size='small' variant="outlined" onInput={(e: React.ChangeEvent<HTMLInputElement>) => handleOnInput(e, 'link')}/>
+            <TextField sx={{ width: '100%' }} label="連結" size='small' variant="outlined" onInput={(e: React.ChangeEvent<HTMLInputElement>) => handleOnInput(e, 'link')} />
           </div>
           <Divider />
           <div className='my-2 flex flex-row justify-around'>
@@ -187,7 +213,7 @@ export const AddTaskDialog = ({
           新增
         </Button>
       </DialogActions>
-      
+
     </Dialog >
   )
 }

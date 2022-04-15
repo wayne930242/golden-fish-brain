@@ -10,11 +10,13 @@ import { ICode } from '../interface'
 
 export const fetchCodes = async (): Promise<ICode[]> => {
   if (Cookies.get('tableName')) {
-    try {
-      await fetchData(Cookies.get('tableName'))
-    } catch (err) {
-      return localStorage.getItem('tableName') ? JSON.parse(localStorage.getItem('tableName')) as ICode[] : []
-    }
+    const codes = await fetchData(Cookies.get('tableName'))
+      .then((newCodes) => {
+        localStorage.setItem('tableName', JSON.stringify(newCodes))
+      })
+      .catch(() => {
+        return localStorage.getItem('tableName') ? JSON.parse(localStorage.getItem('tableName')) as ICode[] : []
+      })
   } else {
     return localStorage.getItem('tableName') ? JSON.parse(localStorage.getItem('tableName')) as ICode[] : []
   }
