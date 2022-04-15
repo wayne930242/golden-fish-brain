@@ -2,7 +2,7 @@ import { ICode, IAction } from "../interface"
 
 const initialState: ICode[] = []
 
-export const codesReducer = (state: ICode[] = initialState, action: IAction<ICode | ICode[]>): ICode[] => {
+export const codesReducer = (state: ICode[], action: IAction<ICode | ICode[]>): ICode[] => {
   switch (action.type) {
     case 'putCode':
       return state.concat(action.payload as ICode)
