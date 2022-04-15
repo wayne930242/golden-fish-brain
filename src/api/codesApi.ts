@@ -45,9 +45,9 @@ export const patchCode = async (data: ICode) => {
   localStorage.setItem('tableName', JSON.stringify(newCodes))
 }
 
-export const delCode = async (data: ICode): Promise<ICode[]> => {
+export const delCode = async (data: ICode) => {
   if (Cookies.get('tableName')) {
-    return delData(Cookies.get('tableName'), data.id)
+    delData(Cookies.get('tableName'), data)
   }
   const codes: ICode[] = localStorage.getItem('tableName')
     ? JSON.parse(localStorage.getItem('tableName'))

@@ -21,6 +21,9 @@ export const initialCode: ICode = {
   note: '',
   hasPeeped: false,
   link: '',
+  createTime: null,
+  editTime: null,
+  reviewTime: null,
 }
 
 export const GlobalContext = createContext<{ codes: ICode[], dispatch: React.Dispatch<IAction<ICode | ICode[]>>, isFetching: boolean }>({

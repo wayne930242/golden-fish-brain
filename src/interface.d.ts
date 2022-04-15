@@ -11,6 +11,9 @@ export interface ICode {
   note: string,
   hasPeeped: boolean,
   link: string,
+  createTime: number,
+  editTime: number,
+  reviewTime: number,
 }
 
 export interface Laws extends Array<Law> { }

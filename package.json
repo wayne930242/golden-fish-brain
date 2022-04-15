@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.67.0",
+    "@aws-sdk/util-dynamodb": "^3.67.0",
     "@babel/core": "^7.16.0",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
