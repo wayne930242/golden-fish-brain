@@ -18,3 +18,8 @@ export interface Law<Key extends TypeLaws> {
   id: Key,
   codes: ICode[],
 }
+
+export interface IAction<Payload> {
+  type: string,
+  payload?: Payload,
+}

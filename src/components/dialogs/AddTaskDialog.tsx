@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 
 import DialogTitle from '@mui/material/DialogTitle'
 import Dialog from '@mui/material/Dialog'
 import TextField from '@mui/material/TextField'
 import DialogContent from '@mui/material/DialogContent'
+import DialogActions from '@mui/material/DialogActions'
 import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
 import IconButton from '@mui/material/IconButton'
@@ -14,16 +15,15 @@ import Divider from '@mui/material/Divider'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
 import Autocomplete from '@mui/material/Autocomplete'
-import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
 
 import MoodBadIcon from '@mui/icons-material/MoodBad'
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied'
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 
-import { LAWS } from '../data/laws'
-import { ICode } from '../interface'
-import { initialCode } from '../App'
+import { LAWS } from '../../data/laws'
+import { ICode } from '../../interface'
+import { initialCode, GlobalContext } from '../../App'
 
 export const AddTaskDialog = ({
   open,
@@ -36,7 +36,7 @@ export const AddTaskDialog = ({
   newCode: ICode,
   setNewCode: React.Dispatch<React.SetStateAction<ICode>>,
 }) => {
-  
+  const {codes, dispatch} = useContext(GlobalContext)
 
   const handleClose = () => {
     setOpen(false)
@@ -95,6 +95,8 @@ export const AddTaskDialog = ({
   }
 
   const handleOnSubmit = () => {
+    dispatch({type: 'putCode', payload: newCode})
+
     setNewCode(initialCode)
     setOpen(false)
   }

@@ -1,68 +1,99 @@
-import * as AWS from 'aws-sdk'
+import {
+	ScanCommand,
+	ScanCommandInput,
+	PutItemCommand,
+	PutItemCommandInput,
+	UpdateItemCommand,
+	UpdateItemCommandInput,
+	DeleteItemCommand,
+	DeleteItemCommandInput,
+} from "@aws-sdk/client-dynamodb"
+
 import { ICode } from '../interface'
+import { client } from '../index'
 
-const docClient = new AWS.DynamoDB.DocumentClient()
-
-export const fetchData = (tableName: string) => {
-	const params = {
+export const fetchData = async (tableName: string): Promise<any> => {
+	const params: ScanCommandInput = {
 		TableName: tableName,
 	}
+	const command = new ScanCommand(params)
 
-	docClient.scan(params, function (err, data) {
-		if (err) {
-			console.error('Error', err)
-		} else {
-			console.log('Success', data)
-		}
+	return new Promise((resolve, reject) => {
+		return client.send(command)
+			.then((data) => {
+				console.log('Success', data)
+				resolve(data.Items)
+			})
+			.catch((err) => {
+				console.error('Error', err)
+				reject([])
+			})
 	})
 }
 
-export const putData = (tableName: string, data: ICode) => {
-	const params = {
+export const putData = (tableName: string, data: any): Promise<any> => {
+	const params: PutItemCommandInput = {
 		TableName: tableName,
 		Item: data,
 	}
+	const command = new PutItemCommand(params)
 
-	docClient.put(params, function (err, data) {
-		if (err) {
-			console.error('Error', err)
-		} else {
-			console.log('Success', data)
-		}
+	return new Promise((resolve, reject) => {
+		return client.send(command)
+			.then((data) => {
+				console.log('Success', data)
+				resolve([])
+			})
+			.catch((err) => {
+				console.error('Error', err)
+				reject([])
+			})
 	})
 }
 
-export const patchData = (tableName: string, data: ICode) => {
-	const params = {
+export const patchData = (tableName: string, data: any): Promise<any> => {
+	const params: UpdateItemCommandInput = {
 		TableName: tableName,
 		Key: {
 			id: data.id,
 		},
-		Item: data,
+		AttributeUpdates: data,
 	}
 
-	docClient.update(params, function (err, data) {
-		if (err) {
-			console.error('Error', err)
-		} else {
-			console.log('Success', data)
-		}
+	const command = new UpdateItemCommand(params)
+
+	return new Promise((resolve, reject) => {
+		return client.send(command)
+			.then((data) => {
+				console.log('Success', data)
+				resolve([])
+			})
+			.catch((err) => {
+				console.error('Error', err)
+				reject([])
+			})
 	})
 }
 
-export const delData = (tableName: string, id: string) => {
-	const params = {
+export const delData = (tableName: string, id: any): Promise<any> => {
+	const params: DeleteItemCommandInput = {
 		TableName: tableName,
 		Key: {
 			id,
 		},
 	}
 
-	docClient.delete(params, function (err, data) {
-		if (err) {
-			console.error("Error", err);
-		} else {
-			console.log("Sucess", data);
-		}
+	const command = new DeleteItemCommand(params)
+
+	return new Promise((resolve, reject) => {
+		return client.send(command)
+			.then((data) => {
+				console.log('Success', data)
+				resolve([])
+			})
+			.catch((err) => {
+				console.error('Error', err)
+				reject([])
+			})
 	})
 }
