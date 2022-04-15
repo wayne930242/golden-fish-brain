@@ -63,7 +63,6 @@ export const patchData = (tableName: string, data: ICode): Promise<void> => {
 		TableName: tableName,
 		Key: marshall({
 			id: data.id,
-			primaryKey: data.id,
 		}),
 		UpdateExpression: "set " + keyNameExpressions
 			.map((nameExpr, idx) => `${nameExpr} = ${keyValueExpressions[idx]}`)
@@ -94,7 +93,6 @@ export const delData = (tableName: string, data: ICode): Promise<void> => {
 		TableName: tableName,
 		Key: marshall({
 			id: data.id,
-			primaryKey: data.id,
 		}),
 	}
 

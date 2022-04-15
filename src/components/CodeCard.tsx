@@ -16,13 +16,15 @@ import MoodBadIcon from '@mui/icons-material/MoodBad'
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied'
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 
+import { patchCode, fetchCodes, delCode } from '../api/codesApi'
 import { EditContent } from './EditContent'
 import { GlobalContext } from '../App'
-import { initialCode } from '../App'
 import { ICode } from "../interface"
+import { ConfirmDialog } from './dialogs/ConfirmDislog'
 
 export const CodeCard = ({ code }: { code: ICode }) => {
-  const { codes, dispatch, isFetching, setIsFetching } = useContext(GlobalContext)
+  const { dispatch, isFetching, setIsFetching } = useContext(GlobalContext)
+  const [openConfirmDelete, setOpenConfirmDelete] = useState<boolean>(false)
 
   const [expand, setExpend] = useState<boolean>(false)
   const handleOnClickTitle = () => {
@@ -39,21 +41,55 @@ export const CodeCard = ({ code }: { code: ICode }) => {
   }
 
   const handleOnSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation()
+    e.stopPropagation();
+
+    (async () => {
+      setIsFetching(true)
+      patchCode({
+        ...editCode,
+        editTime: Date.now()
+      })
+        .then(async () => {
+          const data = await fetchCodes()
+          dispatch({ type: 'fetchCodes', payload: data })
+        })
+        .finally(() => {
+          setEditCode(code)
+        })
+      setIsFetching(false)
+    })()
+
     setEditable(false)
+    setExpend(true)
   }
 
   const handleOnCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
     setEditable(false)
+    setOpenConfirmDelete(false)
   }
 
   const handleOnDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
+    setOpenConfirmDelete(true)
   }
 
   return (
     <Card key={code.id} sx={{ my: 2 }}>
+      <ConfirmDialog open={openConfirmDelete} setOpen={setOpenConfirmDelete} title="確認刪除嗎？" contentText='刪除後的資料將消失在世界上，確定嗎？'
+        onClick={() => {
+          (async () => {
+            setIsFetching(true)
+            delCode(code)
+              .then(async () => {
+                const data = await fetchCodes()
+                dispatch({ type: 'fetchCodes', payload: data })
+              })
+            setIsFetching(false)
+          })()
+        }}
+      />
+
       <div className={editable ? '' : 'cursor-pointer hover:bg-slate-50'} onClick={editable ? undefined : handleOnClickTitle}>
         <CardContent>
           {editable ? (
@@ -124,6 +160,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
             <div className='mx-2'>
               <Button color='primary' variant='contained'
                 onClick={editable ? handleOnSubmit : handleOnEdit}
+                disabled
               >
                 {editable ? '確定' : '編輯'}
               </Button>

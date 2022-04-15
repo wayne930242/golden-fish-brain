@@ -31,7 +31,9 @@ export const AddTaskDialog = ({
   const handleOnSubmit = () => {
     (async () => {
       setIsFetching(true)
-      putCode(newCode)
+      putCode({...newCode,
+        editTime: Date.now()
+      })
         .then(async () => {
           const data = await fetchCodes()
           dispatch({ type: 'fetchCodes', payload: data })

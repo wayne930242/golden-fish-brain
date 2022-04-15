@@ -3,7 +3,7 @@ import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import Paper from '@mui/material/Paper'
 import Divider from '@mui/material/Divider'
-import Button from '@mui/material/Button'
+import CircularProgress from '@mui/material/CircularProgress'
 
 import CodeCard from './components/CodeCard'
 import AddTaskDialog from './components/dialogs/AddTaskDialog'
@@ -42,7 +42,7 @@ const startTime = {
   'today': 1000 * 60 * 60 * 24,
   'threeDay': 3 * 1000 * 60 * 60 * 24,
   'week': 7 * 1000 * 60 * 60 * 24,
-  'all': -Infinity,
+  'all': Infinity,
 }
 
 const filterResult = (filter: 'today' | 'threeDay' | 'week' | 'all', codeTime: number) => {
@@ -52,7 +52,7 @@ const filterResult = (filter: 'today' | 'threeDay' | 'week' | 'all', codeTime: n
 export default function App() {
   const [openAdd, setOpenAdd] = useState<boolean>(false)
 
-  const [filter, setFilter] = useState<'today' | 'threeDay' | 'week' | 'all'>('today')
+  const [filter, setFilter] = useState<'today' | 'threeDay' | 'week' | 'all'>('all')
 
   const { codes, dispatch, isFetching, setIsFetching } = useCodes()
 
@@ -62,7 +62,7 @@ export default function App() {
     setNewCode(c => {
       return {
         ...c,
-        id: codes ? codes.length : 0,
+        id: String(codes ? codes.length : 0) + String(Date.now()),
         createTime: Date.now(),
         editTime: Date.now(),
         reviewTime: Date.now(),
@@ -74,7 +74,7 @@ export default function App() {
   return (
     <GlobalContext.Provider value={{ codes, dispatch, isFetching, setIsFetching }}>
       <Container maxWidth="sm">
-        <Paper sx={{ mx: 2, height: '95vh', overflowY: 'scroll'}}>
+        <Paper sx={{ mx: 2, height: '95vh', overflowY: 'scroll' }}>
           <MyAppBar />
           <MySpeedDial handleOnClick={handleOnClickSD} />
           <div className='flex flex-row justify-start pl-8 py-8'>
@@ -84,19 +84,21 @@ export default function App() {
             </Typography>
           </div>
 
-          <div className='flex flex-row justify-center'>
-
-          </div>
-
           <div className='px-8'>
             <Typography component='h2' variant='h5'>近期進度</Typography>
             <Divider />
-            {codes ? codes
-              .filter(code => filterResult(filter, code.createTime))
-              .map(code => (
-                <CodeCard code={code} />
-              ))
-              : null}
+            {isFetching
+              ?
+              <div className='flex flex-row justify-center'>
+                <CircularProgress />
+              </div>
+              : codes
+                ? codes
+                  .filter(code => filterResult(filter, code.createTime))
+                  .map(code => (
+                    <CodeCard code={code} key={code.id}/>
+                  ))
+                : null}
           </div>
 
           <AddTaskDialog open={openAdd} setOpen={setOpenAdd} newCode={newCode} setNewCode={setNewCode} />
