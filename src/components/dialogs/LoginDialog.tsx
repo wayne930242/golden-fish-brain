@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
@@ -9,6 +9,9 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 
+import { fetchCodes } from '../../api/codesApi'
+import { GlobalContext } from '../../App'
+
 export const LoginDialog = ({
   open,
   setOpen,
@@ -17,6 +20,7 @@ export const LoginDialog = ({
   setOpen: React.Dispatch<React.SetStateAction<boolean>>,
 }) => {
   const [input, setInput] = useState<string>('')
+  const { codes, dispatch, isFetching, setIsFetching } = useContext(GlobalContext)
 
   const handleClickCancel = () => {
     setOpen(false)
@@ -26,7 +30,12 @@ export const LoginDialog = ({
     setOpen(false)
     Cookies.set('tableName', input, {
       sameSite: 'lax',
-    })
+    });
+
+    (async () => {
+      const data = await fetchCodes()
+      dispatch({ type: 'fetchCodes', payload: data })
+    })()
   }
 
   const handleOnInput = (e: React.ChangeEvent<HTMLInputElement>) => {
