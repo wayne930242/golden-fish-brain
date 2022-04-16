@@ -66,7 +66,7 @@ export const AddTaskDialog = ({
 
   return (
     <Dialog onClose={handleClose} open={open}>
-      <DialogTitle>新進度</DialogTitle>
+      <DialogTitle>新增複習卡</DialogTitle>
       <DialogContent>
         <div className='mt-4'>
           <EditContent code={newCode} setCode={setNewCode} />

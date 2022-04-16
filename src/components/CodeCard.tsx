@@ -204,11 +204,12 @@ export const CodeCard = ({ code }: { code: ICode }) => {
               </Paper>
 
               {!expand ? null : (<>
-                <div className='my-2'>
-                  <TextField sx={{ width: '100%' }} label="小叮嚀" size='small' variant="outlined" multiline onInput={(e: React.ChangeEvent<HTMLInputElement>) => handleOnInput(e, 'note')} value={code.note} />
+
+                <div className='my-4'>
+                  <Link href={code.link} target='_blank'>{code.link}</Link>
                 </div>
                 <div className='my-2'>
-                  <TextField sx={{ width: '100%' }} label="連結" size='small' variant="outlined" onInput={(e: React.ChangeEvent<HTMLInputElement>) => handleOnInput(e, 'link')} value={code.link} />
+                  <TextField sx={{ width: '100%' }} label="小叮嚀" size='small' variant="outlined" multiline onInput={(e: React.ChangeEvent<HTMLInputElement>) => handleOnInput(e, 'note')} value={code.note} />
                 </div>
 
                 <Divider />
