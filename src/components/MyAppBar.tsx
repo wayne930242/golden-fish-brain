@@ -8,15 +8,31 @@ import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import MenuIcon from '@mui/icons-material/Menu'
+import { QUOTATIONS } from '../data/quotations'
 
 import { LoginDialog } from './dialogs/LoginDialog'
 
 export default function ButtonAppBar() {
   const [openLogin, setOpenLogin] = useState<boolean>(false)
 
+  const REFRESH_TIME = 10000
+  const [randomQuote, setRandomQuote] = useState<string>('')
+
   useEffect(() => {
     if (Cookies.get('tableName')) return
     setOpenLogin(true)
+  }, [])
+
+  useEffect(() => {
+    const makeRandomQuote = () => {
+      const q = QUOTATIONS[Math.floor(QUOTATIONS.length * Math.random())]
+      setRandomQuote(() => q.text + ' -- ' + q.author)
+    }
+    makeRandomQuote()
+    const timeInteval = setInterval(makeRandomQuote, REFRESH_TIME)
+    return (() => {
+      clearInterval(timeInteval)
+    })
   }, [])
 
   return (
@@ -37,10 +53,14 @@ export default function ButtonAppBar() {
             <MenuIcon />
           </IconButton>
           */}
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            每日功課
+          <Typography sx={{
+            fontSize: '0.7rem',
+            my: 1,
+            flexGrow: 1,
+          }} variant="body2" component="p" >
+            {randomQuote}
           </Typography>
-          <Button color="inherit" onClick={() => setOpenLogin(true)}>登入</Button>
+          <Button color="inherit" size='small' onClick={() => setOpenLogin(true)}>登入</Button>
         </Toolbar>
       </AppBar>
     </Box>
