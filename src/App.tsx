@@ -118,15 +118,10 @@ export default function App() {
               <div className='flex flex-row justify-between'>
                 <Stack direction="row" spacing={2}>
                   <Button onClick={() => {
-                    setMode('achive')
-                  }} variant={mode === 'review' ? 'outlined' : 'contained'} color='success' size='small'>
-                    檢視
-                  </Button>
-
-                  <Button onClick={() => {
-                    setMode('review')
-                  }} variant={mode !== 'review' ? 'outlined' : 'contained'} color='success' size='small'>
-                    複習
+                    if (mode === 'review') setMode('achive')
+                    if (mode === 'achive') setMode('review')
+                  }} variant={'outlined'} color={mode === 'review' ? 'success' : 'info'} size='small'>
+                    {mode === 'review' ? '檢視' : '複習'}
                   </Button>
                 </Stack>
                 <Stack direction='row' spacing={2}>
@@ -165,7 +160,7 @@ export default function App() {
               </div>
             </div>
 
-            <Typography component='h2' variant='h5'>複習卡</Typography>
+            <Typography component='h2' variant='h5'>{mode === 'review' ? '複習中...' : '檢視複習卡'} </Typography>
             <Divider />
             {isFetching
               ?

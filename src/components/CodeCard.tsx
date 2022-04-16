@@ -176,15 +176,13 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                 }}
                 className={'cursor-pointer'} onClick={editable ? undefined : handleOnClickTitle}>
                 <div>
-                  <div className='flex flex-row justify-between'>
-                    <Typography component="div" variant='h6'>{code.title}</Typography>
-                    <div className='flex flex-row'>
-                      {[0, 1, 2, 3, 4].map(n => (
-                        <IconButton size='small' color='warning' key={n} sx={{ cursor: 'default' }}>
-                          {code.star <= n ? <StarOutlineIcon /> : <StarIcon />}
-                        </IconButton>
-                      ))}
-                    </div>
+                  <Typography component="div" variant='h6'>{code.title}</Typography>
+                  <div className='flex flex-row justify-end'>
+                    {[0, 1, 2, 3, 4].map(n => (
+                      <IconButton size='small' color='warning' key={n} sx={{ cursor: 'default' }}>
+                        {code.star <= n ? <StarOutlineIcon /> : <StarIcon />}
+                      </IconButton>
+                    ))}
                   </div>
 
                   <div className='my-2 flex-row flex justify-between'>
