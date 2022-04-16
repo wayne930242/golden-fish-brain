@@ -11,6 +11,10 @@ import StarIcon from '@mui/icons-material/Star'
 import Button from '@mui/material/Button'
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
+import Paper from '@mui/material/Paper'
+
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Checkbox from '@mui/material/Checkbox'
 
 import { Divider, Link } from '@mui/material'
 
@@ -39,6 +43,11 @@ export const CodeCard = ({ code }: { code: ICode }) => {
   }, [code])
 
   const [editable, setEditable] = useState<boolean>(false)
+
+  const [reviewCode, setReviewCode] = useState<ICode>(code)
+  useEffect(() => {
+    setReviewCode(code)
+  }, [code])
 
   const [openAlert, setOpenAlert] = useState<boolean>(false)
 
@@ -87,8 +96,32 @@ export const CodeCard = ({ code }: { code: ICode }) => {
     setOpenConfirmDelete(true)
   }
 
+  const handleOnClickMood = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, n: number) => {
+    e.stopPropagation()
+    setReviewCode(c => {
+      const newFamiliar = [...c.familiar]
+      newFamiliar.push(n)
+      return ({
+        ...c,
+        familiar: newFamiliar,
+      })
+    })
+  }
+
+  const handleOnPeep = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.stopPropagation()
+    setReviewCode(c => {
+      const newHasPeeped = [...c.hasPeeped]
+      newHasPeeped.push(e.target.checked)
+      return ({
+        ...c,
+        hasPeeped: newHasPeeped,
+      })
+    })
+  }
+
   return (
-    <Card key={code.id} sx={{ my: 2 }}>
+    <div className='my-2'>
       <ConfirmDialog open={openConfirmDelete} setOpen={setOpenConfirmDelete} title="確認刪除嗎？" contentText='刪除後的資料將消失在世界上，確定嗎？'
         onClick={() => {
           (async () => {
@@ -103,44 +136,51 @@ export const CodeCard = ({ code }: { code: ICode }) => {
         }}
       />
 
-      <div className={editable ? '' : 'cursor-pointer hover:bg-slate-50'} onClick={editable ? undefined : handleOnClickTitle}>
+      <div className={'hover:bg-slate-50'} >
         <CardContent>
           {editable ? (
             <EditContent code={editCode} setCode={setEditCode} />
           ) : (
             <>
-              <div>
-                <div className='flex flex-row justify-between'>
-                  <Typography component="div" variant='h6'>{code.title}</Typography>
-                  <div className='flex flex-row'>
-                    {[0, 1, 2, 3, 4].map(n => (
-                      <IconButton size='small' color='warning' key={n} sx={{ cursor: 'default' }}>
-                        {code.star <= n ? <StarOutlineIcon /> : <StarIcon />}
-                      </IconButton>
-                    ))}
+              <Paper
+                sx={{
+                  padding: 2,
+                }}
+                className={'cursor-pointer'} onClick={editable ? undefined : handleOnClickTitle}>
+                <div>
+                  <div className='flex flex-row justify-between'>
+                    <Typography component="div" variant='h6'>{code.title}</Typography>
+                    <div className='flex flex-row'>
+                      {[0, 1, 2, 3, 4].map(n => (
+                        <IconButton size='small' color='warning' key={n} sx={{ cursor: 'default' }}>
+                          {code.star <= n ? <StarOutlineIcon /> : <StarIcon />}
+                        </IconButton>
+                      ))}
+                    </div>
                   </div>
+
+                  <div className='my-2 flex-row flex justify-between'>
+                    <Typography component="div" variant='caption'>{code.law}</Typography>
+                  </div>
+
+
                 </div>
 
-                <div className='my-2 flex-row flex justify-between'>
-                  <Typography component="div" variant='caption'>{code.law}</Typography>
+                <div className='mt-2 mb-4'>
+                  <Stack direction="row" spacing={1}>
+                    {code.nums.map((ele: string) => (
+                      <Chip label={ele} key={ele} />
+                    ))}
+                  </Stack>
                 </div>
-
-
-              </div>
-
-              <div className='mt-2 mb-4'>
-                <Stack direction="row" spacing={1}>
-                  {code.nums.map((ele: string) => (
-                    <Chip label={ele} key={ele} />
-                  ))}
-                </Stack>
-              </div>
+              </Paper>
 
               {!expand ? null : (<>
-                <Divider />
-                <div className='mt-2'>
-                  <Typography sx={{ textOverflow: 'ellipsis' }} component="p" variant='body1'>小叮嚀：{code.note}</Typography>
-                </div>
+                {code.note.trim() ?
+                  <div className='my-3'>
+                    <Typography sx={{ textOverflow: 'ellipsis' }} component="p" variant='body1'>小叮嚀：{code.note}</Typography>
+                  </div>
+                  : null}
                 {code.link ?
                   <div className='mt-2'>
                     連結：<Link href={code.link} target='_blank'>{code.link}</Link>
@@ -148,20 +188,21 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                   : null
                 }
 
+                <Divider />
                 <div className='my-2 flex flex-row justify-around'>
-                  <IconButton size='small' color={code.familiar[code.familiar.length - 1] === 0 ? 'error' : 'default'} sx={{ cursor: 'default' }}>
+                  <IconButton onClick={(e) => { handleOnClickMood(e, 0) }} size='small' color={reviewCode.familiar[reviewCode.familiar.length - 1] === 0 ? 'error' : 'default'} >
                     <MoodBadIcon />
                   </IconButton>
-                  <IconButton size='small' color={code.familiar[code.familiar.length - 1] === 1 ? 'success' : 'default'} sx={{ cursor: 'default' }}>
+                  <IconButton onClick={(e) => { handleOnClickMood(e, 1) }} size='small' color={reviewCode.familiar[reviewCode.familiar.length - 1] === 1 ? 'success' : 'default'} >
                     <SentimentDissatisfiedIcon />
                   </IconButton>
-                  <IconButton size='small' color={code.familiar[code.familiar.length - 1] === 2 ? 'primary' : 'default'} sx={{ cursor: 'default' }}>
+                  <IconButton onClick={(e) => { handleOnClickMood(e, 2) }} size='small' color={reviewCode.familiar[reviewCode.familiar.length - 1] === 2 ? 'primary' : 'default'} >
                     <SentimentSatisfiedAltIcon />
                   </IconButton>
+                  <div className='ml-6 flex flex-row justify-center'>
+                    <FormControlLabel control={<Checkbox onChange={handleOnPeep} checked={reviewCode.hasPeeped[reviewCode.hasPeeped.length - 1]} />} label="有偷看" />
+                  </div>
                 </div>
-                <Typography component="div" variant='body1'>
-                  {code.hasPeeped[code.hasPeeped.length - 1] ? '有偷看！' : '沒偷看！'}
-                </Typography>
               </>)}
             </>
           )}
@@ -194,7 +235,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
           忘了寫標題囉。
         </Alert>
       </Snackbar>
-    </Card>
+    </div>
   )
 }
 
