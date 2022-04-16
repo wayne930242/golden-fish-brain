@@ -15,6 +15,7 @@ import AddTaskDialog from './components/dialogs/AddTaskDialog'
 import MySpeedDial from './components/MySpeedDial'
 import MyAppBar from './components/MyAppBar'
 
+import { LuckyCodes } from './helper/data'
 import { useCodes } from './hooks/codesHooks'
 import { LAWS } from './data/laws'
 import { ICode, IAction } from './interface'
@@ -149,7 +150,7 @@ export default function App() {
                       />
                       <Button
                         onClick={() => {
-
+                          setReviewCards(LuckyCodes(codes, Number(value)))
                         }}
                         size='small'
                         variant='contained'
