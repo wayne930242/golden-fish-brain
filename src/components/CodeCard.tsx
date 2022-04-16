@@ -179,7 +179,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                   <Typography component="div" variant='h6'>{code.title}</Typography>
                   <div className='flex flex-row justify-end'>
                     {[0, 1, 2, 3, 4].map(n => (
-                      <IconButton size='small' color='warning' key={n} sx={{ cursor: 'default' }}>
+                      <IconButton size='small' color='warning' key={n}>
                         {code.star <= n ? <StarOutlineIcon /> : <StarIcon />}
                       </IconButton>
                     ))}
