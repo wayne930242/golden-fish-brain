@@ -46,25 +46,21 @@ export const GlobalContext = createContext<{ codes: ICode[], dispatch: React.Dis
 
 const startTime: TypeStartTime = {
   today: 1000 * 60 * 60 * 24,
-  week: 7 * 1000 * 60 * 60 * 24,
   all: Infinity,
 }
 
 const startTimeText: TypeStartTimeText = {
   today: '今天',
-  week: '一週',
   all: '全部',
 }
 
 type TypeStartTimeText = {
   today: string,
-  week: string,
   all: string,
 }
 
 type TypeStartTime = {
   today: number,
-  week: number,
   all: number,
 }
 
