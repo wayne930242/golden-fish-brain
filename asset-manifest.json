@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/golden-fish-brain/static/css/main.f9696e69.css",
-    "main.js": "/golden-fish-brain/static/js/main.7578b1fc.js",
+    "main.js": "/golden-fish-brain/static/js/main.5b80deca.js",
     "index.html": "/golden-fish-brain/index.html",
     "main.f9696e69.css.map": "/golden-fish-brain/static/css/main.f9696e69.css.map",
-    "main.7578b1fc.js.map": "/golden-fish-brain/static/js/main.7578b1fc.js.map"
+    "main.5b80deca.js.map": "/golden-fish-brain/static/js/main.5b80deca.js.map"
   },
   "entrypoints": [
     "static/css/main.f9696e69.css",
-    "static/js/main.7578b1fc.js"
+    "static/js/main.5b80deca.js"
   ]
 }
