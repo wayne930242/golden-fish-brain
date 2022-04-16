@@ -26,16 +26,16 @@ export const LoginDialog = ({
     setOpen(false)
   }
 
-  const handleClickSubmit = () => {
+  const handleClickSubmit = async () => {
     setOpen(false)
     Cookies.set('tableName', input, {
       sameSite: 'lax',
     });
 
-    (async () => {
-      const data = await fetchCodes()
-      dispatch({ type: 'fetchCodes', payload: data })
-    })()
+    setIsFetching(true)
+    const data = await fetchCodes()
+    dispatch({ type: 'fetchCodes', payload: data })
+    setIsFetching(false)
   }
 
   const handleOnInput = (e: React.ChangeEvent<HTMLInputElement>) => {

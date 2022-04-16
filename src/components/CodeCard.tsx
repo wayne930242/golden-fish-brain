@@ -27,6 +27,7 @@ import { EditContent } from './EditContent'
 import { GlobalContext } from '../App'
 import { ICode } from "../interface"
 import { ConfirmDialog } from './dialogs/ConfirmDislog'
+import { unstable_deprecatedPropType } from '@mui/utils'
 
 export const CodeCard = ({ code }: { code: ICode }) => {
   const { dispatch, isFetching, setIsFetching } = useContext(GlobalContext)
@@ -126,9 +127,9 @@ export const CodeCard = ({ code }: { code: ICode }) => {
     const newReviewTime = [...code.reviewTime]
     newReviewTime.push(Date.now())
     const newHasPeeped = [...code.hasPeeped]
-    newHasPeeped.push(tempPeeped)
+    newHasPeeped.push(tempPeeped === undefined ? false : tempPeeped)
     const newFamiliar = [...code.familiar]
-    newFamiliar.push(tempFamiliar)
+    newFamiliar.push(tempFamiliar === undefined ? null : tempFamiliar)
 
     setIsFetching(true)
     patchCode({
@@ -195,7 +196,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                 <div className='mt-2 mb-4'>
                   <Stack direction="row" spacing={1}>
                     {code.nums.map((ele: string) => (
-                      <Chip label={ele} key={ele} />
+                      <Chip label={ele} key={ele + Math.random()} />
                     ))}
                   </Stack>
                 </div>

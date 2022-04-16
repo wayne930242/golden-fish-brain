@@ -60,6 +60,7 @@ export default function ButtonAppBar() {
           }} variant="body2" component="p" >
             {randomQuote}
           </Typography>
+
           <Button color="inherit" size='small' onClick={() => setOpenLogin(true)}>登入</Button>
         </Toolbar>
       </AppBar>
