@@ -160,7 +160,6 @@ export const CodeCard = ({ code }: { code: ICode }) => {
             <div className='mx-2'>
               <Button color='primary' variant='contained'
                 onClick={editable ? handleOnSubmit : handleOnEdit}
-                disabled
               >
                 {editable ? '確定' : '編輯'}
               </Button>

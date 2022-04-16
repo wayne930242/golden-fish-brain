@@ -26,3 +26,8 @@ export interface IAction<Payload> {
   type: string,
   payload?: Payload,
 }
+
+export interface IState {
+  codes: ICode[],
+  isFetching: boolean,
+}

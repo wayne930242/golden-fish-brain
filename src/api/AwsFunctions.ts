@@ -56,21 +56,29 @@ export const putData = (tableName: string, data: ICode): Promise<void> => {
 }
 
 export const patchData = (tableName: string, data: ICode): Promise<void> => {
-	const keys = Object.keys(data)
+	const keys = Object.keys(data).filter(key => key !== 'id')
 	const keyNameExpressions = keys.map(name => `#${name}`)
+		.filter(nameExpr => nameExpr !== '#id')
 	const keyValueExpressions = keys.map(value => `:${value}`)
+		.filter(nameExpr => nameExpr !== ':id')
+	const marshallData = marshall(data)
+
+	const UpdateExpression = "set " + keyNameExpressions
+		.map((nameExpr, idx) => `${nameExpr} = ${keyValueExpressions[idx]}`)
+		.join(", ")
+	const ExpressionAttributeNames = keyNameExpressions
+		.reduce((exprs, nameExpr, idx) => ({ ...exprs, [nameExpr]: keys[idx] }), {})
+	const ExpressionAttributeValues = keyValueExpressions
+		.reduce((exprs, valueExpr, idx) => ({ ...exprs, [valueExpr]: marshallData[keys[idx]] }), {})
+
 	const params: UpdateItemCommandInput = {
 		TableName: tableName,
 		Key: marshall({
 			id: data.id,
 		}),
-		UpdateExpression: "set " + keyNameExpressions
-			.map((nameExpr, idx) => `${nameExpr} = ${keyValueExpressions[idx]}`)
-			.join(", "),
-		ExpressionAttributeNames: keyNameExpressions
-			.reduce((exprs, nameExpr, idx) => ({ ...exprs, [nameExpr]: keys[idx] }), {}),
-		ExpressionAttributeValues: keyValueExpressions
-			.reduce((exprs, valueExpr, idx) => ({ ...exprs, [valueExpr]: marshall(data[keys[idx]]) }), {}),
+		UpdateExpression,
+		ExpressionAttributeNames,
+		ExpressionAttributeValues,
 	}
 
 	const command = new UpdateItemCommand(params)
