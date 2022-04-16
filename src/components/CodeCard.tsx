@@ -212,17 +212,17 @@ export const CodeCard = ({ code }: { code: ICode }) => {
 
                 <Divider />
                 <div className='my-2 flex flex-row justify-around'>
-                  <IconButton onClick={(e) => { handleOnClickMood(e, 0) }} size='small' color={reviewCode.familiar[reviewCode.familiar.length - 1] === 0 ? 'error' : 'default'} >
+                  <IconButton onClick={(e) => { handleOnClickMood(e, 0) }} size='small' color={tempFamiliar === 0 ? 'error' : 'default'} >
                     <MoodBadIcon />
                   </IconButton>
-                  <IconButton onClick={(e) => { handleOnClickMood(e, 1) }} size='small' color={reviewCode.familiar[reviewCode.familiar.length - 1] === 1 ? 'success' : 'default'} >
+                  <IconButton onClick={(e) => { handleOnClickMood(e, 1) }} size='small' color={tempFamiliar === 1 ? 'success' : 'default'} >
                     <SentimentDissatisfiedIcon />
                   </IconButton>
-                  <IconButton onClick={(e) => { handleOnClickMood(e, 2) }} size='small' color={reviewCode.familiar[reviewCode.familiar.length - 1] === 2 ? 'primary' : 'default'} >
+                  <IconButton onClick={(e) => { handleOnClickMood(e, 2) }} size='small' color={tempFamiliar === 2 ? 'primary' : 'default'} >
                     <SentimentSatisfiedAltIcon />
                   </IconButton>
                   <div className='ml-6 flex flex-row justify-center'>
-                    <FormControlLabel control={<Checkbox onChange={handleOnPeep} checked={reviewCode.hasPeeped[reviewCode.hasPeeped.length - 1]} />} label="有偷看" />
+                    <FormControlLabel control={<Checkbox onChange={handleOnPeep} checked={tempPeeped} />} label="有偷看" />
                   </div>
                 </div>
               </>)}
