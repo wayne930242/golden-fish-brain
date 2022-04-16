@@ -4,6 +4,8 @@ import Typography from '@mui/material/Typography'
 import Paper from '@mui/material/Paper'
 import Divider from '@mui/material/Divider'
 import CircularProgress from '@mui/material/CircularProgress'
+import Button from '@mui/material/Button'
+import { Stack } from '@mui/material'
 
 import CodeCard from './components/CodeCard'
 import AddTaskDialog from './components/dialogs/AddTaskDialog'
@@ -24,11 +26,11 @@ export const initialCode: ICode = {
   star: 1,
   familiar: null,
   note: '',
-  hasPeeped: false,
+  hasPeeped: [false],
   link: '',
   createTime: null,
   editTime: null,
-  reviewTime: null,
+  reviewTime: [],
 }
 
 export const GlobalContext = createContext<{ codes: ICode[], dispatch: React.Dispatch<IAction<ICode | ICode[]>>, isFetching: boolean, setIsFetching: React.Dispatch<React.SetStateAction<boolean>> }>({
@@ -38,11 +40,32 @@ export const GlobalContext = createContext<{ codes: ICode[], dispatch: React.Dis
   setIsFetching: null,
 })
 
-const startTime = {
-  'today': 1000 * 60 * 60 * 24,
-  'threeDay': 3 * 1000 * 60 * 60 * 24,
-  'week': 7 * 1000 * 60 * 60 * 24,
-  'all': Infinity,
+const startTime: TypeStartTime = {
+  today: 1000 * 60 * 60 * 24,
+  threeDay: 3 * 1000 * 60 * 60 * 24,
+  week: 7 * 1000 * 60 * 60 * 24,
+  all: Infinity,
+}
+
+const startTimeText: TypeStartTimeText = {
+  today: '今天',
+  threeDay: '三天',
+  week: '一週',
+  all: '全部',
+}
+
+type TypeStartTimeText = {
+  today: string,
+  threeDay: string,
+  week: string,
+  all: string,
+}
+
+type TypeStartTime = {
+  today: number,
+  threeDay: number,
+  week: number,
+  all: number,
 }
 
 const filterResult = (filter: 'today' | 'threeDay' | 'week' | 'all', codeTime: number) => {
@@ -52,7 +75,10 @@ const filterResult = (filter: 'today' | 'threeDay' | 'week' | 'all', codeTime: n
 export default function App() {
   const [openAdd, setOpenAdd] = useState<boolean>(false)
 
-  const [filter, setFilter] = useState<'today' | 'threeDay' | 'week' | 'all'>('all')
+  const [filter, setFilter] = useState<'today' | 'threeDay' | 'week' | 'all'>('today')
+  const handleOnFilter = (f: 'today' | 'threeDay' | 'week' | 'all') => {
+    setFilter(f)
+  }
 
   const { codes, dispatch, isFetching, setIsFetching } = useCodes()
 
@@ -65,7 +91,7 @@ export default function App() {
         id: String(codes ? codes.length : 0) + String(Date.now()),
         createTime: Date.now(),
         editTime: Date.now(),
-        reviewTime: Date.now(),
+        reviewTime: [Date.now()],
       }
     })
     setOpenAdd(true)
@@ -85,7 +111,20 @@ export default function App() {
           </div>
 
           <div className='px-8'>
-            <Typography component='h2' variant='h5'>近期進度</Typography>
+
+            <div className='mb-6'>
+              <Stack direction="row" spacing={2}>
+                {
+                  Object.keys(startTimeText).map((key: keyof TypeStartTimeText) => (
+                    <Button onClick={() => handleOnFilter(key)} variant={filter !== key ? 'outlined' : 'contained'} color='primary' size='small' key={key}>
+                      {startTimeText[key]}
+                    </Button>
+                  ))
+                }
+              </Stack>
+            </div>
+
+            <Typography component='h2' variant='h5'>複習卡</Typography>
             <Divider />
             {isFetching
               ?
@@ -96,7 +135,7 @@ export default function App() {
                 ? codes
                   .filter(code => filterResult(filter, code.createTime))
                   .map(code => (
-                    <CodeCard code={code} key={code.id}/>
+                    <CodeCard code={code} key={code.id} />
                   ))
                 : null}
           </div>

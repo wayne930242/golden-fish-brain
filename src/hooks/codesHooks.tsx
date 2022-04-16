@@ -10,8 +10,10 @@ export const useCodes = (): { codes: ICode[], dispatch: React.Dispatch<IAction<I
 
   useEffect(() => {
     (async () => {
+      setIsFetching(true)
       const data = await fetchCodes()
       dispatch({ type: 'fetchCodes', payload: data })
+      setIsFetching(false)
     })()
   }, [])
 

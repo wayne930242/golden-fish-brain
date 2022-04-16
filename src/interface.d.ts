@@ -7,13 +7,13 @@ export interface ICode {
   law: string,
   nums: string[],
   star: number,
-  familiar: number,
   note: string,
-  hasPeeped: boolean,
   link: string,
   createTime: number,
   editTime: number,
-  reviewTime: number,
+  familiar: number[],
+  reviewTime: number[],
+  hasPeeped: boolean[],
 }
 
 export interface Laws extends Array<Law> { }

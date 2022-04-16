@@ -5,6 +5,8 @@ import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
+import Snackbar from '@mui/material/Snackbar'
+import Alert from '@mui/material/Alert'
 
 import { EditContent } from '../EditContent'
 import { fetchCodes, putCode } from '../../api/codesApi'
@@ -23,15 +25,22 @@ export const AddTaskDialog = ({
   setNewCode: React.Dispatch<React.SetStateAction<ICode>>,
 }) => {
   const { codes, dispatch, isFetching, setIsFetching } = useContext(GlobalContext)
+  const [openAlert, setOpenAlert] = useState<boolean>(false)
 
   const handleClose = () => {
     setOpen(false)
   }
 
   const handleOnSubmit = () => {
+    if (newCode.title.trim() === '') {
+      setOpenAlert(true)
+      return
+    }
+
     (async () => {
       setIsFetching(true)
-      putCode({...newCode,
+      putCode({
+        ...newCode,
         editTime: Date.now()
       })
         .then(async () => {
@@ -51,11 +60,17 @@ export const AddTaskDialog = ({
     setOpen(false)
   }
 
+  const handleCloseAlert = () => {
+    setOpenAlert(false)
+  }
+
   return (
     <Dialog onClose={handleClose} open={open}>
       <DialogTitle>新進度</DialogTitle>
       <DialogContent>
-        <EditContent code={newCode} setCode={setNewCode} />
+        <div className='mt-4'>
+          <EditContent code={newCode} setCode={setNewCode} />
+        </div>
       </DialogContent>
       <DialogActions>
         <Button variant='contained' color='error' onClick={handleOnCancel}>
@@ -65,6 +80,12 @@ export const AddTaskDialog = ({
           新增
         </Button>
       </DialogActions>
+
+      <Snackbar sx={{ width: '90%' }} open={openAlert} autoHideDuration={6000} onClose={handleCloseAlert}>
+        <Alert onClose={handleCloseAlert} severity="error" sx={{ width: '100%' }}>
+          忘了寫標題囉。
+        </Alert>
+      </Snackbar>
 
     </Dialog >
   )

@@ -22,9 +22,11 @@ import { ICode } from '../interface'
 export const EditContent = ({
   setCode,
   code,
+  review = false,
 }: {
   code: ICode,
   setCode: React.Dispatch<React.SetStateAction<ICode>>,
+  review?: boolean,
 }) => {
   const handleOnInput = (e: React.ChangeEvent<HTMLInputElement>, key: keyof ICode) => {
     setCode((c) => ({
@@ -60,17 +62,25 @@ export const EditContent = ({
   }
 
   const handleOnClickMood = (n: number) => {
-    setCode(c => ({
-      ...c,
-      familiar: n,
-    }))
+    setCode(c => {
+      const newFamiliar = [...c.familiar]
+      newFamiliar.push(n)
+      return ({
+        ...c,
+        familiar: newFamiliar,
+      })
+    })
   }
 
   const handleOnPeep = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCode(c => ({
-      ...c,
-      hasPeeped: event.target.checked,
-    }))
+    setCode(c => {
+      const newHasPeeped = [...c.hasPeeped]
+      newHasPeeped.push(event.target.checked)
+      return ({
+        ...c,
+        hasPeeped: newHasPeeped,
+      })
+    })
   }
 
   const handleOnChangeLaw = (_: any, value: string) => {
@@ -85,7 +95,7 @@ export const EditContent = ({
     <div className='flex flex-col'>
       <div className='mb-1 flex flex-row justify-between'>
         <TextField sx={{ width: '100%' }} label="標題" size='small' value={code.title}
-          onInput={(e: React.ChangeEvent<HTMLInputElement>) => handleOnInput(e, 'title')} />
+          onInput={(e: React.ChangeEvent<HTMLInputElement>) => handleOnInput(e, 'title')} required />
         <div className='flex flex-row'>
           {[0, 1, 2, 3, 4].map(n => (
             <IconButton onClick={() => { handleOnClickStar(n + 1) }} size='small' color='warning' key={n}>
@@ -148,26 +158,34 @@ export const EditContent = ({
       </div>
 
       <div className='my-2'>
-        <TextField sx={{ width: '100%' }} label="小叮嚀" size='small' variant="outlined" multiline onInput={(e: React.ChangeEvent<HTMLInputElement>) => handleOnInput(e, 'note')} value={code.note}/>
+        <TextField sx={{ width: '100%' }} label="小叮嚀" size='small' variant="outlined" multiline onInput={(e: React.ChangeEvent<HTMLInputElement>) => handleOnInput(e, 'note')} value={code.note} />
       </div>
       <div className='my-2'>
         <TextField sx={{ width: '100%' }} label="連結" size='small' variant="outlined" onInput={(e: React.ChangeEvent<HTMLInputElement>) => handleOnInput(e, 'link')} value={code.link} />
       </div>
-      <Divider />
-      <div className='my-2 flex flex-row justify-around'>
-        <IconButton onClick={() => { handleOnClickMood(0) }} size='small' color={code.familiar === 0 ? 'error' : 'default'} >
-          <MoodBadIcon />
-        </IconButton>
-        <IconButton onClick={() => { handleOnClickMood(1) }} size='small' color={code.familiar === 1 ? 'success' : 'default'} >
-          <SentimentDissatisfiedIcon />
-        </IconButton>
-        <IconButton onClick={() => { handleOnClickMood(2) }} size='small' color={code.familiar === 2 ? 'primary' : 'default'} >
-          <SentimentSatisfiedAltIcon />
-        </IconButton>
-        <div className='ml-6 flex flex-row justify-center'>
-          <FormControlLabel control={<Checkbox onChange={handleOnPeep} checked={code.hasPeeped} />} label="有偷看" />
-        </div>
-      </div>
+
+      {review
+        ? (
+          <>
+            <Divider />
+            <div className='my-2 flex flex-row justify-around'>
+              <IconButton onClick={() => { handleOnClickMood(0) }} size='small' color={code.familiar[code.familiar.length - 1] === 0 ? 'error' : 'default'} >
+                <MoodBadIcon />
+              </IconButton>
+              <IconButton onClick={() => { handleOnClickMood(1) }} size='small' color={code.familiar[code.familiar.length - 1] === 1 ? 'success' : 'default'} >
+                <SentimentDissatisfiedIcon />
+              </IconButton>
+              <IconButton onClick={() => { handleOnClickMood(2) }} size='small' color={code.familiar[code.familiar.length - 1] === 2 ? 'primary' : 'default'} >
+                <SentimentSatisfiedAltIcon />
+              </IconButton>
+              <div className='ml-6 flex flex-row justify-center'>
+                <FormControlLabel control={<Checkbox onChange={handleOnPeep} checked={code.hasPeeped[code.hasPeeped.length - 1]} />} label="有偷看" />
+              </div>
+            </div>
+          </>
+        )
+        : null
+      }
     </div>
   )
 }

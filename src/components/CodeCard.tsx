@@ -9,6 +9,8 @@ import IconButton from '@mui/material/IconButton'
 import StarOutlineIcon from '@mui/icons-material/StarOutline'
 import StarIcon from '@mui/icons-material/Star'
 import Button from '@mui/material/Button'
+import Snackbar from '@mui/material/Snackbar'
+import Alert from '@mui/material/Alert'
 
 import { Divider, Link } from '@mui/material'
 
@@ -32,7 +34,13 @@ export const CodeCard = ({ code }: { code: ICode }) => {
   }
 
   const [editCode, setEditCode] = useState<ICode>(code)
+  useEffect(() => {
+    setEditCode(code)
+  }, [code])
+
   const [editable, setEditable] = useState<boolean>(false)
+
+  const [openAlert, setOpenAlert] = useState<boolean>(false)
 
   const handleOnEdit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
@@ -40,8 +48,16 @@ export const CodeCard = ({ code }: { code: ICode }) => {
     setEditable(true)
   }
 
+  const handleCloseAlert = () => {
+    setOpenAlert(false)
+  }
+
   const handleOnSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
+    e.stopPropagation()
+    if (editCode.title.trim() === '') {
+      setOpenAlert(true)
+      return
+    }
 
     (async () => {
       setIsFetching(true)
@@ -52,9 +68,6 @@ export const CodeCard = ({ code }: { code: ICode }) => {
         .then(async () => {
           const data = await fetchCodes()
           dispatch({ type: 'fetchCodes', payload: data })
-        })
-        .finally(() => {
-          setEditCode(code)
         })
       setIsFetching(false)
     })()
@@ -123,9 +136,8 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                 </Stack>
               </div>
 
-              <Divider />
-
               {!expand ? null : (<>
+                <Divider />
                 <div className='mt-2'>
                   <Typography sx={{ textOverflow: 'ellipsis' }} component="p" variant='body1'>小叮嚀：{code.note}</Typography>
                 </div>
@@ -137,43 +149,51 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                 }
 
                 <div className='my-2 flex flex-row justify-around'>
-                  <IconButton size='small' color={code.familiar === 0 ? 'error' : 'default'} sx={{ cursor: 'default' }}>
+                  <IconButton size='small' color={code.familiar[code.familiar.length - 1] === 0 ? 'error' : 'default'} sx={{ cursor: 'default' }}>
                     <MoodBadIcon />
                   </IconButton>
-                  <IconButton size='small' color={code.familiar === 1 ? 'success' : 'default'} sx={{ cursor: 'default' }}>
+                  <IconButton size='small' color={code.familiar[code.familiar.length - 1] === 1 ? 'success' : 'default'} sx={{ cursor: 'default' }}>
                     <SentimentDissatisfiedIcon />
                   </IconButton>
-                  <IconButton size='small' color={code.familiar === 2 ? 'primary' : 'default'} sx={{ cursor: 'default' }}>
+                  <IconButton size='small' color={code.familiar[code.familiar.length - 1] === 2 ? 'primary' : 'default'} sx={{ cursor: 'default' }}>
                     <SentimentSatisfiedAltIcon />
                   </IconButton>
                 </div>
                 <Typography component="div" variant='body1'>
-                  {code.hasPeeped ? '有偷看！' : '沒偷看！'}
+                  {code.hasPeeped[code.hasPeeped.length - 1] ? '有偷看！' : '沒偷看！'}
                 </Typography>
               </>)}
             </>
           )}
 
         </CardContent>
-        <CardActions>
-          <div className='w-full flex flex-row justify-end'>
-            <div className='mx-2'>
-              <Button color='primary' variant='contained'
-                onClick={editable ? handleOnSubmit : handleOnEdit}
-              >
-                {editable ? '確定' : '編輯'}
-              </Button>
+        {!expand ? null : (
+          <CardActions>
+            <div className='w-full flex flex-row justify-end'>
+              <div className='mx-2'>
+                <Button color='primary' variant='contained'
+                  onClick={editable ? handleOnSubmit : handleOnEdit}
+                >
+                  {editable ? '確定' : '編輯'}
+                </Button>
+              </div>
+              <div className='mx-2'>
+                <Button color={editable ? 'warning' : 'error'} variant='contained'
+                  onClick={editable ? handleOnCancel : handleOnDelete}
+                >
+                  {editable ? '取消' : '刪除'}
+                </Button>
+              </div>
             </div>
-            <div className='mx-2'>
-              <Button color={editable ? 'warning' : 'error'} variant='contained'
-                onClick={editable ? handleOnCancel : handleOnDelete}
-              >
-                {editable ? '取消' : '刪除'}
-              </Button>
-            </div>
-          </div>
-        </CardActions>
+          </CardActions>
+        )}
       </div>
+
+      <Snackbar sx={{ width: '90%' }} open={openAlert} autoHideDuration={6000} onClose={handleCloseAlert}>
+        <Alert onClose={handleCloseAlert} severity="error" sx={{ width: '100%' }}>
+          忘了寫標題囉。
+        </Alert>
+      </Snackbar>
     </Card>
   )
 }
