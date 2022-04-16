@@ -9,18 +9,16 @@ import Cookies from 'js-cookie'
 import { ICode } from '../interface'
 
 export const fetchCodes = async (): Promise<ICode[]> => {
-  let returnData: ICode[] = []
-  if (Cookies.get('tableName')) {
-    fetchData(Cookies.get('tableName'))
+  if (!Cookies.get('tableName')) return localStorage.getItem('tableName') ? JSON.parse(localStorage.getItem('tableName')) as ICode[] : []
+  const data = await fetchData(Cookies.get('tableName'))
       .then((newCodes) => {
         localStorage.setItem('tableName', JSON.stringify(newCodes))
-        returnData = newCodes
+        return newCodes
       })
       .catch((err) => {
-        returnData = localStorage.getItem('tableName') ? JSON.parse(localStorage.getItem('tableName')) as ICode[] : []
+        return localStorage.getItem('tableName') ? JSON.parse(localStorage.getItem('tableName')) as ICode[] : []
       })
-  }
-  return returnData
+  return data
 }
 
 export const putCode = async (data: ICode) => {
