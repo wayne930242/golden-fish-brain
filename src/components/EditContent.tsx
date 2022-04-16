@@ -7,14 +7,7 @@ import IconButton from '@mui/material/IconButton'
 import StarOutlineIcon from '@mui/icons-material/StarOutline'
 import StarIcon from '@mui/icons-material/Star'
 import Typography from '@mui/material/Typography'
-import Divider from '@mui/material/Divider'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Checkbox from '@mui/material/Checkbox'
 import Autocomplete from '@mui/material/Autocomplete'
-
-import MoodBadIcon from '@mui/icons-material/MoodBad'
-import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied'
-import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 
 import { LAWS } from '../data/laws'
 import { ICode } from '../interface'
@@ -22,7 +15,6 @@ import { ICode } from '../interface'
 export const EditContent = ({
   setCode,
   code,
-  review = false,
 }: {
   code: ICode,
   setCode: React.Dispatch<React.SetStateAction<ICode>>,
@@ -59,28 +51,6 @@ export const EditContent = ({
       ...c,
       star: n,
     }))
-  }
-
-  const handleOnClickMood = (n: number) => {
-    setCode(c => {
-      const newFamiliar = [...c.familiar]
-      newFamiliar.push(n)
-      return ({
-        ...c,
-        familiar: newFamiliar,
-      })
-    })
-  }
-
-  const handleOnPeep = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCode(c => {
-      const newHasPeeped = [...c.hasPeeped]
-      newHasPeeped.push(event.target.checked)
-      return ({
-        ...c,
-        hasPeeped: newHasPeeped,
-      })
-    })
   }
 
   const handleOnChangeLaw = (_: any, value: string) => {
@@ -163,29 +133,6 @@ export const EditContent = ({
       <div className='my-2'>
         <TextField sx={{ width: '100%' }} label="連結" size='small' variant="outlined" onInput={(e: React.ChangeEvent<HTMLInputElement>) => handleOnInput(e, 'link')} value={code.link} />
       </div>
-
-      {review
-        ? (
-          <>
-            <Divider />
-            <div className='my-2 flex flex-row justify-around'>
-              <IconButton onClick={() => { handleOnClickMood(0) }} size='small' color={code.familiar[code.familiar.length - 1] === 0 ? 'error' : 'default'} >
-                <MoodBadIcon />
-              </IconButton>
-              <IconButton onClick={() => { handleOnClickMood(1) }} size='small' color={code.familiar[code.familiar.length - 1] === 1 ? 'success' : 'default'} >
-                <SentimentDissatisfiedIcon />
-              </IconButton>
-              <IconButton onClick={() => { handleOnClickMood(2) }} size='small' color={code.familiar[code.familiar.length - 1] === 2 ? 'primary' : 'default'} >
-                <SentimentSatisfiedAltIcon />
-              </IconButton>
-              <div className='ml-6 flex flex-row justify-center'>
-                <FormControlLabel control={<Checkbox onChange={handleOnPeep} checked={code.hasPeeped[code.hasPeeped.length - 1]} />} label="有偷看" />
-              </div>
-            </div>
-          </>
-        )
-        : null
-      }
     </div>
   )
 }

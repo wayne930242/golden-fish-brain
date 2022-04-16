@@ -15,7 +15,7 @@ import { LoginDialog } from './dialogs/LoginDialog'
 export default function ButtonAppBar() {
   const [openLogin, setOpenLogin] = useState<boolean>(false)
 
-  const REFRESH_TIME = 10000
+  const REFRESH_TIME = 15000
   const [randomQuote, setRandomQuote] = useState<string>('')
 
   useEffect(() => {

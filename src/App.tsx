@@ -32,7 +32,7 @@ export const initialCode: ICode = {
   link: '',
   createTime: null,
   editTime: null,
-  hasPeeped: [false],
+  hasPeeped: [],
   familiar: [],
   reviewTime: [],
 }
@@ -98,7 +98,6 @@ export default function App() {
         id: String(codes ? codes.length : 0) + String(Date.now()),
         createTime: Date.now(),
         editTime: Date.now(),
-        reviewTime: [Date.now()],
       }
     })
     setOpenAdd(true)

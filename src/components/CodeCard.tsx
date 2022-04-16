@@ -1,7 +1,6 @@
 import { useState, useContext, useEffect } from 'react'
 import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
-import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
@@ -12,6 +11,7 @@ import Button from '@mui/material/Button'
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
 import Paper from '@mui/material/Paper'
+import TextField from '@mui/material/TextField'
 
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
@@ -43,10 +43,15 @@ export const CodeCard = ({ code }: { code: ICode }) => {
   }, [code])
 
   const [editable, setEditable] = useState<boolean>(false)
+  const [reviewing, setReviewing] = useState<boolean>(false)
+  const [tempPeeped, setTempPeeped] = useState<boolean>(code.hasPeeped[code.hasPeeped.length - 1])
+  const [tempFamiliar, setTempFamiliar] = useState<number>(code.familiar[code.familiar.length - 1])
 
   const [reviewCode, setReviewCode] = useState<ICode>(code)
   useEffect(() => {
     setReviewCode(code)
+    setTempPeeped(code.hasPeeped[code.hasPeeped.length - 1])
+    setTempFamiliar(code.familiar[code.familiar.length - 1])
   }, [code])
 
   const [openAlert, setOpenAlert] = useState<boolean>(false)
@@ -96,28 +101,51 @@ export const CodeCard = ({ code }: { code: ICode }) => {
     setOpenConfirmDelete(true)
   }
 
+  const handleOnInput = (e: React.ChangeEvent<HTMLInputElement>, key: keyof ICode) => {
+    e.stopPropagation()
+    setReviewing(true)
+    setReviewCode((c) => ({
+      ...c,
+      [key]: e.target.value,
+    }))
+  }
+
   const handleOnClickMood = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, n: number) => {
     e.stopPropagation()
-    setReviewCode(c => {
-      const newFamiliar = [...c.familiar]
-      newFamiliar.push(n)
-      return ({
-        ...c,
-        familiar: newFamiliar,
-      })
-    })
+    setReviewing(true)
+    setTempFamiliar(n)
   }
 
   const handleOnPeep = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation()
-    setReviewCode(c => {
-      const newHasPeeped = [...c.hasPeeped]
-      newHasPeeped.push(e.target.checked)
-      return ({
-        ...c,
-        hasPeeped: newHasPeeped,
-      })
+    setReviewing(true)
+    setTempPeeped(e.target.checked)
+  }
+
+  const handleSubmitReview = async () => {
+    const newReviewTime = [...code.reviewTime]
+    newReviewTime.push(Date.now())
+    const newHasPeeped = [...code.hasPeeped]
+    newHasPeeped.push(tempPeeped)
+    const newFamiliar = [...code.familiar]
+    newFamiliar.push(tempFamiliar)
+
+    setIsFetching(true)
+    patchCode({
+      ...code,
+      ...reviewCode,
+      familiar: newFamiliar,
+      hasPeeped: newHasPeeped,
+      reviewTime: newReviewTime,
     })
+      .then(async () => {
+        const data = await fetchCodes()
+        dispatch({ type: 'fetchCodes', payload: data })
+      })
+    setIsFetching(false)
+
+    setReviewing(false)
+    setReviewCode(code)
   }
 
   return (
@@ -176,17 +204,12 @@ export const CodeCard = ({ code }: { code: ICode }) => {
               </Paper>
 
               {!expand ? null : (<>
-                {code.note.trim() ?
-                  <div className='my-3'>
-                    <Typography sx={{ textOverflow: 'ellipsis' }} component="p" variant='body1'>小叮嚀：{code.note}</Typography>
-                  </div>
-                  : null}
-                {code.link ?
-                  <div className='mt-2'>
-                    連結：<Link href={code.link} target='_blank'>{code.link}</Link>
-                  </div>
-                  : null
-                }
+                <div className='my-2'>
+                  <TextField sx={{ width: '100%' }} label="小叮嚀" size='small' variant="outlined" multiline onInput={(e: React.ChangeEvent<HTMLInputElement>) => handleOnInput(e, 'note')} value={code.note} />
+                </div>
+                <div className='my-2'>
+                  <TextField sx={{ width: '100%' }} label="連結" size='small' variant="outlined" onInput={(e: React.ChangeEvent<HTMLInputElement>) => handleOnInput(e, 'link')} value={code.link} />
+                </div>
 
                 <Divider />
                 <div className='my-2 flex flex-row justify-around'>
@@ -210,20 +233,29 @@ export const CodeCard = ({ code }: { code: ICode }) => {
         </CardContent>
         {!expand ? null : (
           <CardActions>
-            <div className='w-full flex flex-row justify-end'>
-              <div className='mx-2'>
-                <Button color='primary' variant='contained'
-                  onClick={editable ? handleOnSubmit : handleOnEdit}
+            <div className='w-full flex flex-row justify-between mx-4'>
+              <div>
+                <Button color='success' variant='contained'
+                  onClick={handleSubmitReview}
                 >
-                  {editable ? '確定' : '編輯'}
+                  複習完畢！
                 </Button>
               </div>
-              <div className='mx-2'>
-                <Button color={editable ? 'warning' : 'error'} variant='contained'
-                  onClick={editable ? handleOnCancel : handleOnDelete}
-                >
-                  {editable ? '取消' : '刪除'}
-                </Button>
+              <div className='flex flex-row'>
+                <div className='mr-2'>
+                  <Button color='primary' variant='contained'
+                    onClick={editable ? handleOnSubmit : handleOnEdit}
+                  >
+                    {editable ? '確定' : '編輯'}
+                  </Button>
+                </div>
+                <div>
+                  <Button color={editable ? 'warning' : 'error'} variant='contained'
+                    onClick={editable ? handleOnCancel : handleOnDelete}
+                  >
+                    {editable ? '取消' : '刪除'}
+                  </Button>
+                </div>
               </div>
             </div>
           </CardActions>
