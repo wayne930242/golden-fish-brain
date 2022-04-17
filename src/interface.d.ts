@@ -31,3 +31,8 @@ export interface IState {
   codes: ICode[],
   isFetching: boolean,
 }
+
+export interface ISession {
+  name: string | null,
+  state: 'login' | 'error' | 'empty',
+}

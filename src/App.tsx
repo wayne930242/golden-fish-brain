@@ -146,7 +146,7 @@ export default function App() {
                         variant='contained'
                         color='error'
                       >
-                        產生
+                        抽卡
                       </Button>
                     </>
                   ) :
