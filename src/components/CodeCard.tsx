@@ -22,7 +22,7 @@ import MoodBadIcon from '@mui/icons-material/MoodBad'
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied'
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 
-import { patchCode, fetchCodes, delCode } from '../api/codesApi'
+import { patchCode, fetchCodes, delCode } from '../actions/codesActions'
 import { EditContent } from './EditContent'
 import { GlobalContext } from '../App'
 import { ICode } from "../interface"
@@ -37,6 +37,8 @@ export const CodeCard = ({ code }: { code: ICode }) => {
   const handleOnClickTitle = () => {
     setExpend(ex => !ex)
   }
+
+  console.log(code)
 
   const [editCode, setEditCode] = useState<ICode>(code)
   useEffect(() => {

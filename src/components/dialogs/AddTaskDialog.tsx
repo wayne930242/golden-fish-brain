@@ -9,7 +9,7 @@ import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
 
 import { EditContent } from '../EditContent'
-import { fetchCodes, putCode } from '../../api/codesApi'
+import { fetchCodes, putCode } from '../../actions/codesActions'
 import { ICode } from '../../interface'
 import { initialCode, GlobalContext } from '../../App'
 

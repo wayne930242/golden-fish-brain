@@ -38,7 +38,7 @@ export const initialCode: ICode = {
 }
 
 export const GlobalContext = createContext<{ codes: ICode[], dispatch: React.Dispatch<IAction<ICode | ICode[]>>, isFetching: boolean, setIsFetching: React.Dispatch<React.SetStateAction<boolean>> }>({
-  codes: [],
+  codes: null,
   dispatch: null,
   isFetching: false,
   setIsFetching: null,
@@ -64,6 +64,12 @@ type TypeStartTime = {
   all: number,
 }
 
+const Loading = () => (
+  <div className='flex flex-row justify-center my-20'>
+    <CircularProgress />
+  </div>
+)
+
 const filterResult = (filter: keyof TypeStartTimeText, codeTime: number) => {
   return codeTime >= Date.now() - startTime[filter]
 }
@@ -73,7 +79,6 @@ export default function App() {
 
   const [filter, setFilter] = useState<keyof TypeStartTimeText>('today')
   const handleOnFilter = (f: keyof TypeStartTimeText) => {
-    setReviewCards(codes)
     setFilter(f)
   }
 
@@ -81,9 +86,10 @@ export default function App() {
   const [value, setValue] = useState<number>(defaultValue)
 
   const { codes, dispatch, isFetching, setIsFetching } = useCodes()
+  const filteredCodes = codes !== null ? codes.filter(code => filterResult(filter, code.createTime)) : []
 
   const [mode, setMode] = useState<'review' | 'achive'>('achive')
-  const [reviewCards, setReviewCards] = useState<ICode[]>([])
+  const [reviewCards, setReviewCards] = useState<ICode[]>(null)
 
   const [newCode, setNewCode] = useState<ICode>(initialCode)
 
@@ -162,26 +168,22 @@ export default function App() {
 
             <Typography component='h2' variant='h5'>{mode === 'review' ? '複習中...' : '檢視複習卡'} </Typography>
             <Divider />
-            {isFetching
-              ?
-              <div className='flex flex-row justify-center'>
-                <CircularProgress />
-              </div>
+            {isFetching || codes === null
+              ? <Loading />
               : mode === 'review'
-                ? reviewCards
+                ? reviewCards !== null && reviewCards.length !== 0
                   ? reviewCards
-                    .filter(code => filterResult(filter, code.createTime))
                     .map(code => (
                       <CodeCard code={code} key={code.id} />
                     ))
-                  : null
-                : codes
-                  ? codes
-                    .filter(code => filterResult(filter, code.createTime))
+                  : <div className='my-10'><Typography component='p' variant='body1'>抽卡或新增複習卡。</Typography></div>
+                : filteredCodes.length !== 0
+                  ? filteredCodes
                     .map(code => (
-                      <CodeCard code={code} key={code.id} />
-                    ))
-                  : null}
+                    <CodeCard code={code} key={code.id} />
+                  ))
+                  : <div className='my-10'><Typography component='p' variant='body1'>新增複習卡或篩選「全部」複習卡。</Typography></div>
+            }
           </div>
 
           <AddTaskDialog open={openAdd} setOpen={setOpenAdd} newCode={newCode} setNewCode={setNewCode} />

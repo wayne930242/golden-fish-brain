@@ -3,7 +3,7 @@ import {
   putData,
   patchData,
   delData,
-} from "./AwsFunctions"
+} from "../api/AwsFunctions"
 import Cookies from 'js-cookie'
 
 import { ICode } from '../interface'

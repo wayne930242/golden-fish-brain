@@ -1,10 +1,10 @@
-import { useEffect, useReducer, useState } from 'react'
-import { ICode, IAction, IState } from '../interface'
-import { fetchCodes } from '../api/codesApi'
+import { useEffect, useReducer } from 'react'
+import { ICode, IAction} from '../interface'
+import { fetchCodes } from '../actions/codesActions'
 import { codesReducer } from '../reducer/codesReducer'
 
 export const useCodes = (): { codes: ICode[], dispatch: React.Dispatch<IAction<ICode | ICode[] | boolean>>, isFetching: boolean, setIsFetching: React.Dispatch<React.SetStateAction<boolean>> } => {
-  const [state, dispatch] = useReducer(codesReducer, { codes: [], isFetching: false })
+  const [state, dispatch] = useReducer(codesReducer, { codes: null, isFetching: false })
 
   const setIsFetching = (b: boolean) => dispatch({ type: 'setFetching', payload: b })
 

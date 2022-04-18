@@ -9,7 +9,7 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 
-import { fetchCodes } from '../../api/codesApi'
+import { fetchCodes } from '../../actions/codesActions'
 import { GlobalContext } from '../../App'
 
 export const LoginDialog = ({
