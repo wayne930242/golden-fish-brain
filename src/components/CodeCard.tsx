@@ -22,23 +22,20 @@ import MoodBadIcon from '@mui/icons-material/MoodBad'
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied'
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 
-import { patchCode, fetchCodes, delCode } from '../actions/codesActions'
+import { patchCode, delCode } from '../actions/codesActions'
 import { EditContent } from './EditContent'
 import { GlobalContext } from '../App'
 import { ICode } from "../interface"
 import { ConfirmDialog } from './dialogs/ConfirmDislog'
-import { unstable_deprecatedPropType } from '@mui/utils'
 
 export const CodeCard = ({ code }: { code: ICode }) => {
-  const { dispatch, isFetching, setIsFetching } = useContext(GlobalContext)
+  const { dispatch } = useContext(GlobalContext)
   const [openConfirmDelete, setOpenConfirmDelete] = useState<boolean>(false)
 
   const [expand, setExpend] = useState<boolean>(false)
   const handleOnClickTitle = () => {
     setExpend(ex => !ex)
   }
-
-  console.log(code)
 
   const [editCode, setEditCode] = useState<ICode>(code)
   useEffect(() => {
@@ -75,19 +72,10 @@ export const CodeCard = ({ code }: { code: ICode }) => {
       setOpenAlert(true)
       return
     }
-
-    (async () => {
-      setIsFetching(true)
-      patchCode({
-        ...editCode,
-        editTime: Date.now()
-      })
-        .then(async () => {
-          const data = await fetchCodes()
-          dispatch({ type: 'fetchCodes', payload: data })
-        })
-      setIsFetching(false)
-    })()
+    patchCode(dispatch.codes, {
+      ...editCode,
+      editTime: Date.now()
+    })
 
     setEditable(false)
     setExpend(true)
@@ -133,19 +121,13 @@ export const CodeCard = ({ code }: { code: ICode }) => {
     const newFamiliar = [...code.familiar]
     newFamiliar.push(tempFamiliar === undefined ? null : tempFamiliar)
 
-    setIsFetching(true)
-    patchCode({
+    patchCode(dispatch.codes, {
       ...code,
       ...reviewCode,
       familiar: newFamiliar,
       hasPeeped: newHasPeeped,
       reviewTime: newReviewTime,
     })
-      .then(async () => {
-        const data = await fetchCodes()
-        dispatch({ type: 'fetchCodes', payload: data })
-      })
-    setIsFetching(false)
 
     setReviewing(false)
     setReviewCode(code)
@@ -155,15 +137,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
     <div className='my-2'>
       <ConfirmDialog open={openConfirmDelete} setOpen={setOpenConfirmDelete} title="確認刪除嗎？" contentText='刪除後的資料將消失在世界上，確定嗎？'
         onClick={() => {
-          (async () => {
-            setIsFetching(true)
-            delCode(code)
-              .then(async () => {
-                const data = await fetchCodes()
-                dispatch({ type: 'fetchCodes', payload: data })
-              })
-            setIsFetching(false)
-          })()
+          delCode(dispatch.codes, code)
         }}
       />
 

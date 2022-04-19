@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect } from 'react'
+import React, { useState, createContext } from 'react'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import Paper from '@mui/material/Paper'
@@ -15,10 +15,12 @@ import AddTaskDialog from './components/dialogs/AddTaskDialog'
 import MySpeedDial from './components/MySpeedDial'
 import MyAppBar from './components/MyAppBar'
 
+import { useSession } from './hooks/useSession'
+import { useMyReducer } from './reducers'
 import { LuckyCodes } from './helper/data'
-import { useCodes } from './hooks/codesHooks'
+import { useCodes } from './hooks/useCodes'
 import { LAWS } from './data/laws'
-import { ICode, IAction } from './interface'
+import { ICode, TypeDispatch, ISession } from './interface'
 
 import Logo from './logo.png'
 
@@ -37,12 +39,24 @@ export const initialCode: ICode = {
   reviewTime: [],
 }
 
-export const GlobalContext = createContext<{ codes: ICode[], dispatch: React.Dispatch<IAction<ICode | ICode[]>>, isFetching: boolean, setIsFetching: React.Dispatch<React.SetStateAction<boolean>> }>({
+export const GlobalContext = createContext<TypeGlobalContext>({
   codes: null,
-  dispatch: null,
+  session: {
+    name: null,
+    state: 'idle',
+  },
+  hasError: false,
   isFetching: false,
-  setIsFetching: null,
+  dispatch: null,
 })
+
+type TypeGlobalContext = {
+  codes: ICode[],
+  session: ISession,
+  isFetching: boolean,
+  hasError: boolean,
+  dispatch: TypeDispatch,
+}
 
 const startTime: TypeStartTime = {
   today: 1000 * 60 * 60 * 24,
@@ -63,6 +77,15 @@ type TypeStartTime = {
   today: number,
   all: number,
 }
+
+const Title = () => (
+  <div className='flex flex-row justify-start pl-8 py-8'>
+    <img src={Logo} className="h-10" alt="logo" />
+    <Typography variant="h4" component="h1" gutterBottom>
+      <span className='ml-1'>搶救金魚腦</span>
+    </Typography>
+  </div>
+)
 
 const Loading = () => (
   <div className='flex flex-row justify-center my-20'>
@@ -85,7 +108,10 @@ export default function App() {
   const defaultValue: number = 5
   const [value, setValue] = useState<number>(defaultValue)
 
-  const { codes, dispatch, isFetching, setIsFetching } = useCodes()
+  const { dispatch } = useMyReducer()
+
+  const session = useSession()
+  const { codes, isFetching, hasError } = useCodes()
   const filteredCodes = codes !== null ? codes.filter(code => filterResult(filter, code.createTime)) : []
 
   const [mode, setMode] = useState<'review' | 'achive'>('achive')
@@ -93,7 +119,7 @@ export default function App() {
 
   const [newCode, setNewCode] = useState<ICode>(initialCode)
 
-  const handleOnClickSD = () => {
+  const handleOnClickSpeedDial = () => {
     setNewCode(c => {
       return {
         ...c,
@@ -106,17 +132,19 @@ export default function App() {
   }
 
   return (
-    <GlobalContext.Provider value={{ codes, dispatch, isFetching, setIsFetching }}>
+    <GlobalContext.Provider value={{
+      codes,
+      isFetching,
+      hasError,
+      session,
+      dispatch,
+    }}>
       <Container maxWidth="sm">
         <Paper sx={{ mx: 2, height: '95vh', overflowY: 'scroll' }}>
           <MyAppBar />
-          <MySpeedDial handleOnClick={handleOnClickSD} />
-          <div className='flex flex-row justify-start pl-8 py-8'>
-            <img src={Logo} className="h-10" alt="logo" />
-            <Typography variant="h4" component="h1" gutterBottom>
-              <span className='ml-1'>搶救金魚腦</span>
-            </Typography>
-          </div>
+          <MySpeedDial handleOnClick={handleOnClickSpeedDial} />
+
+          <Title />
 
           <div className='px-8'>
 
@@ -180,8 +208,8 @@ export default function App() {
                 : filteredCodes.length !== 0
                   ? filteredCodes
                     .map(code => (
-                    <CodeCard code={code} key={code.id} />
-                  ))
+                      <CodeCard code={code} key={code.id} />
+                    ))
                   : <div className='my-10'><Typography component='p' variant='body1'>新增複習卡或篩選「全部」複習卡。</Typography></div>
             }
           </div>

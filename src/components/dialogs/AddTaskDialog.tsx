@@ -9,7 +9,7 @@ import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
 
 import { EditContent } from '../EditContent'
-import { fetchCodes, putCode } from '../../actions/codesActions'
+import { putCode } from '../../actions/codesActions'
 import { ICode } from '../../interface'
 import { initialCode, GlobalContext } from '../../App'
 
@@ -24,7 +24,7 @@ export const AddTaskDialog = ({
   newCode: ICode,
   setNewCode: React.Dispatch<React.SetStateAction<ICode>>,
 }) => {
-  const { codes, dispatch, isFetching, setIsFetching } = useContext(GlobalContext)
+  const { codes, dispatch, isFetching } = useContext(GlobalContext)
   const [openAlert, setOpenAlert] = useState<boolean>(false)
 
   const handleClose = () => {
@@ -37,22 +37,12 @@ export const AddTaskDialog = ({
       return
     }
 
-    (async () => {
-      setIsFetching(true)
-      putCode({
-        ...newCode,
-        editTime: Date.now()
-      })
-        .then(async () => {
-          const data = await fetchCodes()
-          dispatch({ type: 'fetchCodes', payload: data })
-        })
-        .finally(() => {
-          setNewCode(initialCode)
-          setOpen(false)
-        })
-      setIsFetching(false)
-    })()
+    putCode(dispatch.codes, {
+      ...newCode,
+      editTime: Date.now()
+    })
+    setNewCode(initialCode)
+    setOpen(false)
   }
 
   const handleOnCancel = () => {

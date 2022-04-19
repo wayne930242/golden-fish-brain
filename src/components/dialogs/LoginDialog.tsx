@@ -1,5 +1,4 @@
-import Cookies from 'js-cookie'
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
@@ -8,9 +7,10 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
+import { loginAction } from '../../actions/sessionActions'
 
-import { fetchCodes } from '../../actions/codesActions'
 import { GlobalContext } from '../../App'
+import { Typography } from '@mui/material'
 
 export const LoginDialog = ({
   open,
@@ -20,23 +20,25 @@ export const LoginDialog = ({
   setOpen: React.Dispatch<React.SetStateAction<boolean>>,
 }) => {
   const [input, setInput] = useState<string>('')
-  const { codes, dispatch, isFetching, setIsFetching } = useContext(GlobalContext)
+  const { dispatch, session } = useContext(GlobalContext)
+
+  const isLogin = session.state === 'login'
+  const hasError = session.state === 'error'
 
   const handleClickCancel = () => {
     setOpen(false)
   }
 
   const handleClickSubmit = async () => {
-    setOpen(false)
-    Cookies.set('tableName', input, {
-      sameSite: 'lax',
-    });
-
-    setIsFetching(true)
-    const data = await fetchCodes()
-    dispatch({ type: 'fetchCodes', payload: data })
-    setIsFetching(false)
+    loginAction(dispatch, input.toLowerCase())
+      .then(() => {
+        setOpen(false)
+      })
   }
+
+  useEffect(() => {
+    if (isLogin) setOpen(false)
+  }, [isLogin])
 
   const handleOnInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value)
@@ -60,6 +62,11 @@ export const LoginDialog = ({
             onInput={handleOnInput}
             value={input}
           />
+          {hasError
+            ?
+            <Typography color='red' component='p' variant='caption' >使用者名稱是錯誤的！</Typography>
+            : null
+          }
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClickCancel}>取消</Button>

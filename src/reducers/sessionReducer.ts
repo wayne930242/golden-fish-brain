@@ -15,7 +15,7 @@ export const sessionReducer = (state: ISession, action: IAction<string | false>)
     case 'signOut':
       return {
         name: null,
-        state: 'empty',
+        state: 'idle',
       }
 
     default:

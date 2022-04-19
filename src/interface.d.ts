@@ -1,6 +1,5 @@
 import { TypeLaws } from "./data/laws";
 
-export interface ICodes extends Array<ICode> { }
 export interface ICode {
   id: string,
   title: string,
@@ -28,11 +27,27 @@ export interface IAction<Payload> {
 }
 
 export interface IState {
-  codes: ICode[],
-  isFetching: boolean,
+  codes: ICodes,
+  session: ISession,
 }
+
+export interface ICodes {
+  data: ICode[],
+  state: TypeCodesState,
+}
+
+type TypeCodesState = 'idle' | 'fetching' | 'error' | 'done'
 
 export interface ISession {
   name: string | null,
-  state: 'login' | 'error' | 'empty',
+  state: TypeSessionState,
+}
+
+type TypeSessionState = 'login' | 'error' | 'idle'
+
+export type TypeCodesDispatch = React.Dispatch<IAction<ICode | ICode[] | TypeCodesState>>
+export type TypeSessionDispatch = React.Dispatch<IAction<string | false>>
+export type TypeDispatch = {
+  codes: TypeCodesDispatch,
+  session: TypeSessionDispatch,
 }
