@@ -22,6 +22,7 @@ import MoodBadIcon from '@mui/icons-material/MoodBad'
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied'
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 
+import { getReviewTime } from '../helper/data'
 import { patchCode, delCode } from '../actions/codesActions'
 import { EditContent } from './EditContent'
 import { GlobalContext } from '../App'
@@ -118,7 +119,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
 
   const handleSubmitReview = async () => {
     const newReviewTime = [...code.reviewTime]
-    newReviewTime.push(Date.now())
+    newReviewTime.push(getReviewTime(code))
     const newHasPeeped = [...code.hasPeeped]
     newHasPeeped.push(tempPeeped === undefined ? false : tempPeeped)
     const newFamiliar = [...code.familiar]

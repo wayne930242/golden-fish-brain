@@ -9,13 +9,13 @@ import {
   Stack,
   TextField,
 } from '@mui/material'
+import Cookies from 'js-cookie'
 
 import CodeCard from './components/CodeCard'
 import AddTaskDialog from './components/dialogs/AddTaskDialog'
 import MySpeedDial from './components/MySpeedDial'
 import MyAppBar from './components/MyAppBar'
 
-import { useSession } from './hooks/useSession'
 import { useMyReducer } from './reducers'
 import { LuckyCodes } from './helper/data'
 import { fetchCodes } from './actions/codesActions'
@@ -112,6 +112,12 @@ export default function App() {
 
   useEffect(() => {
     fetchCodes(dispatch.codes)
+  }, [])
+
+  useEffect(() => {
+    if (Cookies.get('tableName')) {
+      dispatch.session({ type: 'login', payload: Cookies.get('tableName') })
+    }
   }, [])
 
   const session = state.session 
