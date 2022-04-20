@@ -144,6 +144,10 @@ export default function App() {
     setOpenAdd(true)
   }
 
+  useEffect(() => {
+    if (mode === 'review') setReviewCards(LuckyCodes(codes, Number(value)))
+  }, [codes, mode])
+
   return (
     <GlobalContext.Provider value={{
       codes,
@@ -217,13 +221,13 @@ export default function App() {
                     .map(code => (
                       <CodeCard code={code} key={code.id} />
                     ))
-                  : <div className='my-10'><Typography component='p' variant='body1'>抽卡或新增複習卡。</Typography></div>
+                  : <div className='my-10'><Typography component='p' variant='body1'>沒有需要複習的複習卡。</Typography></div>
                 : filteredCodes.length !== 0
                   ? filteredCodes
                     .map(code => (
                       <CodeCard code={code} key={code.id} />
                     ))
-                  : <div className='my-10'><Typography component='p' variant='body1'>新增複習卡或篩選「全部」複習卡。</Typography></div>
+                  : <div className='my-10'><Typography component='p' variant='body1'>沒有可供檢視的複習卡。</Typography></div>
             }
           </div>
 
