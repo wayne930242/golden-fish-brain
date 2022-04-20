@@ -7,6 +7,8 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
+
+import { MySnackbarAlert } from '../alert/MySnackbarAlert'
 import { loginAction } from '../../actions/sessionActions'
 
 import { GlobalContext } from '../../App'
@@ -22,6 +24,8 @@ export const LoginDialog = ({
   const [input, setInput] = useState<string>('')
   const { dispatch, session } = useContext(GlobalContext)
 
+  const [openAlert, setOpenAlert] = useState<boolean>(false)
+
   const isLogin = session.state === 'login'
   const hasError = session.state === 'error'
 
@@ -34,6 +38,13 @@ export const LoginDialog = ({
       .then(() => {
         setOpen(false)
       })
+      .catch(() => {
+        setOpenAlert(true)
+      })
+  }
+
+  const handleClickCloseAlert = () => {
+    setOpenAlert(false)
   }
 
   useEffect(() => {
@@ -64,7 +75,9 @@ export const LoginDialog = ({
           />
           {hasError
             ?
-            <Typography color='red' component='p' variant='caption' >使用者名稱是錯誤的！</Typography>
+            <MySnackbarAlert open={openAlert} onClose={handleClickCloseAlert}>
+              使用者名稱是錯誤的！
+            </MySnackbarAlert>
             : null
           }
         </DialogContent>

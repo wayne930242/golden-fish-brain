@@ -5,9 +5,8 @@ import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
-import Snackbar from '@mui/material/Snackbar'
-import Alert from '@mui/material/Alert'
 
+import { MySnackbarAlert } from '../alert/MySnackbarAlert'
 import { EditContent } from '../EditContent'
 import { putCode } from '../../actions/codesActions'
 import { ICode } from '../../interface'
@@ -39,7 +38,8 @@ export const AddTaskDialog = ({
 
     putCode(dispatch.codes, {
       ...newCode,
-      editTime: Date.now()
+      createTime: Date.now(),
+      editTime: Date.now(),
     })
     setNewCode(initialCode)
     setOpen(false)
@@ -71,11 +71,9 @@ export const AddTaskDialog = ({
         </Button>
       </DialogActions>
 
-      <Snackbar sx={{ width: '90%' }} open={openAlert} autoHideDuration={6000} onClose={handleCloseAlert}>
-        <Alert onClose={handleCloseAlert} severity="error" sx={{ width: '100%' }}>
-          忘了寫標題囉。
-        </Alert>
-      </Snackbar>
+      <MySnackbarAlert open={openAlert} onClose={handleCloseAlert}>
+        忘了寫標題囉。
+      </MySnackbarAlert>
 
     </Dialog >
   )

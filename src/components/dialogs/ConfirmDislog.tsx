@@ -20,7 +20,7 @@ export const ConfirmDialog = ({
   title: string,
   contentText: string,
 
-  onClick: () => any,
+  onClick: (e?: React.MouseEvent<HTMLButtonElement>) => any,
 }) => {
   const handleClickCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()

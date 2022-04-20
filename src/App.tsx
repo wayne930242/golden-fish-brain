@@ -100,7 +100,7 @@ const filterResult = (filter: keyof TypeStartTimeText, codeTime: number) => {
 export default function App() {
   const [openAdd, setOpenAdd] = useState<boolean>(false)
 
-  const [filter, setFilter] = useState<keyof TypeStartTimeText>('today')
+  const [filter, setFilter] = useState<keyof TypeStartTimeText>('all')
   const handleOnFilter = (f: keyof TypeStartTimeText) => {
     setFilter(f)
   }

@@ -30,7 +30,9 @@ import { ConfirmDialog } from './dialogs/ConfirmDislog'
 
 export const CodeCard = ({ code }: { code: ICode }) => {
   const { dispatch } = useContext(GlobalContext)
+
   const [openConfirmDelete, setOpenConfirmDelete] = useState<boolean>(false)
+  const [openConfirmReview, setOpenConfirmReview] = useState<boolean>(false)
 
   const [expand, setExpend] = useState<boolean>(false)
   const handleOnClickTitle = () => {
@@ -141,6 +143,10 @@ export const CodeCard = ({ code }: { code: ICode }) => {
         }}
       />
 
+      <ConfirmDialog open={openConfirmReview} setOpen={setOpenConfirmReview} title="確認送出嗎？" contentText='確認送出並更新這次的複習狀況嗎？'
+        onClick={handleSubmitReview}
+      />
+
       <div className={'hover:bg-slate-50'} >
         <CardContent>
           {editable ? (
@@ -165,7 +171,6 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                   <div className='my-2 flex-row flex justify-between'>
                     <Typography component="div" variant='caption'>{code.law}</Typography>
                   </div>
-
 
                 </div>
 
@@ -212,9 +217,9 @@ export const CodeCard = ({ code }: { code: ICode }) => {
             <div className='w-full flex flex-row justify-between mx-4'>
               <div>
                 <Button color='success' variant='contained'
-                  onClick={handleSubmitReview}
+                  onClick={() => setOpenConfirmReview(true)}
                 >
-                  複習完畢！
+                  送出複習
                 </Button>
               </div>
               <div className='flex flex-row'>

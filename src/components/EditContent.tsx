@@ -8,6 +8,10 @@ import StarOutlineIcon from '@mui/icons-material/StarOutline'
 import StarIcon from '@mui/icons-material/Star'
 import Typography from '@mui/material/Typography'
 import Autocomplete from '@mui/material/Autocomplete'
+import { Divider } from '@mui/material'
+
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css"
 
 import { LAWS } from '../data/laws'
 import { ICode } from '../interface'
@@ -18,8 +22,9 @@ export const EditContent = ({
 }: {
   code: ICode,
   setCode: React.Dispatch<React.SetStateAction<ICode>>,
-  review?: boolean,
 }) => {
+  const [startDate, setStartDate] = useState<Date>(new Date(code.createTime))
+
   const handleOnInput = (e: React.ChangeEvent<HTMLInputElement>, key: keyof ICode) => {
     setCode((c) => ({
       ...c,
@@ -60,9 +65,26 @@ export const EditContent = ({
     }))
   }
 
+  const handleOnPickDate = (date: Date) => {
+    setCode(c => ({
+      ...c,
+      createTime: date.getTime(),
+    }))
+    setStartDate(date)
+  }
+
 
   return (
     <div className='flex flex-col'>
+      <div className='z-50 mb-4 w-full'>
+        <div className='flex flex-row'>
+          <div className='shrink-0'>
+            創建日期：
+          </div>
+        <DatePicker className=' text-gray-600 font-extrabold inline-block text-center cursor-pointer' selected={startDate} onChange={handleOnPickDate} />
+        </div>
+      </div>
+
       <div className='mb-1 flex flex-row justify-between'>
         <TextField sx={{ width: '100%' }} label="標題" size='small' value={code.title}
           onInput={(e: React.ChangeEvent<HTMLInputElement>) => handleOnInput(e, 'title')} required />

@@ -4,7 +4,7 @@ import Cookies from 'js-cookie'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import Toolbar from '@mui/material/Toolbar'
-import Typography from '@mui/material/Typography'
+// import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 
 import { GlobalContext } from '../App'
@@ -17,15 +17,15 @@ export default function ButtonAppBar() {
 
   const { session } = useContext(GlobalContext)
 
-  const REFRESH_TIME = 15000
-  const [randomQuote, setRandomQuote] = useState<string>('')
+  /* const REFRESH_TIME = 15000
+  const [randomQuote, setRandomQuote] = useState<string>('') */
 
   useEffect(() => {
     if (Cookies.get('tableName')) return
     setOpenLogin(true)
   }, [])
 
-  useEffect(() => {
+  /* useEffect(() => {
     const makeRandomQuote = () => {
       const q = QUOTATIONS[Math.floor(QUOTATIONS.length * Math.random())]
       setRandomQuote(() => q.text + ' -- ' + q.author)
@@ -35,7 +35,7 @@ export default function ButtonAppBar() {
     return (() => {
       clearInterval(timeInteval)
     })
-  }, [])
+  }, []) */
 
   return (
     <Box sx={{ flexGrow: 1 }}>

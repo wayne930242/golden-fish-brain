@@ -20,7 +20,7 @@ export const loginAction = async (dispatch: TypeDispatch, name: string): Promise
       .catch((err) => {
         setState(dispatch.codes, 'error')
         dispatch.session({ type: 'login', payload: false })
-        reject()
+        reject(err)
       })
   })
 }
