@@ -33,7 +33,7 @@ export const fetchData = async (tableName: string): Promise<any> => {
 	})
 }
 
-export const putData = (tableName: string, data: ICode): Promise<void> => {
+export const putData = (tableName: string, data: ICode): Promise<any> => {
 	const params: PutItemCommandInput = {
 		TableName: tableName,
 		Item: marshall({
@@ -42,20 +42,18 @@ export const putData = (tableName: string, data: ICode): Promise<void> => {
 	}
 	const command = new PutItemCommand(params)
 
-	return new Promise((resolve, reject) => {
-		client.send(command)
-			.then((data) => {
-				console.log('Success', data)
-				resolve()
-			})
-			.catch((err) => {
-				console.error('Error', err)
-				reject()
-			})
-	})
+	client.send(command)
+		.then((data) => {
+			console.log('Success', data)
+		})
+		.catch((err) => {
+			console.error('Error', err)
+		})
+
+	return fetchData(tableName)
 }
 
-export const patchData = (tableName: string, data: ICode): Promise<void> => {
+export const patchData = (tableName: string, data: ICode): Promise<any> => {
 	const keys = Object.keys(data).filter(key => key !== 'id')
 	const keyNameExpressions = keys.map(name => `#${name}`)
 		.filter(nameExpr => nameExpr !== '#id')
@@ -83,20 +81,18 @@ export const patchData = (tableName: string, data: ICode): Promise<void> => {
 
 	const command = new UpdateItemCommand(params)
 
-	return new Promise((resolve, reject) => {
-		client.send(command)
-			.then((data) => {
-				console.log('Success', data)
-				resolve()
-			})
-			.catch((err) => {
-				console.error('Error', err)
-				reject()
-			})
-	})
+	client.send(command)
+		.then((data) => {
+			console.log('Success', data)
+		})
+		.catch((err) => {
+			console.error('Error', err)
+		})
+
+	return fetchData(tableName)
 }
 
-export const delData = (tableName: string, data: ICode): Promise<void> => {
+export const delData = (tableName: string, data: ICode): Promise<any> => {
 	const params: DeleteItemCommandInput = {
 		TableName: tableName,
 		Key: marshall({
@@ -106,15 +102,13 @@ export const delData = (tableName: string, data: ICode): Promise<void> => {
 
 	const command = new DeleteItemCommand(params)
 
-	return new Promise((resolve, reject) => {
-		client.send(command)
-			.then((data) => {
-				console.log('Success', data)
-				resolve()
-			})
-			.catch((err) => {
-				console.error('Error', err)
-				reject()
-			})
-	})
+	client.send(command)
+		.then((data) => {
+			console.log('Success', data)
+		})
+		.catch((err) => {
+			console.error('Error', err)
+		})
+
+	return fetchData(tableName)
 }

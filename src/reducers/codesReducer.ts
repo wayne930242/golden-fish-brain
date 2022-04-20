@@ -25,7 +25,7 @@ export const codesReducer = (state: ICodes, action: IAction<ICode | ICode[] | Ty
     case 'fetchCodes':
       return {
         ...state,
-        data: action.payload as ICode[],
+        data: action.payload === null ? null : [...action.payload as ICode[]],
       }
     case 'setState':
 

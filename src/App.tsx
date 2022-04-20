@@ -1,4 +1,4 @@
-import React, { useState, createContext } from 'react'
+import React, { useState, createContext, useEffect } from 'react'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import Paper from '@mui/material/Paper'
@@ -18,7 +18,7 @@ import MyAppBar from './components/MyAppBar'
 import { useSession } from './hooks/useSession'
 import { useMyReducer } from './reducers'
 import { LuckyCodes } from './helper/data'
-import { useCodes } from './hooks/useCodes'
+import { fetchCodes } from './actions/codesActions'
 import { LAWS } from './data/laws'
 import { ICode, TypeDispatch, ISession } from './interface'
 
@@ -108,10 +108,17 @@ export default function App() {
   const defaultValue: number = 5
   const [value, setValue] = useState<number>(defaultValue)
 
-  const { dispatch } = useMyReducer()
+  const { state, dispatch } = useMyReducer()
 
-  const session = useSession()
-  const { codes, isFetching, hasError } = useCodes()
+  useEffect(() => {
+    fetchCodes(dispatch.codes)
+  }, [])
+
+  const session = state.session 
+  const codes = state.codes.data
+  const isFetching = state.codes.state === 'fetching'
+  const hasError = state.codes.state === 'error'
+
   const filteredCodes = codes !== null ? codes.filter(code => filterResult(filter, code.createTime)) : []
 
   const [mode, setMode] = useState<'review' | 'achive'>('achive')

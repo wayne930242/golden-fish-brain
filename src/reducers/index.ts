@@ -1,4 +1,4 @@
-import { useReducer } from 'react'
+import { useReducer, useState, useEffect } from 'react'
 import { codesReducer } from './codesReducer'
 import { sessionReducer } from './sessionReducer'
 import { ICodes, ISession, IState, TypeDispatch } from '../interface'
@@ -20,7 +20,7 @@ export const useMyReducer = (): {
   const [codes, codesDispatch] = useReducer(codesReducer, initialCodesState)
   const [session, sessionDispatch] = useReducer(sessionReducer, initialSessionState)
 
-  const state: IState = {
+  const state = {
     codes,
     session,
   }

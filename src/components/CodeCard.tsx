@@ -74,6 +74,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
       setOpenAlert(true)
       return
     }
+
     patchCode(dispatch.codes, {
       ...editCode,
       editTime: Date.now()
@@ -185,8 +186,8 @@ export const CodeCard = ({ code }: { code: ICode }) => {
 
               {!expand ? null : (<>
 
-                <div className='my-4'>
-                  <Link href={code.link} target='_blank'>{code.link}</Link>
+                <div className='my-4 overflow-x-hidden'>
+                  <Link className='text-ellipsis text-xs' href={code.link} target='_blank'>{code.link}</Link>
                 </div>
                 <div className='my-2'>
                   <TextField sx={{ width: '100%' }} label="小叮嚀" size='small' variant="outlined" multiline onInput={(e: React.ChangeEvent<HTMLInputElement>) => handleOnInput(e, 'note')} value={code.note} />
