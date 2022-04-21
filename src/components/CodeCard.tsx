@@ -14,6 +14,7 @@ import Alert from '@mui/material/Alert'
 import Paper from '@mui/material/Paper'
 import TextField from '@mui/material/TextField'
 
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
 
@@ -48,9 +49,10 @@ export const CodeCard = ({ code }: { code: ICode }) => {
   }, [code])
 
   const [editable, setEditable] = useState<boolean>(false)
-  const [reviewing, setReviewing] = useState<boolean>(false)
   const [tempPeeped, setTempPeeped] = useState<boolean>(code.hasPeeped[code.hasPeeped.length - 1])
   const [tempFamiliar, setTempFamiliar] = useState<number>(code.familiar[code.familiar.length - 1])
+
+  const [editedReview, setEditedReview] = useState<boolean>(false)
 
   const [reviewCode, setReviewCode] = useState<ICode>(code)
   useEffect(() => {
@@ -58,6 +60,18 @@ export const CodeCard = ({ code }: { code: ICode }) => {
     setTempPeeped(code.hasPeeped[code.hasPeeped.length - 1])
     setTempFamiliar(code.familiar[code.familiar.length - 1])
   }, [code])
+
+  const handleOnClearReview = () => {
+    setReviewCode(code)
+    setTempPeeped(code.hasPeeped[code.hasPeeped.length - 1])
+    setTempFamiliar(code.familiar[code.familiar.length - 1])
+    setTempHistory({
+      reviewTime: [...code.reviewTime],
+      familiar: [...code.familiar],
+      hasPeeped: [...code.hasPeeped],
+    })
+    setEditedReview(false)
+  }
 
   const [openAlert, setOpenAlert] = useState<boolean>(false)
 
@@ -100,7 +114,6 @@ export const CodeCard = ({ code }: { code: ICode }) => {
 
   const handleOnInput = (e: React.ChangeEvent<HTMLInputElement>, key: keyof ICode) => {
     e.stopPropagation()
-    setReviewing(true)
     setReviewCode((c) => ({
       ...c,
       [key]: e.target.value,
@@ -109,14 +122,14 @@ export const CodeCard = ({ code }: { code: ICode }) => {
 
   const handleOnClickMood = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, n: number) => {
     e.stopPropagation()
-    setReviewing(true)
     setTempFamiliar(n)
+    setEditedReview(true)
   }
 
   const handleOnPeep = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation()
-    setReviewing(true)
     setTempPeeped(e.target.checked)
+    setEditedReview(true)
   }
 
   const [tempHistory, setTempHistory] = useState<{
@@ -140,6 +153,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
 
   const handleOnDeleteHistory = (i: number) => {
     return (_e: React.MouseEvent<HTMLButtonElement>) => {
+      setEditedReview(true)
       setDeletedHistories((d => {
         const newDeleted = [...d]
         newDeleted[i] = true
@@ -150,6 +164,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
 
   const handleOnUndoDeleteHistory = (i: number) => {
     return (_e: React.MouseEvent<HTMLButtonElement>) => {
+      setEditedReview(true)
       setDeletedHistories((d => {
         const newDeleted = [...d]
         newDeleted[i] = false
@@ -158,13 +173,12 @@ export const CodeCard = ({ code }: { code: ICode }) => {
     }
   }
 
-
   const handleOnUpdateHistory = (newHistory: {
     familiar: number,
     reviewTime: number,
     hasPeeped: boolean,
   }) => {
-
+    setEditedReview(true)
   }
 
   const handleSubmitReview = async () => {
@@ -191,8 +205,8 @@ export const CodeCard = ({ code }: { code: ICode }) => {
       reviewTime: newReviewTime,
     })
 
-    setReviewing(false)
     setDeletedHistories([])
+    setEditedReview(false)
   }
 
   return (
@@ -207,7 +221,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
         onClick={handleSubmitReview}
       />
 
-      <div className={'hover:bg-slate-50'} >
+      <div className='hover:bg-slate-50 pb-3' >
         <CardContent>
           {editable ? (
             <EditContent code={editCode} setCode={setEditCode} />
@@ -304,31 +318,49 @@ export const CodeCard = ({ code }: { code: ICode }) => {
         </CardContent>
         {!expand ? null : (
           <CardActions>
+
             <div className='w-full flex flex-row justify-between mx-4'>
-              <div>
-                <Button color='success' variant='contained'
-                  onClick={() => setOpenConfirmReview(true)}
-                >
-                  送出複習
-                </Button>
-              </div>
-              <div className='flex flex-row'>
-                <div className='mr-2'>
-                  <Button color='primary' variant='contained'
-                    onClick={editable ? handleOnSubmit : handleOnEdit}
-                  >
-                    {editable ? '確定' : '編輯'}
-                  </Button>
-                </div>
-                <div>
-                  <Button color={editable ? 'warning' : 'error'} variant='contained'
-                    onClick={editable ? handleOnCancel : handleOnDelete}
-                  >
-                    {editable ? '取消' : '刪除'}
-                  </Button>
-                </div>
-              </div>
+              {editedReview
+                ? (
+                  <>
+                    <div className='mr-4'>
+                      <Button color='success' variant='contained'
+                        onClick={() => setOpenConfirmReview(true)}
+                      >
+                        送出
+                      </Button>
+                    </div>
+                    <div>
+                      <Button color={editable ? 'warning' : 'error'} variant='contained'
+                        onClick={handleOnClearReview}
+                      >
+                        重置
+                      </Button>
+                    </div>
+                  </>
+                )
+                : (
+
+                  <>
+                    <div className='mr-4'>
+                      <Button color='primary' variant='contained'
+                        onClick={editable ? handleOnSubmit : handleOnEdit}
+                      >
+                        {editable ? '確定' : '編輯'}
+                      </Button>
+                    </div>
+                    <div>
+                      <Button color={editable ? 'warning' : 'error'} variant='contained'
+                        onClick={editable ? handleOnCancel : handleOnDelete}
+                      >
+                        {editable ? '取消' : '刪除'}
+                      </Button>
+                    </div>
+                  </>
+                )
+              }
             </div>
+
           </CardActions>
         )}
       </div>
