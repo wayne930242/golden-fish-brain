@@ -8,11 +8,22 @@ import Toolbar from '@mui/material/Toolbar'
 import Button from '@mui/material/Button'
 
 import { GlobalContext } from '../App'
-import { QUOTATIONS } from '../data/quotations'
+import DashboardIcon from '@mui/icons-material/Dashboard'
+import CollectionsBookmarkIcon from '@mui/icons-material/CollectionsBookmark'
+import IconButton from '@mui/material/IconButton'
+// import { QUOTATIONS } from '../data/quotations'
 
+import { TypeRouter } from '../interface'
 import { LoginDialog } from './dialogs/LoginDialog'
 
-export default function ButtonAppBar() {
+
+export default function ButtonAppBar({
+  router,
+  setRouter,
+}: {
+  router: TypeRouter,
+  setRouter: React.Dispatch<React.SetStateAction<TypeRouter>>,
+}) {
   const [openLogin, setOpenLogin] = useState<boolean>(false)
 
   const { session } = useContext(GlobalContext)
@@ -24,6 +35,11 @@ export default function ButtonAppBar() {
     if (Cookies.get('tableName')) return
     setOpenLogin(true)
   }, [])
+
+  const handleRouter = (_e: React.MouseEvent<HTMLButtonElement>) => {
+    if (router === 'home') setRouter('dashboard')
+    if (router === 'dashboard') setRouter('home')
+  }
 
   /* useEffect(() => {
     const makeRandomQuote = () => {
@@ -38,14 +54,15 @@ export default function ButtonAppBar() {
   }, []) */
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <LoginDialog
-        open={openLogin}
-        setOpen={setOpenLogin}
-      />
-      <AppBar position="static">
-        <Toolbar>
-          {/* <IconButton
+    <nav>
+      <Box sx={{ flexGrow: 1 }}>
+        <LoginDialog
+          open={openLogin}
+          setOpen={setOpenLogin}
+        />
+        <AppBar position="static">
+          <Toolbar>
+            {/* <IconButton
             size="large"
             edge="start"
             color="inherit"
@@ -55,7 +72,7 @@ export default function ButtonAppBar() {
             <MenuIcon />
           </IconButton>
           */}
-          {/* <Typography sx={{
+            {/* <Typography sx={{
             fontSize: '0.7rem',
             my: 1,
             flexGrow: 1,
@@ -63,12 +80,21 @@ export default function ButtonAppBar() {
             {randomQuote}
         </Typography> */}
 
-          {session.state !== 'login'
-            ? <Button color="inherit" size='small' onClick={() => setOpenLogin(true)}>登入</Button>
-            : <Button color="inherit" size='small' onClick={() => setOpenLogin(true)}>目前是 {session.name}，重新登入</Button>
-          }
-        </Toolbar>
-      </AppBar>
-    </Box>
+            <div className='flex flex-row justify-between w-full'>
+              {session.state !== 'login'
+                ? <Button color="inherit" size='small' onClick={() => setOpenLogin(true)}>登入</Button>
+                : <Button color="inherit" size='small' onClick={() => setOpenLogin(true)}>目前是 {session.name}，重新登入</Button>
+              }
+              <IconButton color="inherit" size='small' onClick={handleRouter}>
+                {router === 'home'
+                  ? <DashboardIcon />
+                  : <CollectionsBookmarkIcon />
+                }
+              </IconButton>
+            </div>
+          </Toolbar>
+        </AppBar>
+      </Box>
+    </nav>
   )
 }

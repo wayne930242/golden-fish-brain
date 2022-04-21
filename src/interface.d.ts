@@ -1,5 +1,7 @@
 import { TypeLaws } from "./data/laws";
 
+export type TypeRouter = 'home' | 'dashboard'
+
 export interface ICode {
   id: string,
   title: string,
