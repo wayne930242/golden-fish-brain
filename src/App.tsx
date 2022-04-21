@@ -53,7 +53,7 @@ type TypeGlobalContext = {
 
 const title: { [key: string]: string } = {
   home: '搶救金魚腦',
-  dashboard: '儀表板',
+  dashboard: '法條一覽',
 }
 
 const Title = ({ router }: { router: TypeRouter }) => (
@@ -98,6 +98,7 @@ export default function App() {
   const hasError = state.codes.state === 'error'
 
   const [router, setRouter] = useState<TypeRouter>('home')
+  
   const [newCode, setNewCode] = useState<ICode>(initialCode)
 
   const routerMap = {

@@ -46,7 +46,7 @@ export const Home = () => {
     setFilter(f)
   }
 
-  const {codes, isFetching, session, dispatch, hasError} = useContext(GlobalContext)
+  const { codes, isFetching } = useContext(GlobalContext)
 
   const filteredCodes = codes !== null ? codes.filter(code => filterResult(filter, code.createTime)) : []
 
