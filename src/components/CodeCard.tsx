@@ -1,6 +1,7 @@
-import { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
+import List from '@mui/material/List'
 import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
@@ -22,6 +23,7 @@ import MoodBadIcon from '@mui/icons-material/MoodBad'
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied'
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 
+import { ReviewHistoryList } from './ReviewHistoryList'
 import { getReviewTime } from '../helper/data'
 import { patchCode, delCode } from '../actions/codesActions'
 import { EditContent } from './EditContent'
@@ -78,7 +80,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
 
     patchCode(dispatch.codes, {
       ...editCode,
-      editTime: Date.now()
+      editTime: Date.now(),
     })
 
     setEditable(false)
@@ -117,12 +119,68 @@ export const CodeCard = ({ code }: { code: ICode }) => {
     setTempPeeped(e.target.checked)
   }
 
+  const [tempHistory, setTempHistory] = useState<{
+    reviewTime: number[],
+    familiar: number[],
+    hasPeeped: boolean[],
+  }>({
+    reviewTime: [...code.reviewTime],
+    familiar: [...code.familiar],
+    hasPeeped: [...code.hasPeeped],
+  })
+  const [deletedHistories, setDeletedHistories] = useState<boolean[]>([])
+
+  useEffect(() => {
+    setTempHistory({
+      reviewTime: [...code.reviewTime],
+      familiar: [...code.familiar],
+      hasPeeped: [...code.hasPeeped],
+    })
+  }, [code])
+
+  const handleOnDeleteHistory = (i: number) => {
+    return (_e: React.MouseEvent<HTMLButtonElement>) => {
+      setDeletedHistories((d => {
+        const newDeleted = [...d]
+        newDeleted[i] = true
+        return newDeleted
+      }))
+    }
+  }
+
+  const handleOnUndoDeleteHistory = (i: number) => {
+    return (_e: React.MouseEvent<HTMLButtonElement>) => {
+      setDeletedHistories((d => {
+        const newDeleted = [...d]
+        newDeleted[i] = false
+        return newDeleted
+      }))
+    }
+  }
+
+
+  const handleOnUpdateHistory = (newHistory: {
+    familiar: number,
+    reviewTime: number,
+    hasPeeped: boolean,
+  }) => {
+
+  }
+
   const handleSubmitReview = async () => {
-    const newReviewTime = [...code.reviewTime]
+    const newReviewTime = [...tempHistory.reviewTime]
+    const newHasPeeped = [...tempHistory.hasPeeped]
+    const newFamiliar = [...tempHistory.familiar]
+
+    deletedHistories.forEach((ele, index) => {
+      if (!Boolean(ele)) return
+      newReviewTime.splice(index, 1)
+      newHasPeeped.splice(index, 1)
+      newFamiliar.splice(index, 1)
+    })
+
     newReviewTime.push(getReviewTime(code))
-    const newHasPeeped = [...code.hasPeeped]
     newHasPeeped.push(tempPeeped === undefined ? false : tempPeeped)
-    const newFamiliar = [...code.familiar]
     newFamiliar.push(tempFamiliar === undefined ? null : tempFamiliar)
 
     patchCode(dispatch.codes, {
@@ -134,7 +192,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
     })
 
     setReviewing(false)
-    setReviewCode(code)
+    setDeletedHistories([])
   }
 
   return (
@@ -208,6 +266,36 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                   <div className='ml-6 flex flex-row justify-center'>
                     <FormControlLabel control={<Checkbox onChange={handleOnPeep} checked={tempPeeped} />} label="有偷看" />
                   </div>
+                </div>
+
+                <Divider />
+                <div className='my-2'>
+                  <List
+                    sx={{ width: '100%', backgroundColor: 'inherit' }}
+                    component="div"
+                    aria-labelledby="nested-list-subheader"
+                    subheader={
+                      <Typography sx={{
+                        ml: 2,
+                      }} component="div" variant='h6' align='center'>
+                        複習歷史
+                      </Typography>
+                    }
+                  >
+                    {code.reviewTime.map((t, i) => (
+                      <ReviewHistoryList
+                        key={t}
+                        reviewTime={t}
+                        familiar={code.familiar[i]}
+                        hasPeeped={code.hasPeeped[i]}
+                        onDelete={handleOnDeleteHistory(i)}
+                        onUnDoDelete={handleOnUndoDeleteHistory(i)}
+                        onUpdate={handleOnUpdateHistory}
+                        deleted={Boolean(deletedHistories[i])}
+                      />
+                    ))
+                    }
+                  </List>
                 </div>
               </>)}
             </>
