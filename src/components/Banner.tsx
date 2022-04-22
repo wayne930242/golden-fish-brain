@@ -24,8 +24,8 @@ export const Banner = () => {
       <div className='w-full relative h-64 overflow-y-clip'>
         <img className='w-full' src={BannerImg} alt="banner" />
         <div className='text-white absolute text-center pt-20 top-0 left-0 w-full'>
-          <Typography component='p' variant='h3'>{endDay}</Typography>
-          <Typography component='p' variant='caption'>{updateDate}</Typography>
+          <Typography sx={{textShadow: 'black 0.2em 0.2em 0.2em'}} component='p' variant='h3'>{endDay}</Typography>
+          <Typography sx={{textShadow: 'black 0.1em 0.1em 0.1em'}} component='p' variant='caption'>{updateDate}</Typography>
         </div>
       </div>
     </>
