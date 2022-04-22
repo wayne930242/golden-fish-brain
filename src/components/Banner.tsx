@@ -21,9 +21,9 @@ export const Banner = () => {
 
   return (
     <>
-      <div className='w-full relative h-52 overflow-y-clip'>
+      <div className='w-full relative h-64 overflow-y-clip'>
         <img className='w-full' src={BannerImg} alt="banner" />
-        <div className='text-white absolute text-center pt-16 top-0 left-0 w-full'>
+        <div className='text-white absolute text-center pt-20 top-0 left-0 w-full'>
           <Typography component='p' variant='h3'>{endDay}</Typography>
           <Typography component='p' variant='caption'>{updateDate}</Typography>
         </div>

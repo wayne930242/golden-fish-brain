@@ -58,7 +58,7 @@ export default function ButtonAppBar({
           open={openLogin}
           setOpen={setOpenLogin}
         />
-        <AppBar position="static">
+        <AppBar position="sticky" sx={{ backgroundColor: '#000', color: '#fff' }}>
           <Toolbar>
             {/* <IconButton
             size="large"

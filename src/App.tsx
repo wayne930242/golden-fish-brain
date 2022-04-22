@@ -95,13 +95,13 @@ export default function App() {
 
   useEffect(() => {
     fetchCodes(dispatch.codes)
-  }, [])
+  }, [dispatch.codes])
 
   useEffect(() => {
     if (Cookies.get('tableName')) {
       dispatch.session({ type: 'login', payload: Cookies.get('tableName') })
     }
-  }, [])
+  }, [dispatch])
 
   const session = state.session
   const codes = state.codes.data
