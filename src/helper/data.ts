@@ -1,4 +1,5 @@
 import { ICode } from "../interface"
+import { timeParser } from "./view"
 
 export const LuckyCodes = (codes: ICode[], num: number): ICode[] => {
   if (num === NaN) return []
@@ -10,7 +11,7 @@ export const LuckyCodes = (codes: ICode[], num: number): ICode[] => {
     if (times === 0) {
       groupsCode[0].push(code)
     }
-    else if (code.reviewTime[code.reviewTime.length - 1] <= now) groupsCode[times].push(code)
+    else if (code.reviewTime[code.reviewTime.length - 1] + division[times] <= now) groupsCode[times].push(code)
   }
 
   const result: ICode[] = []
@@ -28,11 +29,13 @@ export const LuckyCodes = (codes: ICode[], num: number): ICode[] => {
   return result
 }
 
-export const getReviewTime = (code: ICode): number => {
-  const now = Date.now()
+export const getReviewString = (code: ICode): string => {
   const times = code.reviewTime.length > 3 ? 4 : code.reviewTime.length
+  if (times === 0) return '還沒複習過'
 
-  return now + division[times]
+  return '已經複習' + 
+  code.reviewTime.length + '次，' +
+  '下次複習時間：' + timeParser(code.reviewTime[code.reviewTime.length - 1] + division[times])
 }
 
 const day: number = 1000 * 60 * 50 * 24

@@ -14,7 +14,6 @@ import Alert from '@mui/material/Alert'
 import Paper from '@mui/material/Paper'
 import TextField from '@mui/material/TextField'
 
-import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
 
@@ -25,7 +24,7 @@ import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 
 import { ReviewHistoryList } from './ReviewHistoryList'
-import { getReviewTime } from '../helper/data'
+import { getReviewString } from '../helper/data'
 import { patchCode, delCode } from '../actions/codesActions'
 import { EditContent } from './EditContent'
 import { GlobalContext } from '../App'
@@ -49,27 +48,21 @@ export const CodeCard = ({ code }: { code: ICode }) => {
   }, [code])
 
   const [editable, setEditable] = useState<boolean>(false)
-  const [tempPeeped, setTempPeeped] = useState<boolean>(code.hasPeeped[code.hasPeeped.length - 1])
-  const [tempFamiliar, setTempFamiliar] = useState<number>(code.familiar[code.familiar.length - 1])
+  const [tempPeeped, setTempPeeped] = useState<boolean>(code.hasPeeped.length !== 0 ? code.hasPeeped[code.hasPeeped.length - 1] : false)
+  const [tempFamiliar, setTempFamiliar] = useState<number>(code.familiar.length !== 0 ? code.familiar[code.familiar.length - 1] : null)
 
   const [editedReview, setEditedReview] = useState<boolean>(false)
 
   const [reviewCode, setReviewCode] = useState<ICode>(code)
   useEffect(() => {
     setReviewCode(code)
-    setTempPeeped(code.hasPeeped[code.hasPeeped.length - 1])
-    setTempFamiliar(code.familiar[code.familiar.length - 1])
+    setTempPeeped(code.hasPeeped.length !== 0 ? code.hasPeeped[code.hasPeeped.length - 1] : false)
+    setTempFamiliar(code.familiar.length !== 0 ? code.familiar[code.familiar.length - 1] : null)
   }, [code])
 
   const handleOnClearReview = () => {
-    setReviewCode(code)
-    setTempPeeped(code.hasPeeped[code.hasPeeped.length - 1])
-    setTempFamiliar(code.familiar[code.familiar.length - 1])
-    setTempHistory({
-      reviewTime: [...code.reviewTime],
-      familiar: [...code.familiar],
-      hasPeeped: [...code.hasPeeped],
-    })
+    setTempPeeped(code.hasPeeped.length !== 0 ? code.hasPeeped[code.hasPeeped.length - 1] : false)
+    setTempFamiliar(code.familiar.length !== 0 ? code.familiar[code.familiar.length - 1] : null)
     setEditedReview(false)
   }
 
@@ -87,6 +80,18 @@ export const CodeCard = ({ code }: { code: ICode }) => {
 
   const handleOnSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
+    const newReviewTime = [...tempHistory.reviewTime]
+    const newHasPeeped = [...tempHistory.hasPeeped]
+    const newFamiliar = [...tempHistory.familiar]
+
+    deletedHistories.forEach((ele, index) => {
+      if (ele === true) {
+        newReviewTime.splice(index, 1)
+        newHasPeeped.splice(index, 1)
+        newFamiliar.splice(index, 1)
+      }
+    })
+
     if (editCode.title.trim() === '') {
       setOpenAlert(true)
       return
@@ -95,6 +100,9 @@ export const CodeCard = ({ code }: { code: ICode }) => {
     patchCode(dispatch.codes, {
       ...editCode,
       editTime: Date.now(),
+      familiar: newFamiliar,
+      hasPeeped: newHasPeeped,
+      reviewTime: newReviewTime,
     })
 
     setEditable(false)
@@ -128,7 +136,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
 
   const handleOnPeep = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation()
-    setTempPeeped(e.target.checked)
+    setTempPeeped(() => e.target.checked)
     setEditedReview(true)
   }
 
@@ -153,7 +161,6 @@ export const CodeCard = ({ code }: { code: ICode }) => {
 
   const handleOnDeleteHistory = (i: number) => {
     return (_e: React.MouseEvent<HTMLButtonElement>) => {
-      setEditedReview(true)
       setDeletedHistories((d => {
         const newDeleted = [...d]
         newDeleted[i] = true
@@ -164,7 +171,6 @@ export const CodeCard = ({ code }: { code: ICode }) => {
 
   const handleOnUndoDeleteHistory = (i: number) => {
     return (_e: React.MouseEvent<HTMLButtonElement>) => {
-      setEditedReview(true)
       setDeletedHistories((d => {
         const newDeleted = [...d]
         newDeleted[i] = false
@@ -193,18 +199,11 @@ export const CodeCard = ({ code }: { code: ICode }) => {
   }
 
   const handleSubmitReview = async () => {
-    const newReviewTime = [...tempHistory.reviewTime]
-    const newHasPeeped = [...tempHistory.hasPeeped]
-    const newFamiliar = [...tempHistory.familiar]
+    const newReviewTime = [...code.reviewTime]
+    const newHasPeeped = [...code.hasPeeped]
+    const newFamiliar = [...code.familiar]
 
-    deletedHistories.forEach((ele, index) => {
-      if (!Boolean(ele)) return
-      newReviewTime.splice(index, 1)
-      newHasPeeped.splice(index, 1)
-      newFamiliar.splice(index, 1)
-    })
-
-    newReviewTime.push(getReviewTime(code))
+    newReviewTime.push(Date.now())
     newHasPeeped.push(tempPeeped === undefined ? false : tempPeeped)
     newFamiliar.push(tempFamiliar === undefined ? null : tempFamiliar)
 
@@ -235,7 +234,38 @@ export const CodeCard = ({ code }: { code: ICode }) => {
       <div className='hover:bg-slate-50 pb-3' >
         <CardContent>
           {editable ? (
-            <EditContent code={editCode} setCode={setEditCode} />
+            <>
+              <EditContent code={editCode} setCode={setEditCode} />
+              <Divider />
+              <div className='my-2'>
+                <List
+                  sx={{ width: '100%', backgroundColor: 'inherit' }}
+                  component="div"
+                  aria-labelledby="nested-list-subheader"
+                  subheader={
+                    <Typography sx={{
+                      ml: 2,
+                    }} component="div" variant='h6' align='center'>
+                      複習歷史
+                    </Typography>
+                  }
+                >
+                  {reviewCode.reviewTime.map((t, i) => (
+                    <ReviewHistoryList
+                      key={t}
+                      reviewTime={t}
+                      familiar={code.familiar[i]}
+                      hasPeeped={code.hasPeeped[i]}
+                      onDelete={handleOnDeleteHistory(i)}
+                      onUnDoDelete={handleOnUndoDeleteHistory(i)}
+                      onUpdate={handleOnUpdateHistory(i)}
+                      deleted={Boolean(deletedHistories[i])}
+                    />
+                  ))
+                  }
+                </List>
+              </div>
+            </>
           ) : (
             <>
               <Paper
@@ -245,6 +275,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                 className={'cursor-pointer'} onClick={editable ? undefined : handleOnClickTitle}>
                 <div>
                   <Typography component="div" variant='h6'>{code.title}</Typography>
+                  <Typography component='div' variant='caption'>{getReviewString(code)}</Typography>
                   <div className='flex flex-row justify-end'>
                     {[0, 1, 2, 3, 4].map(n => (
                       <IconButton size='small' color='warning' key={n}>
@@ -292,36 +323,6 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                     <FormControlLabel control={<Checkbox onChange={handleOnPeep} checked={tempPeeped} />} label="有偷看" />
                   </div>
                 </div>
-
-                <Divider />
-                <div className='my-2'>
-                  <List
-                    sx={{ width: '100%', backgroundColor: 'inherit' }}
-                    component="div"
-                    aria-labelledby="nested-list-subheader"
-                    subheader={
-                      <Typography sx={{
-                        ml: 2,
-                      }} component="div" variant='h6' align='center'>
-                        複習歷史
-                      </Typography>
-                    }
-                  >
-                    {code.reviewTime.map((t, i) => (
-                      <ReviewHistoryList
-                        key={t}
-                        reviewTime={t}
-                        familiar={code.familiar[i]}
-                        hasPeeped={code.hasPeeped[i]}
-                        onDelete={handleOnDeleteHistory(i)}
-                        onUnDoDelete={handleOnUndoDeleteHistory(i)}
-                        onUpdate={handleOnUpdateHistory(i)}
-                        deleted={Boolean(deletedHistories[i])}
-                      />
-                    ))
-                    }
-                  </List>
-                </div>
               </>)}
             </>
           )}
@@ -338,7 +339,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                       <Button color='success' variant='contained'
                         onClick={() => setOpenConfirmReview(true)}
                       >
-                        送出複習
+                        新增複習
                       </Button>
                     </div>
                     <div>

@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography'
 import Paper from '@mui/material/Paper'
 import Cookies from 'js-cookie'
 
+import { Banner } from './components/Banner'
 import AddTaskDialog from './components/dialogs/AddTaskDialog'
 import MySpeedDial from './components/MySpeedDial'
 import MyAppBar from './components/MyAppBar'
@@ -52,15 +53,15 @@ type TypeGlobalContext = {
 }
 
 const title: { [key: string]: string } = {
-  home: '搶救金魚腦',
-  dashboard: '法條一覽',
+  home: '複習',
+  dashboard: '一覽',
 }
 
 const Title = ({ router }: { router: TypeRouter }) => (
   <div className='flex flex-row justify-start pl-8 py-8'>
-    <img src={Logo} className="h-10" alt="logo" />
+    {/* <img src={Logo} className="h-10 mr-3" alt="logo" /> */}
     <Typography variant="h4" component="h1" gutterBottom>
-      <span className='ml-3'>{title[router]}</span>
+      <span className=''>{title[router]}</span>
     </Typography>
   </div>
 )
@@ -98,7 +99,7 @@ export default function App() {
   const hasError = state.codes.state === 'error'
 
   const [router, setRouter] = useState<TypeRouter>('home')
-  
+
   const [newCode, setNewCode] = useState<ICode>(initialCode)
 
   const routerMap = {
@@ -117,6 +118,7 @@ export default function App() {
       <Container maxWidth="sm">
         <Paper sx={{ mx: 2, height: '95vh', overflowY: 'scroll' }}>
           <MyAppBar router={router} setRouter={setRouter} />
+          <Banner />
           <MySpeedDial handleOnClick={handleOnClickSpeedDial} />
 
           <Title router={router} />
