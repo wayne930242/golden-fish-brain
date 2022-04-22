@@ -10,7 +10,7 @@ export const MySpeedDial = ({
 
   return (
     <Button
-      sx={{ position: 'absolute', bottom: 16, right: 16, width: 64, height: 64, borderRadius: 32 }}
+      sx={{ position: 'absolute', bottom: 32, right: 58, width: 64, height: 64, borderRadius: 32 }}
       size="large"
       color="primary"
       variant='contained'

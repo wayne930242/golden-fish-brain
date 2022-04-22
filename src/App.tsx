@@ -53,15 +53,15 @@ type TypeGlobalContext = {
 }
 
 const title: { [key: string]: string } = {
-  home: '複習',
+  home: '',
   dashboard: '一覽',
 }
 
 const Title = ({ router }: { router: TypeRouter }) => (
-  <div className='flex flex-row justify-start pl-8 py-8'>
+  <div className='flex flex-row justify-start py-8'>
     {/* <img src={Logo} className="h-10 mr-3" alt="logo" /> */}
-    <Typography variant="h4" component="h1" gutterBottom>
-      <span className=''>{title[router]}</span>
+    <Typography sx={{ width: '100%' }} align='center' variant="h4" component="div" gutterBottom>
+      {title[router]}
     </Typography>
   </div>
 )
@@ -115,23 +115,20 @@ export default function App() {
       session,
       dispatch,
     }}>
-      <Container maxWidth="sm">
-        <Paper sx={{ mx: 2, height: '95vh', overflowY: 'scroll' }}>
+      <div className='bg-zinc-800 relative'>
+        <Container className="h-screen overflow-y-scroll" >
           <MyAppBar router={router} setRouter={setRouter} />
           <Banner />
-          <MySpeedDial handleOnClick={handleOnClickSpeedDial} />
 
-          <Title router={router} />
-
-          <div className='px-8'>
-
+          <div className='px-8 bg-slate-50'>
+            <Title router={router} />
             {routerMap[router]}
-
           </div>
 
+          <MySpeedDial handleOnClick={handleOnClickSpeedDial} />
           <AddTaskDialog open={openAdd} setOpen={setOpenAdd} newCode={newCode} setNewCode={setNewCode} />
-        </Paper>
-      </Container>
+        </Container>
+      </div>
     </GlobalContext.Provider >
   )
 }
