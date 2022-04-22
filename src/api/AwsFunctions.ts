@@ -33,7 +33,7 @@ export const fetchData = async (tableName: string): Promise<any> => {
 	})
 }
 
-export const putData = (tableName: string, data: ICode): Promise<any> => {
+export const putData = async (tableName: string, data: ICode): Promise<any> => {
 	const params: PutItemCommandInput = {
 		TableName: tableName,
 		Item: marshall({
@@ -42,7 +42,7 @@ export const putData = (tableName: string, data: ICode): Promise<any> => {
 	}
 	const command = new PutItemCommand(params)
 
-	client.send(command)
+	await client.send(command)
 		.then((data) => {
 			console.log('Success', data)
 		})
@@ -53,7 +53,7 @@ export const putData = (tableName: string, data: ICode): Promise<any> => {
 	return fetchData(tableName)
 }
 
-export const patchData = (tableName: string, data: ICode): Promise<any> => {
+export const patchData = async (tableName: string, data: ICode): Promise<any> => {
 	const keys = Object.keys(data).filter(key => key !== 'id')
 	const keyNameExpressions = keys.map(name => `#${name}`)
 		.filter(nameExpr => nameExpr !== '#id')
@@ -81,7 +81,7 @@ export const patchData = (tableName: string, data: ICode): Promise<any> => {
 
 	const command = new UpdateItemCommand(params)
 
-	client.send(command)
+	await client.send(command)
 		.then((data) => {
 			console.log('Success', data)
 		})
@@ -92,7 +92,7 @@ export const patchData = (tableName: string, data: ICode): Promise<any> => {
 	return fetchData(tableName)
 }
 
-export const delData = (tableName: string, data: ICode): Promise<any> => {
+export const delData = async (tableName: string, data: ICode): Promise<any> => {
 	const params: DeleteItemCommandInput = {
 		TableName: tableName,
 		Key: marshall({
@@ -102,7 +102,7 @@ export const delData = (tableName: string, data: ICode): Promise<any> => {
 
 	const command = new DeleteItemCommand(params)
 
-	client.send(command)
+	await client.send(command)
 		.then((data) => {
 			console.log('Success', data)
 		})
