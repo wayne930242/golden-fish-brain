@@ -115,9 +115,9 @@ export default function App() {
       session,
       dispatch,
     }}>
-      <div className='bg-zinc-800 relative h-screen overflow-y-hidden flex flex-row justify-center w-full'>
-        <div style={{ maxWidth: '800px', width: '100%' }}>
-          <Container className="h-screen overflow-y-auto" >
+      <div className='bg-zinc-800 h-screen overflow-y-hidden flex flex-row justify-center w-full'>
+        <div className='w-full relative' style={{ maxWidth: 600 }}>
+          <Container className="h-screen overflow-y-auto overflow-x-hidden" >
             <MyAppBar router={router} setRouter={setRouter} />
             <Banner />
 
@@ -127,7 +127,6 @@ export default function App() {
             </div>
 
           </Container>
-
           <MySpeedDial handleOnClick={handleOnClickSpeedDial} />
           <AddTaskDialog open={openAdd} setOpen={setOpenAdd} newCode={newCode} setNewCode={setNewCode} />
         </div>

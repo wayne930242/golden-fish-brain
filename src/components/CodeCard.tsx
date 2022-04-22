@@ -309,15 +309,17 @@ export const CodeCard = ({ code }: { code: ICode }) => {
 
                 <Divider />
                 <div className='my-2 flex flex-row justify-around'>
-                  <IconButton onClick={(e) => { handleOnClickMood(e, 0) }} size='small' color={tempFamiliar === 0 ? 'error' : 'default'} >
-                    <MoodBadIcon />
-                  </IconButton>
-                  <IconButton onClick={(e) => { handleOnClickMood(e, 1) }} size='small' color={tempFamiliar === 1 ? 'success' : 'default'} >
-                    <SentimentDissatisfiedIcon />
-                  </IconButton>
-                  <IconButton onClick={(e) => { handleOnClickMood(e, 2) }} size='small' color={tempFamiliar === 2 ? 'primary' : 'default'} >
-                    <SentimentSatisfiedAltIcon />
-                  </IconButton>
+                  <div className='flex flex-row justify-start'>
+                    <IconButton onClick={(e) => { handleOnClickMood(e, 0) }} size='small' color={tempFamiliar === 0 ? 'error' : 'default'} >
+                      <MoodBadIcon />
+                    </IconButton>
+                    <IconButton onClick={(e) => { handleOnClickMood(e, 1) }} size='small' color={tempFamiliar === 1 ? 'success' : 'default'} >
+                      <SentimentDissatisfiedIcon />
+                    </IconButton>
+                    <IconButton onClick={(e) => { handleOnClickMood(e, 2) }} size='small' color={tempFamiliar === 2 ? 'primary' : 'default'} >
+                      <SentimentSatisfiedAltIcon />
+                    </IconButton>
+                  </div>
                   <div className='ml-6 flex flex-row justify-center'>
                     <FormControlLabel control={<Checkbox onChange={handleOnPeep} checked={tempPeeped} />} label="有偷看" />
                   </div>
@@ -330,7 +332,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
         {!expand ? null : (
           <CardActions>
 
-            <div className='w-full flex flex-row justify-between mx-4'>
+            <div className='w-full flex flex-row mx-4'>
               {editedReview
                 ? (
                   <>
