@@ -184,7 +184,6 @@ export const CodeCard = ({ code }: { code: ICode }) => {
     reviewTime?: number,
     hasPeeped?: boolean,
   ) => {
-    setEditedReview(true)
     const newFamiliar = [...reviewCode.familiar]
     const newReviewTime = [...reviewCode.reviewTime]
     const newHasPeeped = [...reviewCode.hasPeeped]
