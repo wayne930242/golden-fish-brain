@@ -6,6 +6,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 
 import CodeCard from '../CodeCard'
 import { ICode } from '../../interface'
+import { Typography } from '@mui/material'
 
 export const CodesCardsDialog = ({
   open,
@@ -29,7 +30,13 @@ export const CodesCardsDialog = ({
     <Dialog open={open} onClose={handleClickCancel}>
       <DialogTitle>{lawName}</DialogTitle>
       <DialogContent>
-        {codes.map((code) => {
+        {codes.length === 0
+        ?(
+          <Typography component='p'>
+            還沒有這個法規的複習卡，趕快新增吧！
+          </Typography>
+        )
+        : codes.map((code) => {
           return (
             <CodeCard code={code} key={code.id} />
           )

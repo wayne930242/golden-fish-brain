@@ -219,7 +219,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
   }
 
   return (
-    <div className='my-2'>
+    <div>
       <ConfirmDialog open={openConfirmDelete} setOpen={setOpenConfirmDelete} title="確認刪除嗎？" contentText='刪除後的資料將消失在世界上，確定嗎？'
         onClick={() => {
           delCode(dispatch.codes, code)
@@ -230,7 +230,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
         onClick={handleSubmitReview}
       />
 
-      <div className='hover:bg-slate-50 pb-3' >
+      <div className='hover:bg-slate-50' >
         <CardContent>
           {editable ? (
             <>

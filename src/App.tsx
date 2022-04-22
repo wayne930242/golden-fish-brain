@@ -1,7 +1,9 @@
-import React, { useState, createContext, useEffect } from 'react'
-import Container from '@mui/material/Container'
-import Typography from '@mui/material/Typography'
-import Paper from '@mui/material/Paper'
+import { useState, createContext, useEffect } from 'react'
+import {
+  Divider,
+  Typography,
+  Container,
+} from '@mui/material'
 import Cookies from 'js-cookie'
 
 import { Banner } from './components/Banner'
@@ -16,7 +18,8 @@ import { fetchCodes } from './actions/codesActions'
 import { LAWS } from './data/laws'
 import { ICode, TypeDispatch, ISession, TypeRouter } from './interface'
 
-import Logo from './logo.png'
+import { QUOTATIONS } from './data/quotations'
+// import Logo from './logo.png'
 
 export const initialCode: ICode = {
   id: null,
@@ -53,17 +56,24 @@ type TypeGlobalContext = {
 }
 
 const title: { [key: string]: string } = {
-  home: '',
+  home: null,
   dashboard: '一覽',
 }
 
 const Title = ({ router }: { router: TypeRouter }) => (
-  <div className='flex flex-row justify-start py-8'>
-    {/* <img src={Logo} className="h-10 mr-3" alt="logo" /> */}
-    <Typography sx={{ width: '100%' }} align='center' variant="h4" component="div" gutterBottom>
-      {title[router]}
-    </Typography>
-  </div>
+  <>
+    {title[router]
+      ? (
+        <div className='flex flex-row justify-start pt-6 pb-4'>
+          {/* <img src={Logo} className="h-10 mr-3" alt="logo" /> */}
+          <Typography sx={{ width: '100%' }} align='center' variant="h4" component="div" gutterBottom>
+            {title[router]}
+          </Typography>
+        </div>
+      )
+      : <div className='pt-6' />
+    }
+  </>
 )
 
 export default function App() {
@@ -107,6 +117,27 @@ export default function App() {
     dashboard: <Dashboard />,
   }
 
+  const REFRESH_TIME = 12000
+  const [randomQuote, setRandomQuote] = useState<React.ReactNode>(<></>)
+
+  useEffect(() => {
+    const makeRandomQuote = () => {
+      const q = QUOTATIONS[Math.floor(QUOTATIONS.length * Math.random())]
+      setRandomQuote(() => (
+        <div>
+          <p className='text-xs w-full'>{q.text}</p>
+          <p className='font-bold text-xs w-full text-right'>-- {q.author}</p>
+        </div>
+      )
+      )
+    }
+    makeRandomQuote()
+    const timeInteval = setInterval(makeRandomQuote, REFRESH_TIME)
+    return (() => {
+      clearInterval(timeInteval)
+    })
+  }, [])
+
   return (
     <GlobalContext.Provider value={{
       codes,
@@ -121,16 +152,24 @@ export default function App() {
             <MyAppBar router={router} setRouter={setRouter} />
             <Banner />
 
-            <div className='px-8 bg-slate-50'>
+            <div className='px-8 bg-slate-50 pb-6'>
               <Title router={router} />
+
               {routerMap[router]}
+
+              {/* Footer */}
+              <Divider />
+              <div className='mt-4 ml-4 mr-16'>
+                {isFetching ? '載入中...' : randomQuote}
+              </div>
             </div>
+
 
           </Container>
           <MySpeedDial handleOnClick={handleOnClickSpeedDial} />
           <AddTaskDialog open={openAdd} setOpen={setOpenAdd} newCode={newCode} setNewCode={setNewCode} />
         </div>
-      </div>
+      </div >
     </GlobalContext.Provider >
   )
 }

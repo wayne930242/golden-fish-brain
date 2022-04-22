@@ -106,7 +106,7 @@ export const Home = () => {
       </div>
 
       <Typography component='h2' variant='h5'>{mode === 'review' ? '複習中...' : '檢視複習卡'} </Typography>
-      <Divider />
+      <Divider sx={{ marginBottom: 1 }} />
       {isFetching || codes === null
         ? <Loading />
         : mode === 'review'
