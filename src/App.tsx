@@ -115,19 +115,22 @@ export default function App() {
       session,
       dispatch,
     }}>
-      <div className='bg-zinc-800 relative'>
-        <Container className="h-screen overflow-y-scroll" >
-          <MyAppBar router={router} setRouter={setRouter} />
-          <Banner />
+      <div className='bg-zinc-800 relative h-screen overflow-y-hidden flex flex-row justify-center w-full'>
+        <div style={{ maxWidth: '800px', width: '100%' }}>
+          <Container className="h-screen overflow-y-auto" >
+            <MyAppBar router={router} setRouter={setRouter} />
+            <Banner />
 
-          <div className='px-8 bg-slate-50'>
-            <Title router={router} />
-            {routerMap[router]}
-          </div>
+            <div className='px-8 bg-slate-50'>
+              <Title router={router} />
+              {routerMap[router]}
+            </div>
+
+          </Container>
 
           <MySpeedDial handleOnClick={handleOnClickSpeedDial} />
           <AddTaskDialog open={openAdd} setOpen={setOpenAdd} newCode={newCode} setNewCode={setNewCode} />
-        </Container>
+        </div>
       </div>
     </GlobalContext.Provider >
   )
