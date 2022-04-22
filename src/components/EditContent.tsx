@@ -65,26 +65,9 @@ export const EditContent = ({
     }))
   }
 
-  const handleOnPickDate = (date: Date) => {
-    setCode(c => ({
-      ...c,
-      createTime: date.getTime(),
-    }))
-    setStartDate(date)
-  }
-
 
   return (
     <div className='flex flex-col'>
-      <div className='z-50 mb-4 w-full'>
-        <div className='flex flex-row'>
-          <div className='shrink-0'>
-            創建日期：
-          </div>
-        <DatePicker className=' text-gray-600 font-extrabold inline-block text-center cursor-pointer' selected={startDate} onChange={handleOnPickDate} />
-        </div>
-      </div>
-
       <div className='mb-1 flex flex-row justify-between'>
         <TextField sx={{ width: '100%' }} label="標題" size='small' value={code.title}
           onInput={(e: React.ChangeEvent<HTMLInputElement>) => handleOnInput(e, 'title')} required />

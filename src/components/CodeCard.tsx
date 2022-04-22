@@ -173,12 +173,23 @@ export const CodeCard = ({ code }: { code: ICode }) => {
     }
   }
 
-  const handleOnUpdateHistory = (newHistory: {
-    familiar: number,
-    reviewTime: number,
-    hasPeeped: boolean,
-  }) => {
+  const handleOnUpdateHistory = (i: number) => (
+    familiar?: number,
+    reviewTime?: number,
+    hasPeeped?: boolean,
+  ) => {
     setEditedReview(true)
+    const newFamiliar = [...reviewCode.familiar]
+    const newReviewTime = [...reviewCode.reviewTime]
+    const newHasPeeped = [...reviewCode.hasPeeped]
+    if (familiar) newFamiliar[i] = familiar
+    if (reviewTime) newReviewTime[i] = reviewTime
+    if (hasPeeped) newHasPeeped[i] = hasPeeped
+    setTempHistory({
+      familiar: newFamiliar,
+      reviewTime: newReviewTime,
+      hasPeeped: newHasPeeped,
+    })
   }
 
   const handleSubmitReview = async () => {
@@ -304,7 +315,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                         hasPeeped={code.hasPeeped[i]}
                         onDelete={handleOnDeleteHistory(i)}
                         onUnDoDelete={handleOnUndoDeleteHistory(i)}
-                        onUpdate={handleOnUpdateHistory}
+                        onUpdate={handleOnUpdateHistory(i)}
                         deleted={Boolean(deletedHistories[i])}
                       />
                     ))
@@ -327,14 +338,14 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                       <Button color='success' variant='contained'
                         onClick={() => setOpenConfirmReview(true)}
                       >
-                        送出
+                        送出複習
                       </Button>
                     </div>
                     <div>
                       <Button color={editable ? 'warning' : 'error'} variant='contained'
                         onClick={handleOnClearReview}
                       >
-                        重置
+                        取消
                       </Button>
                     </div>
                   </>
