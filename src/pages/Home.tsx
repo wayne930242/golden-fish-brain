@@ -65,7 +65,7 @@ export const Home = () => {
             <Button onClick={() => {
               if (mode === 'review') setMode('achive')
               if (mode === 'achive') setMode('review')
-            }} variant={'outlined'} color={mode === 'review' ? 'success' : 'info'} size='small'>
+            }} variant={'outlined'} color={mode === 'review' ? 'success' : 'info'}> 
               {mode === 'review' ? '檢視' : '複習'}
             </Button>
           </Stack>
@@ -76,7 +76,6 @@ export const Home = () => {
                   sx={{
                     width: 30,
                   }}
-                  size='small'
                   onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
                     setValue(Number(e.target.value))
                   }}
@@ -87,7 +86,6 @@ export const Home = () => {
                   onClick={() => {
                     setReviewCards(LuckyCodes(codes, Number(value)))
                   }}
-                  size='small'
                   variant='contained'
                   color='error'
                 >

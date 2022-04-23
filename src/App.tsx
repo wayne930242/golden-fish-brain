@@ -148,11 +148,11 @@ export default function App() {
     }}>
       <div className='bg-zinc-800 h-screen overflow-y-hidden flex flex-row justify-center w-full'>
         <div className='w-full relative' style={{ maxWidth: 600 }}>
-          <Container className="h-screen overflow-y-auto overflow-x-hidden" >
+          <Container className="h-screen overflow-y-auto overflow-x-hidden" disableGutters>
             <MyAppBar router={router} setRouter={setRouter} />
             <Banner />
 
-            <div className='px-8 bg-slate-50 pb-6'>
+            <div className='px-4 bg-slate-50 pb-6'>
               <Title router={router} />
 
               {routerMap[router]}
