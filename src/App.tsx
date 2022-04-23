@@ -1,4 +1,5 @@
 import { useState, createContext, useEffect } from 'react'
+import { use100vh } from 'react-div-100vh'
 import {
   Divider,
   Typography,
@@ -110,6 +111,8 @@ export default function App() {
 
   const [router, setRouter] = useState<TypeRouter>('home')
 
+  const vh = use100vh()
+
   const [newCode, setNewCode] = useState<ICode>(initialCode)
 
   const routerMap = {
@@ -146,9 +149,9 @@ export default function App() {
       session,
       dispatch,
     }}>
-      <div className='bg-zinc-800 h-screen overflow-y-hidden flex flex-row justify-center w-full'>
+      <div style={{ height: vh }} className='bg-zinc-800 overflow-y-hidden flex flex-row justify-center w-full'>
         <div className='w-full relative' style={{ maxWidth: 600 }}>
-          <Container className="h-screen overflow-y-auto overflow-x-hidden" disableGutters>
+          <Container sx={{ height: vh }} className="overflow-y-auto overflow-x-hidden" disableGutters>
             <MyAppBar router={router} setRouter={setRouter} />
             <Banner />
 
@@ -159,7 +162,7 @@ export default function App() {
 
               {/* Footer */}
               <Divider />
-              <div className='mt-4 ml-4 mr-16'>
+              <div className='mt-4 ml-4 mr-24'>
                 {isFetching ? '載入中...' : randomQuote}
               </div>
             </div>
