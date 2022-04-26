@@ -1,17 +1,42 @@
 import { ICode } from "../interface"
 import { timeParser } from "./view"
 
-export const LuckyCodes = (codes: ICode[], num: number): ICode[] => {
+export const LuckyCodes = (codes: ICode[], num: number, type: string = 'memoCurve'): ICode[] => {
   if (num === NaN) return []
-  const now = Date.now()
   const groupsCode: [ICode[], ICode[], ICode[], ICode[], ICode[]] = [[], [], [], [], []]
 
-  for (const code of codes) {
-    const times = code.reviewTime.length > 3 ? 4 : code.reviewTime.length
-    if (times === 0) {
-      groupsCode[0].push(code)
-    }
-    else if (code.reviewTime[code.reviewTime.length - 1] + division[times] <= now) groupsCode[times].push(code)
+  switch (type) {
+    case 'peeped':
+      for (const code of codes) {
+        const times = code.reviewTime.length > 3 ? 4 : code.reviewTime.length
+        if (times === 0) {
+          groupsCode[0].push(code)
+        }
+        else if (code.hasPeeped.length !== 0 && code.hasPeeped[code.hasPeeped.length - 1]) {
+          groupsCode[0].push(code)
+        }
+      }
+      break
+    case 'familiar':
+      for (const code of codes) {
+        const times = code.reviewTime.length > 3 ? 4 : code.reviewTime.length
+        if (times === 0) {
+          groupsCode[0].push(code)
+        }
+        else if (code.familiar.length !== 0 && code.familiar[code.hasPeeped.length - 1]) {
+          groupsCode[code.familiar[code.hasPeeped.length - 1]].push(code)
+        }
+      }
+      break
+    default:
+      const now = Date.now()
+      for (const code of codes) {
+        const times = code.reviewTime.length > 3 ? 4 : code.reviewTime.length
+        if (times === 0) {
+          groupsCode[0].push(code)
+        }
+        else if (code.reviewTime[code.reviewTime.length - 1] + division[times] <= now) groupsCode[times].push(code)
+      }
   }
 
   const result: ICode[] = []
@@ -33,9 +58,9 @@ export const getReviewString = (code: ICode): string => {
   const times = code.reviewTime.length > 3 ? 4 : code.reviewTime.length
   if (times === 0) return '還沒複習過'
 
-  return '已經複習' + 
-  code.reviewTime.length + '次，' +
-  '下次複習時間：' + timeParser(code.reviewTime[code.reviewTime.length - 1] + division[times])
+  return '已經複習' +
+    code.reviewTime.length + '次，' +
+    '下次複習時間：' + timeParser(code.reviewTime[code.reviewTime.length - 1] + division[times])
 }
 
 const day: number = 1000 * 60 * 50 * 24

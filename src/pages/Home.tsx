@@ -5,7 +5,13 @@ import {
   TextField,
   Typography,
   Button,
+  Box,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent
 } from '@mui/material'
+import FormControl from '@mui/material/FormControl'
 
 import { GlobalContext } from '../App'
 import { Loading } from '../components/Loading'
@@ -46,16 +52,18 @@ export const Home = () => {
     setFilter(f)
   }
 
+  const [luckyType, setLuckyType] = useState<'memoCurve' | 'peeped' | 'familiar'>('memoCurve')
+
   const { codes, isFetching } = useContext(GlobalContext)
 
-  const filteredCodes = codes !== null ? codes.filter(code => filterResult(filter, code.createTime)) : []
+  const filteredCodes = codes !== null ? codes.filter(code => filterResult(filter, code.editTime)) : []
 
   const defaultValue: number = 5
   const [value, setValue] = useState<number>(defaultValue)
 
   useEffect(() => {
-    if (mode === 'review') setReviewCards(LuckyCodes(codes, Number(value)))
-  }, [codes, mode])
+    if (mode === 'review') setReviewCards(LuckyCodes(codes, Number(value), luckyType))
+  }, [codes, mode, luckyType])
 
   return (
     <main>
@@ -65,10 +73,11 @@ export const Home = () => {
             <Button onClick={() => {
               if (mode === 'review') setMode('achive')
               if (mode === 'achive') setMode('review')
-            }} variant={'outlined'} color={mode === 'review' ? 'success' : 'info'}> 
-              {mode === 'review' ? '檢視' : '複習'}
+            }} variant={mode === 'review' ? 'outlined' : 'contained'} color={mode === 'review' ? 'success' : 'info'}>
+              {mode === 'review' ? '查看新卡' : '開始複習'}
             </Button>
           </Stack>
+
           <Stack direction='row' spacing={2}>
             {mode === 'review' ? (
               <>
@@ -100,11 +109,34 @@ export const Home = () => {
               ))
             }
           </Stack>
+
         </div>
       </div>
 
-      <Typography component='h2' variant='h5'>{mode === 'review' ? '複習中...' : '檢視複習卡'} </Typography>
-      <Divider sx={{ marginBottom: 1 }} />
+      <Typography component='h2' align='center' variant='h4' sx={{ marginBottom: 2 }}>{mode === 'review' ? '每日複習' : '新複習卡'} </Typography>
+
+      {mode === 'review'
+        ? (
+          <Box sx={{ minWidth: 120, marginBottom: 2 }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">抽卡邏輯</InputLabel>
+              <Select
+                value={luckyType}
+                label="抽卡邏輯"
+                onChange={(e: SelectChangeEvent) => {
+                  setLuckyType(e.target.value as 'memoCurve' | 'peeped' | 'familiar')
+                }}
+                size='small'
+              >
+                <MenuItem value='memoCurve'>記憶曲線</MenuItem>
+                <MenuItem value='peeped'>偷看</MenuItem>
+                <MenuItem value='familiar'>熟悉度</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+        )
+        : null
+      }
       {isFetching || codes === null
         ? <Loading />
         : mode === 'review'

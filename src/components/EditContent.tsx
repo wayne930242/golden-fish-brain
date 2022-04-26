@@ -115,8 +115,9 @@ export const EditContent = ({
 
       </div>
 
-      <div className='mt-2'>
-        <Stack direction="row" spacing={1}>
+      <div className='mb-2 flex flex-row justify-between'>
+        <Typography component="div" variant='body1'>法條編號：</Typography>
+        <Stack direction="row" spacing={1} justifyContent='flex-end'>
           {code.nums.map((ele: string) => (
             <Chip label={ele} key={ele} onDelete={() => {
               setCode((c) => {

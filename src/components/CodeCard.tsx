@@ -304,7 +304,8 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                   <Link className='text-ellipsis text-xs' href={code.link} target='_blank'>{code.link}</Link>
                 </div>
                 <div className='my-2'>
-                  <TextField sx={{ width: '100%' }} label="小叮嚀" size='small' variant="outlined" multiline onInput={(e: React.ChangeEvent<HTMLInputElement>) => handleOnInput(e, 'note')} value={code.note} />
+                  <Typography component='div' variant='body1'>小叮嚀：</Typography>
+                  <Typography component='div' variant='body2'> {code.note} </Typography>
                 </div>
 
                 <Divider />
@@ -343,6 +344,16 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                         新增複習
                       </Button>
                     </div>
+                    <div className='mr-4'>
+                      <Button color='secondary' variant='contained'
+                        onClick={() => {
+                          setExpend(false)
+                          handleOnClearReview()
+                        }}
+                      >
+                        收合
+                      </Button>
+                    </div>
                     <div>
                       <Button color={editable ? 'warning' : 'error'} variant='contained'
                         onClick={handleOnClearReview}
@@ -360,6 +371,16 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                         onClick={editable ? handleOnSubmit : handleOnEdit}
                       >
                         {editable ? '確定' : '編輯'}
+                      </Button>
+                    </div>
+                    <div className='mr-4'>
+                      <Button color='secondary' variant='contained'
+                        onClick={() => {
+                          setExpend(false)
+                          setEditable(false)
+                        }}
+                      >
+                        收合
                       </Button>
                     </div>
                     <div>
