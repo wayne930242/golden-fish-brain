@@ -120,7 +120,7 @@ export default function App() {
     dashboard: <Dashboard />,
   }
 
-  const REFRESH_TIME = 12000
+  const REFRESH_TIME = 20000
   const [randomQuote, setRandomQuote] = useState<React.ReactNode>(<></>)
 
   useEffect(() => {
