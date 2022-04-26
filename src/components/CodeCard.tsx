@@ -37,9 +37,9 @@ export const CodeCard = ({ code }: { code: ICode }) => {
   const [openConfirmDelete, setOpenConfirmDelete] = useState<boolean>(false)
   const [openConfirmReview, setOpenConfirmReview] = useState<boolean>(false)
 
-  const [expand, setExpend] = useState<boolean>(false)
+  const [expand, setExpand] = useState<boolean>(false)
   const handleOnClickTitle = () => {
-    setExpend(ex => !ex)
+    setExpand(ex => !ex)
   }
 
   const [editCode, setEditCode] = useState<ICode>(code)
@@ -70,7 +70,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
 
   const handleOnEdit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
-    setExpend(true)
+    setExpand(true)
     setEditable(true)
   }
 
@@ -106,7 +106,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
     })
 
     setEditable(false)
-    setExpend(true)
+    setExpand(true)
   }
 
   const handleOnCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -347,7 +347,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                     <div className='mr-4'>
                       <Button color='secondary' variant='contained'
                         onClick={() => {
-                          setExpend(false)
+                          setExpand(false)
                           handleOnClearReview()
                         }}
                       >
@@ -376,7 +376,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                     <div className='mr-4'>
                       <Button color='secondary' variant='contained'
                         onClick={() => {
-                          setExpend(false)
+                          setExpand(false)
                           setEditable(false)
                         }}
                       >
