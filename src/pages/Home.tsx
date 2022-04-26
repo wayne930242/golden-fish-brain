@@ -129,8 +129,8 @@ export const Home = () => {
                 size='small'
               >
                 <MenuItem value='memoCurve'>記憶曲線</MenuItem>
-                <MenuItem value='peeped'>偷看</MenuItem>
-                <MenuItem value='familiar'>熟悉度</MenuItem>
+                <MenuItem value='peeped'>是否偷看？</MenuItem>
+                <MenuItem value='familiar'>不熟悉優先</MenuItem>
               </Select>
             </FormControl>
           </Box>
