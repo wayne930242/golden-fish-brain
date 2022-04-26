@@ -8,22 +8,25 @@ export const LuckyCodes = (codes: ICode[], num: number, type: string = 'memoCurv
   switch (type) {
     case 'peeped':
       for (const code of codes) {
-        const times = code.reviewTime.length > 3 ? 4 : code.reviewTime.length
+        const times = code.reviewTime.length
         if (times === 0) {
           groupsCode[0].push(code)
         }
-        else if (code.hasPeeped.length !== 0 && code.hasPeeped[code.hasPeeped.length - 1]) {
+        else if (code.hasPeeped[code.hasPeeped.length - 1] === true) {
           groupsCode[0].push(code)
         }
       }
       break
     case 'familiar':
       for (const code of codes) {
-        const times = code.reviewTime.length > 3 ? 4 : code.reviewTime.length
+        const times = code.reviewTime.length
         if (times === 0) {
           groupsCode[0].push(code)
         }
-        else if (code.familiar.length !== 0 && code.familiar[code.hasPeeped.length - 1]) {
+        else if (code.familiar[code.hasPeeped.length - 1] === null) {
+          groupsCode[0].push(code)
+        }
+        else if (code.familiar[code.hasPeeped.length - 1] < 2) {
           groupsCode[code.familiar[code.hasPeeped.length - 1]].push(code)
         }
       }
