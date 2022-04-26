@@ -351,7 +351,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                           handleOnClearReview()
                         }}
                       >
-                        收合
+                        關閉
                       </Button>
                     </div>
                     <div>
@@ -380,7 +380,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                           setEditable(false)
                         }}
                       >
-                        收合
+                        關閉
                       </Button>
                     </div>
                     <div>
