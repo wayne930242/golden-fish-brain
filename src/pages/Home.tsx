@@ -93,7 +93,7 @@ export const Home = () => {
                 />
                 <Button
                   onClick={() => {
-                    setReviewCards(LuckyCodes(codes, Number(value)))
+                    setReviewCards(LuckyCodes(codes, Number(value), luckyType))
                   }}
                   variant='contained'
                   color='error'
