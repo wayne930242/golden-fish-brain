@@ -63,7 +63,7 @@ export const Home = () => {
 
   useEffect(() => {
     if (mode === 'review') setReviewCards(LuckyCodes(codes, Number(value), luckyType))
-  }, [codes, mode, luckyType])
+  }, [mode, luckyType])
 
   return (
     <main>
