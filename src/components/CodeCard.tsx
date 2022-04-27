@@ -343,7 +343,6 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                   }
                 >
                   {reviewCode.reviewTime.map((t, i) => {
-                    console.log(code.familiar)
                     return (
                       <ListItem sx={{ width: '100%' }} key={String(t) + String(i)}>
                         <div className='grid grid-cols-12 gap-1 w-full'>
