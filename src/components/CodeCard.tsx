@@ -305,13 +305,68 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                 <div className='my-4 overflow-x-hidden'>
                   <Link className='text-ellipsis text-xs' href={code.link} target='_blank'>{code.link}</Link>
                 </div>
-                <div className='my-2'>
+                <div className='my-2 mx-4'>
                   <Typography component='div' variant='body1'>小叮嚀：</Typography>
                   <Typography component='div' variant='body2'> {code.note} </Typography>
                 </div>
 
-                <Divider />
-                <div className='my-2 flex flex-row justify-around'>
+                <div>
+                  <List
+                    sx={{ width: '100%', backgroundColor: 'inherit' }}
+                    component="div"
+                    aria-labelledby="nested-list-subheader"
+                    subheader={
+                      <Typography sx={{
+                        ml: 2,
+                        mt: 2,
+                      }} component="div" variant='h6' align='center'>
+                        複習歷史
+                      </Typography>
+                    }
+                  >
+                    {reviewCode.reviewTime.map((t, i) => {
+                      return (
+                        <ListItem sx={{ width: '100%' }} key={String(t) + String(i)}>
+                          <div className='grid grid-cols-12 gap-1 w-full'>
+                            <div className='col-span-1 text-center' style={{ lineHeight: '46px' }}>
+                              {i + 1}.
+                            </div>
+                            <div className='col-span-5 text-center' style={{ lineHeight: '46px' }}>
+                              {timeParser(t)}
+                            </div>
+                            <div className='col-span-4 text-center' style={{ lineHeight: '46px' }}>
+                              {code.hasPeeped[i] ? 'O 有偷看' : 'X 沒偷看'}
+                            </div>
+                            <div className='col-span-2 flex flex-col justify-center'>
+                              {code.familiar[i] === 0
+                                ? (
+                                  <IconButton sx={{ my: 'auto', display: 'block', cursor: 'default' }} size='small' color='error'>
+                                    <MoodBadIcon />
+                                  </IconButton>
+                                )
+                                : code.familiar[i] === 1
+                                  ? (
+                                    <IconButton sx={{ my: 'auto', display: 'block', cursor: 'default' }} size='small' color='success'>
+                                      <SentimentDissatisfiedIcon />
+                                    </IconButton>
+                                  )
+                                  : (
+                                    <IconButton sx={{ my: 'auto', display: 'block', cursor: 'default' }} size='small' color='primary'>
+                                      <SentimentSatisfiedAltIcon />
+                                    </IconButton>
+                                  )
+                              }
+                            </div>
+                          </div>
+                        </ListItem>
+                      )
+                    })
+                    }
+                  </List>
+                </div>
+
+                <div className='my-2 flex flex-row justify-around bg-white rounded-lg shadow-xl mx-4'>
+                  <div style={{ lineHeight: '46px' }}>新複習</div>
                   <div className='flex flex-row justify-start'>
                     <IconButton onClick={(e) => { handleOnClickMood(e, 0) }} size='small' color={tempFamiliar === 0 ? 'error' : 'default'} >
                       <MoodBadIcon />
@@ -327,60 +382,6 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                     <FormControlLabel control={<Checkbox onChange={handleOnPeep} checked={tempPeeped} />} label="有偷看" />
                   </div>
                 </div>
-
-                <Divider />
-                <List
-                  sx={{ width: '100%', backgroundColor: 'inherit' }}
-                  component="div"
-                  aria-labelledby="nested-list-subheader"
-                  subheader={
-                    <Typography sx={{
-                      ml: 2,
-                      mt: 2,
-                    }} component="div" variant='h6' align='center'>
-                      複習歷史
-                    </Typography>
-                  }
-                >
-                  {reviewCode.reviewTime.map((t, i) => {
-                    return (
-                      <ListItem sx={{ width: '100%' }} key={String(t) + String(i)}>
-                        <div className='grid grid-cols-12 gap-1 w-full'>
-                          <div className='col-span-1 text-center' style={{ lineHeight: '46px' }}>
-                            {i + 1}.
-                          </div>
-                          <div className='col-span-5 text-center' style={{ lineHeight: '46px' }}>
-                            {timeParser(t)}
-                          </div>
-                          <div className='col-span-4 text-center' style={{ lineHeight: '46px' }}>
-                            {code.hasPeeped[i] ? 'O 有偷看' : 'X 沒偷看'}
-                          </div>
-                          <div className='col-span-2 flex flex-col justify-center'>
-                            {code.familiar[i] === 0
-                              ? (
-                                <IconButton sx={{ my: 'auto', display: 'block', cursor: 'default' }} size='small' color='error'>
-                                  <MoodBadIcon />
-                                </IconButton>
-                              )
-                              : code.familiar[i] === 1
-                                ? (
-                                  <IconButton sx={{ my: 'auto', display: 'block', cursor: 'default' }} size='small' color='success'>
-                                    <SentimentDissatisfiedIcon />
-                                  </IconButton>
-                                )
-                                : (
-                                  <IconButton sx={{ my: 'auto', display: 'block', cursor: 'default' }} size='small' color='primary'>
-                                    <SentimentSatisfiedAltIcon />
-                                  </IconButton>
-                                )
-                            }
-                          </div>
-                        </div>
-                      </ListItem>
-                    )
-                  })
-                  }
-                </List>
               </>)}
             </>
           )}
