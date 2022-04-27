@@ -59,11 +59,9 @@ export const LuckyCodes = (codes: ICode[], num: number, type: string = 'memoCurv
 
 export const getReviewString = (code: ICode): string => {
   const times = code.reviewTime.length > 3 ? 4 : code.reviewTime.length
-  console.log(code, times)
   if (times === 0) return '還沒複習過'
 
-  return '已經複習' +
-    code.reviewTime.length + '次，' +
+  return '已經複習' + code.reviewTime.length + '次，' +
     '下次複習：' + timeParser(code.reviewTime[code.reviewTime.length - 1] + division[times - 1])
 }
 

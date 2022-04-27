@@ -30,12 +30,12 @@ export const ReviewHistoryList = ({
   deleted: boolean,
 }) => {
   const [startDate, setStartDate] = useState<Date>(new Date(reviewTime))
-  
+
   const [tempPeeped, setTempPeeped] = useState<boolean>(hasPeeped)
   useEffect(() => {
     setTempPeeped(hasPeeped)
   }, [hasPeeped])
-  
+
   const [tempFamiliar, setTempFamiliar] = useState<number>(familiar)
   useEffect(() => {
     setTempFamiliar(familiar)
@@ -79,12 +79,12 @@ export const ReviewHistoryList = ({
                     <MoodBadIcon />
                   </IconButton>
                 )
-                : (
-                  <IconButton sx={{ my: 'auto', display: 'block' }} size='small' color='success'>
-                    <SentimentDissatisfiedIcon />
-                  </IconButton>
-                )
-                  ? familiar === 1
+                : familiar === 1
+                  ? (
+                    <IconButton sx={{ my: 'auto', display: 'block' }} size='small' color='success'>
+                      <SentimentDissatisfiedIcon />
+                    </IconButton>
+                  )
                   : (
                     <IconButton sx={{ my: 'auto', display: 'block' }} size='small' color='primary'>
                       <SentimentSatisfiedAltIcon />
@@ -111,7 +111,7 @@ export const ReviewHistoryList = ({
               </Button>
             </div>
             <div className='col-span-2 flex flex-col justify-center'>
-              <IconButton onClick={(e) => { handleOnClickMood( 0) }} size='small' color={tempFamiliar === 0 ? 'error' : 'default'} >
+              <IconButton onClick={(e) => { handleOnClickMood(0) }} size='small' color={tempFamiliar === 0 ? 'error' : 'default'} >
                 <MoodBadIcon />
               </IconButton>
               <IconButton onClick={(e) => { handleOnClickMood(1) }} size='small' color={tempFamiliar === 1 ? 'success' : 'default'} >
