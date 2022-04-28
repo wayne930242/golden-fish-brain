@@ -82,10 +82,13 @@ export const makeCodesHistory = (codes: ICode[]): TypeHistory => {
   for (const code of codes) {
     if (code.reviewTime.length === 0) continue
     for (const time of code.reviewTime) {
-      if (Array.isArray(history[timeParser(time)])) {
-        history[timeParser(time)].push(code)
+      if (history[timeParser(time)] && Array.isArray(history[timeParser(time)].codes)) {
+        history[timeParser(time)].codes.push(code)
       } else {
-        history[timeParser(time)] = [code]
+        history[timeParser(time)] = {
+          time,
+          codes: [code],
+        }
       }
     }
   }
@@ -93,5 +96,8 @@ export const makeCodesHistory = (codes: ICode[]): TypeHistory => {
 }
 
 export type TypeHistory = {
-  [time: string]: ICode[],
+  [timeString: string]: {
+    time: number,
+    codes: ICode[],
+  },
 }

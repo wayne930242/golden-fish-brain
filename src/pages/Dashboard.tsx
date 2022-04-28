@@ -118,27 +118,31 @@ export const Dashboard = () => {
               : (
                 <div>
                   {
-                    Object.keys(history).map((time: string) => {
-                      return (
-                        <div key={time} className='pt-4'>
-                          <Typography component='div' variant='h6'>
-                            {time}
-                          </Typography>
-                          <Divider />
-                          <List>
-                            {history[time].map((code) => (
-                              <ListItem key={code.id} button onClick={() => {
-                                setReviewTitle(null)
-                                setOpenDialog(true)
-                                setReviewCodes([code])
-                              }}>
-                                【{code.law}】{code.nums.map(num => '#' + num).join(', ')}——{code.title}
-                              </ListItem>
-                            ))}
-                          </List>
-                        </div>
-                      )
-                    })
+                    Object.keys(history)
+                      .sort((t1, t2) => (
+                        history[t2].time - history[t1].time
+                      ))
+                      .map((time: string) => {
+                        return (
+                          <div key={time} className='pt-4'>
+                            <Typography component='div' variant='h6'>
+                              {time}
+                            </Typography>
+                            <Divider />
+                            <List>
+                              {history[time].codes.map((code) => (
+                                <ListItem key={code.id} button onClick={() => {
+                                  setReviewTitle(null)
+                                  setOpenDialog(true)
+                                  setReviewCodes([code])
+                                }}>
+                                  【{code.law}】{code.nums.map(num => '#' + num).join(', ')}——{code.title}
+                                </ListItem>
+                              ))}
+                            </List>
+                          </div>
+                        )
+                      })
                   }
                 </div>
               )
