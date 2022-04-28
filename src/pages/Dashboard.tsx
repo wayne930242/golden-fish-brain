@@ -12,8 +12,12 @@ import {
   Table,
   Stack,
   Paper,
+  ListItem,
+  List,
+  Divider,
 } from '@mui/material'
 
+import { makeCodesHistory, TypeHistory } from '../helper/data'
 import { CodesCardsDialog } from '../components/dialogs/CodesCardsDialog'
 import { GlobalContext } from '../App'
 import { LAWS } from "../data/laws"
@@ -29,6 +33,8 @@ export const Dashboard = () => {
   const [progress, setProgress] = useState<TypeProgress>({})
 
   const [mode, setMode] = useState<TypeModes>('byLaw')
+
+  const [history, setHistory] = useState<TypeHistory>({})
 
   const [openDialog, setOpenDialog] = useState<boolean>(false)
   const [reviewCodes, setReviewCodes] = useState<ICode[]>([])
@@ -46,6 +52,11 @@ export const Dashboard = () => {
     })
     setProgress(newProgress)
   }, [codes])
+
+  useEffect(() => {
+    if (mode === 'byLaw') return
+    setHistory(makeCodesHistory(codes))
+  }, [mode, codes])
 
   return (
     <main>
@@ -104,7 +115,33 @@ export const Dashboard = () => {
                   </Table>
                 </TableContainer>
               )
-              : null
+              : (
+                <div>
+                  {
+                    Object.keys(history).map((time: string) => {
+                      return (
+                        <div key={time} className='pt-4'>
+                          <Typography component='div' variant='h6'>
+                            {time}
+                          </Typography>
+                          <Divider />
+                          <List>
+                            {history[time].map((code) => (
+                              <ListItem key={code.id} button onClick={() => {
+                                setReviewTitle(null)
+                                setOpenDialog(true)
+                                setReviewCodes([code])
+                              }}>
+                                【{code.law}】{code.nums.map(num => '#' + num).join(', ')}——{code.title}
+                              </ListItem>
+                            ))}
+                          </List>
+                        </div>
+                      )
+                    })
+                  }
+                </div>
+              )
           }
         </Paper>
 

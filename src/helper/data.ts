@@ -77,3 +77,21 @@ const division = [
   longTime,
 ]
 
+export const makeCodesHistory = (codes: ICode[]): TypeHistory => {
+  const history: TypeHistory = {}
+  for (const code of codes) {
+    if (code.reviewTime.length === 0) continue
+    for (const time of code.reviewTime) {
+      if (Array.isArray(history[timeParser(time)])) {
+        history[timeParser(time)].push(code)
+      } else {
+        history[timeParser(time)] = [code]
+      }
+    }
+  }
+  return history
+}
+
+export type TypeHistory = {
+  [time: string]: ICode[],
+}

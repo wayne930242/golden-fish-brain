@@ -275,15 +275,14 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                 }}
                 className={'cursor-pointer'} onClick={editable ? undefined : handleOnClickTitle}>
                 <div className='my-2 flex-row flex'>
-                  <Typography component="div" variant='body1'>{code.law}</Typography>
-                  <Typography sx={{ mx: 1 }} component="div" variant='body1'>——</Typography>
+                  <Typography component="div" variant='body1'>【{code.law}】</Typography>
                   <Typography component="div" variant='body1'>{code.nums.map((ele: string, index) => (
                     <span key={ele + Math.random()}>{index === 0 ? null : ", "}#{ele}</span>
                   ))}
                   </Typography>
                 </div>
 
-                <div>
+                <div className='ml-2'>
                   <Typography component="div" variant='h6'>{code.title}</Typography>
                   <Typography component='div' variant='caption'>{getReviewString(code)}</Typography>
                   <div className='flex flex-row justify-end'>

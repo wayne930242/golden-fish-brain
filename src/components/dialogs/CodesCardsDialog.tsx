@@ -28,19 +28,19 @@ export const CodesCardsDialog = ({
 
   return (
     <Dialog open={open} onClose={handleClickCancel}>
-      <DialogTitle>{lawName}</DialogTitle>
-      <DialogContent>
+      {lawName ? <DialogTitle>【{lawName}】</DialogTitle> : null}
+      <DialogContent sx={{ padding: 0 }}>
         {codes.length === 0
-        ?(
-          <Typography component='p'>
-            還沒有這個法規的複習卡，趕快新增吧！
-          </Typography>
-        )
-        : codes.map((code) => {
-          return (
-            <CodeCard code={code} key={code.id} />
+          ? (
+            <Typography component='p'>
+              還沒有這個法規的複習卡，趕快新增吧！
+            </Typography>
           )
-        })}
+          : codes.map((code) => {
+            return (
+              <CodeCard code={code} key={code.id} />
+            )
+          })}
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClickCancel} color='warning'>關閉</Button>
