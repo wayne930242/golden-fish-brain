@@ -38,7 +38,7 @@ export const LuckyCodes = (codes: ICode[], num: number, type: string = 'memoCurv
         if (times === 0) {
           groupsCode[0].push(code)
         }
-        else if (code.reviewTime[code.reviewTime.length - 1] + division[times] <= now) groupsCode[times].push(code)
+        else if (code.reviewTime[code.reviewTime.length - 1] + division[times - 1] <= now) groupsCode[times].push(code)
       }
   }
 
