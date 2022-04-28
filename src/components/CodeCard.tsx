@@ -232,7 +232,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
         onClick={handleSubmitReview}
       />
 
-      <div className='hover:bg-slate-50' >
+      <div className='hover:bg-slate-50 border-b-2' >
         <CardContent>
           {editable ? (
             <>
@@ -274,6 +274,15 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                   padding: 2,
                 }}
                 className={'cursor-pointer'} onClick={editable ? undefined : handleOnClickTitle}>
+                <div className='my-2 flex-row flex'>
+                  <Typography component="div" variant='body1'>{code.law}</Typography>
+                  <Typography sx={{ mx: 1 }} component="div" variant='body1'>——</Typography>
+                  <Typography component="div" variant='body1'>{code.nums.map((ele: string, index) => (
+                    <span key={ele + Math.random()}>{index === 0 ? null : ", "}#{ele}</span>
+                  ))}
+                  </Typography>
+                </div>
+
                 <div>
                   <Typography component="div" variant='h6'>{code.title}</Typography>
                   <Typography component='div' variant='caption'>{getReviewString(code)}</Typography>
@@ -285,104 +294,103 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                     ))}
                   </div>
 
-                  <div className='my-2 flex-row flex justify-between'>
-                    <Typography component="div" variant='caption'>{code.law}</Typography>
-                  </div>
-
-                </div>
-
-                <div className='mt-2 mb-4'>
-                  <Stack direction="row" spacing={1}>
-                    {code.nums.map((ele: string) => (
-                      <Chip label={ele} key={ele + Math.random()} />
-                    ))}
-                  </Stack>
                 </div>
               </Paper>
 
-              {!expand ? null : (<>
-
-                <div className='my-4 overflow-x-hidden'>
-                  <Link className='text-ellipsis text-xs' href={code.link} target='_blank'>{code.link}</Link>
-                </div>
-                <div className='my-2 mx-4'>
-                  <Typography component='div' variant='body1'>小叮嚀：</Typography>
-                  <Typography component='div' variant='body2'> {code.note} </Typography>
-                </div>
-
+              {!expand ? null : (
                 <div>
-                  <List
-                    sx={{ width: '100%', backgroundColor: 'inherit' }}
-                    component="div"
-                    aria-labelledby="nested-list-subheader"
-                    subheader={
-                      <Typography sx={{
-                        ml: 2,
-                        mt: 2,
-                      }} component="div" variant='h6' align='center'>
-                        複習歷史
-                      </Typography>
-                    }
-                  >
-                    {reviewCode.reviewTime.map((t, i) => {
-                      return (
-                        <ListItem sx={{ width: '100%' }} key={String(t) + String(i)}>
-                          <div className='grid grid-cols-12 gap-1 w-full'>
-                            <div className='col-span-1 text-center' style={{ lineHeight: '46px' }}>
-                              {i + 1}.
-                            </div>
-                            <div className='col-span-5 text-center' style={{ lineHeight: '46px' }}>
-                              {timeParser(t)}
-                            </div>
-                            <div className='col-span-4 text-center' style={{ lineHeight: '46px' }}>
-                              {code.hasPeeped[i] ? 'O 有偷看' : 'X 沒偷看'}
-                            </div>
-                            <div className='col-span-2 flex flex-col justify-center'>
-                              {code.familiar[i] === 0
-                                ? (
-                                  <IconButton sx={{ my: 'auto', display: 'block', cursor: 'default' }} size='small' color='error'>
-                                    <MoodBadIcon />
-                                  </IconButton>
-                                )
-                                : code.familiar[i] === 1
-                                  ? (
-                                    <IconButton sx={{ my: 'auto', display: 'block', cursor: 'default' }} size='small' color='success'>
-                                      <SentimentDissatisfiedIcon />
-                                    </IconButton>
-                                  )
-                                  : (
-                                    <IconButton sx={{ my: 'auto', display: 'block', cursor: 'default' }} size='small' color='primary'>
-                                      <SentimentSatisfiedAltIcon />
-                                    </IconButton>
-                                  )
-                              }
-                            </div>
-                          </div>
-                        </ListItem>
-                      )
-                    })
-                    }
-                  </List>
-                </div>
+                  <div className='my-4 overflow-x-hidden'>
+                    <Link className='text-ellipsis text-xs' href={code.link} target='_blank'>{code.link}</Link>
+                  </div>
+                  {code.note && code.note.trim() !== ''
+                    ? (
+                      <div className='my-2 mx-4'>
+                        <Typography component='div' variant='body1'>小叮嚀：</Typography>
+                        <Typography component='div' variant='body2'> {code.note} </Typography>
+                      </div>
+                    ) : null
+                  }
 
-                <div className='my-2 flex flex-row justify-around bg-white rounded-lg shadow-xl mx-4'>
-                  <div style={{ lineHeight: '46px' }}>新複習</div>
-                  <div className='flex flex-row justify-start'>
-                    <IconButton onClick={(e) => { handleOnClickMood(e, 0) }} size='small' color={tempFamiliar === 0 ? 'error' : 'default'} >
-                      <MoodBadIcon />
-                    </IconButton>
-                    <IconButton onClick={(e) => { handleOnClickMood(e, 1) }} size='small' color={tempFamiliar === 1 ? 'success' : 'default'} >
-                      <SentimentDissatisfiedIcon />
-                    </IconButton>
-                    <IconButton onClick={(e) => { handleOnClickMood(e, 2) }} size='small' color={tempFamiliar === 2 ? 'primary' : 'default'} >
-                      <SentimentSatisfiedAltIcon />
-                    </IconButton>
+                  <div>
+                    <List
+                      sx={{ width: '100%', backgroundColor: 'inherit' }}
+                      component="div"
+                      aria-labelledby="nested-list-subheader"
+                      subheader={
+                        <Typography sx={{
+                          ml: 2,
+                          mt: 2,
+                        }} component="div" variant='h6' align='center'>
+                          複習歷史
+                        </Typography>
+                      }
+                    >
+                      {reviewCode.reviewTime.map((t, i) => {
+                        return (
+                          <ListItem sx={{ width: '100%' }} key={String(t) + String(i)}>
+                            <div className='grid grid-cols-12 gap-1 w-full'>
+                              <div className='col-span-1 text-center' style={{ lineHeight: '46px' }}>
+                                {i + 1}.
+                              </div>
+                              <div className='col-span-5' style={{ lineHeight: '46px' }}>
+                                {timeParser(t)}
+                              </div>
+                              <div className='col-span-4 text-right' style={{ lineHeight: '46px' }}>
+                                {code.hasPeeped[i] ? 'O 有偷看' : 'X 沒偷看'}
+                              </div>
+                              <div className='col-span-2 flex flex-col justify-center'>
+                                {code.familiar[i] === 0
+                                  ? (
+                                    <IconButton sx={{ my: 'auto', display: 'block', cursor: 'default' }} size='small' color='error'>
+                                      <MoodBadIcon />
+                                    </IconButton>
+                                  )
+                                  : code.familiar[i] === 1
+                                    ? (
+                                      <IconButton sx={{ my: 'auto', display: 'block', cursor: 'default' }} size='small' color='success'>
+                                        <SentimentDissatisfiedIcon />
+                                      </IconButton>
+                                    )
+                                    : (
+                                      <IconButton sx={{ my: 'auto', display: 'block', cursor: 'default' }} size='small' color='primary'>
+                                        <SentimentSatisfiedAltIcon />
+                                      </IconButton>
+                                    )
+                                }
+                              </div>
+                            </div>
+                          </ListItem>
+                        )
+                      })
+                      }
+                    </List>
                   </div>
-                  <div className='ml-6 flex flex-row justify-center'>
-                    <FormControlLabel control={<Checkbox onChange={handleOnPeep} checked={tempPeeped} />} label="有偷看" />
+
+                  <div className='w-full px-4 py-2 flex flex-row justify-between bg-white rounded-sm shadow-md'>
+                    <div className='flex flex-row justify-start'>
+                      <IconButton onClick={(e) => { handleOnClickMood(e, 0) }} size='small' color={tempFamiliar === 0 ? 'error' : 'default'} >
+                        <MoodBadIcon />
+                      </IconButton>
+                      <IconButton onClick={(e) => { handleOnClickMood(e, 1) }} size='small' color={tempFamiliar === 1 ? 'success' : 'default'} >
+                        <SentimentDissatisfiedIcon />
+                      </IconButton>
+                      <IconButton onClick={(e) => { handleOnClickMood(e, 2) }} size='small' color={tempFamiliar === 2 ? 'primary' : 'default'} >
+                        <SentimentSatisfiedAltIcon />
+                      </IconButton>
+                    </div>
+                    <div className='flex flex-row justify-center'>
+                      <FormControlLabel control={<Checkbox onChange={handleOnPeep} checked={tempPeeped} />} label="有偷看" />
+                    </div>
+                    <div>
+                      <Button color='success' variant='contained'
+                        onClick={() => setOpenConfirmReview(true)}
+                      >
+                        送出
+                      </Button>
+                    </div>
                   </div>
                 </div>
-              </>)}
+              )}
             </>
           )}
 
@@ -390,39 +398,10 @@ export const CodeCard = ({ code }: { code: ICode }) => {
         {!expand ? null : (
           <CardActions>
 
-            <div className='w-full flex flex-row mx-4'>
-              {editedReview
-                ? (
-                  <>
-                    <div className='mr-4'>
-                      <Button color='success' variant='contained'
-                        onClick={() => setOpenConfirmReview(true)}
-                      >
-                        新增複習
-                      </Button>
-                    </div>
-                    <div className='mr-4'>
-                      <Button color='secondary' variant='contained'
-                        onClick={() => {
-                          setExpand(false)
-                          handleOnClearReview()
-                        }}
-                      >
-                        關閉
-                      </Button>
-                    </div>
-                    <div>
-                      <Button color={editable ? 'warning' : 'error'} variant='contained'
-                        onClick={handleOnClearReview}
-                      >
-                        取消
-                      </Button>
-                    </div>
-                  </>
-                )
-                : (
-
-                  <>
+            <div className='w-full flex flex-row mx-4 justify-between mb-4'>
+              {
+                <>
+                  <div className='flex flex-row'>
                     <div className='mr-4'>
                       <Button color='primary' variant='contained'
                         onClick={editable ? handleOnSubmit : handleOnEdit}
@@ -430,16 +409,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                         {editable ? '確定' : '編輯'}
                       </Button>
                     </div>
-                    <div className='mr-4'>
-                      <Button color='secondary' variant='contained'
-                        onClick={() => {
-                          setExpand(false)
-                          setEditable(false)
-                        }}
-                      >
-                        關閉
-                      </Button>
-                    </div>
+
                     <div>
                       <Button color={editable ? 'warning' : 'error'} variant='contained'
                         onClick={editable ? handleOnCancel : handleOnDelete}
@@ -447,8 +417,19 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                         {editable ? '取消' : '刪除'}
                       </Button>
                     </div>
-                  </>
-                )
+                  </div>
+
+                  <div>
+                    <Button color='secondary' variant='contained'
+                      onClick={() => {
+                        setExpand(false)
+                        setEditable(false)
+                      }}
+                    >
+                      關閉
+                    </Button>
+                  </div>
+                </>
               }
             </div>
 
@@ -461,7 +442,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
           忘了寫標題囉。
         </Alert>
       </Snackbar>
-    </div>
+    </div >
   )
 }
 

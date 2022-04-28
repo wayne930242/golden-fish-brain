@@ -68,17 +68,6 @@ export const EditContent = ({
 
   return (
     <div className='flex flex-col'>
-      <div className='mb-1 flex flex-row justify-between'>
-        <TextField sx={{ width: '100%' }} label="標題" size='small' value={code.title}
-          onInput={(e: React.ChangeEvent<HTMLInputElement>) => handleOnInput(e, 'title')} required />
-        <div className='flex flex-row'>
-          {[0, 1, 2, 3, 4].map(n => (
-            <IconButton onClick={() => { handleOnClickStar(n + 1) }} size='small' color='warning' key={n}>
-              {code.star <= n ? <StarOutlineIcon /> : <StarIcon />}
-            </IconButton>
-          ))}
-        </div>
-      </div>
 
       <div className='my-2 flex-row flex justify-between'>
         <Autocomplete
@@ -112,14 +101,11 @@ export const EditContent = ({
             輸入 , 來分隔
           </Typography>
         </div>
-
       </div>
-
-      <div className='mb-2 flex flex-row justify-between'>
-        <Typography component="div" variant='body1'>法條編號：</Typography>
+      <div className='mb-4 flex flex-row justify-end'>
         <Stack direction="row" spacing={1} justifyContent='flex-end'>
           {code.nums.map((ele: string) => (
-            <Chip label={ele} key={ele} onDelete={() => {
+            <Chip label={'#' + ele} key={ele} onDelete={() => {
               setCode((c) => {
                 const newNums = [...c.nums]
                 newNums.splice(c.nums.indexOf(ele), 1)
@@ -131,6 +117,18 @@ export const EditContent = ({
             }} />
           ))}
         </Stack>
+      </div>
+
+      <div className='mb-1 flex flex-row justify-between'>
+        <TextField sx={{ width: '100%' }} label="標題" size='small' value={code.title}
+          onInput={(e: React.ChangeEvent<HTMLInputElement>) => handleOnInput(e, 'title')} required />
+        <div className='flex flex-row'>
+          {[0, 1, 2, 3, 4].map(n => (
+            <IconButton onClick={() => { handleOnClickStar(n + 1) }} size='small' color='warning' key={n}>
+              {code.star <= n ? <StarOutlineIcon /> : <StarIcon />}
+            </IconButton>
+          ))}
+        </div>
       </div>
 
       <div className='my-2'>

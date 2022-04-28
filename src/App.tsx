@@ -56,7 +56,7 @@ type TypeGlobalContext = {
   dispatch: TypeDispatch,
 }
 
-const title: { [key: string]: string } = {
+/* const title: { [key: string]: string } = {
   home: null,
   dashboard: '一覽',
 }
@@ -66,7 +66,7 @@ const Title = ({ router }: { router: TypeRouter }) => (
     {title[router]
       ? (
         <div className='flex flex-row justify-start pt-6 pb-4'>
-          {/* <img src={Logo} className="h-10 mr-3" alt="logo" /> */}
+          <img src={Logo} className="h-10 mr-3" alt="logo" />
           <Typography sx={{ width: '100%' }} align='center' variant="h4" component="div" gutterBottom>
             {title[router]}
           </Typography>
@@ -75,7 +75,7 @@ const Title = ({ router }: { router: TypeRouter }) => (
       : <div className='pt-6' />
     }
   </>
-)
+)*/
 
 export default function App() {
   const [openAdd, setOpenAdd] = useState<boolean>(false)
@@ -156,8 +156,6 @@ export default function App() {
             <Banner />
 
             <div className='px-4 bg-slate-50 pb-6'>
-              <Title router={router} />
-
               {routerMap[router]}
 
               {/* Footer */}

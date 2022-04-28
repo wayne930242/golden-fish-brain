@@ -1,6 +1,5 @@
 import { useEffect, useState, useContext } from 'react'
 import {
-  Divider,
   Stack,
   TextField,
   Typography,
@@ -67,16 +66,14 @@ export const Home = () => {
 
   return (
     <main>
-      <div className='mb-6'>
+      <div className='py-6 my-6'>
         <div className='flex flex-row justify-between'>
-          <Stack direction="row" spacing={2}>
-            <Button onClick={() => {
-              if (mode === 'review') setMode('achive')
-              if (mode === 'achive') setMode('review')
-            }} variant={mode === 'review' ? 'outlined' : 'contained'} color={mode === 'review' ? 'success' : 'info'}>
-              {mode === 'review' ? '查看新卡' : '開始複習'}
-            </Button>
-          </Stack>
+          <Button onClick={() => {
+            if (mode === 'review') setMode('achive')
+            if (mode === 'achive') setMode('review')
+          }} variant={mode === 'review' ? 'outlined' : 'contained'} color={mode === 'review' ? 'success' : 'info'}>
+            {mode === 'review' ? '查看新卡' : '開始複習'}
+          </Button>
 
           <Stack direction='row' spacing={2}>
             {mode === 'review' ? (
