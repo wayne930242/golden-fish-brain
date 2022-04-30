@@ -1,9 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react'
-import Chip from '@mui/material/Chip'
-import Stack from '@mui/material/Stack'
+import cx from 'classnames'
+
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
-import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
@@ -13,7 +12,8 @@ import Button from '@mui/material/Button'
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
 import Paper from '@mui/material/Paper'
-import TextField from '@mui/material/TextField'
+import CheckIcon from '@mui/icons-material/Check'
+import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates'
 
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
@@ -39,9 +39,12 @@ export const CodeCard = ({ code }: { code: ICode }) => {
   const [openConfirmDelete, setOpenConfirmDelete] = useState<boolean>(false)
   const [openConfirmReview, setOpenConfirmReview] = useState<boolean>(false)
 
+  const [openHistory, setOpenHistory] = useState<boolean>(false)
+
   const [expand, setExpand] = useState<boolean>(false)
   const handleOnClickTitle = () => {
     setExpand(ex => !ex)
+    setOpenHistory(false)
   }
 
   const [editCode, setEditCode] = useState<ICode>(code)
@@ -53,20 +56,12 @@ export const CodeCard = ({ code }: { code: ICode }) => {
   const [tempPeeped, setTempPeeped] = useState<boolean>(code.hasPeeped.length !== 0 ? code.hasPeeped[code.hasPeeped.length - 1] : false)
   const [tempFamiliar, setTempFamiliar] = useState<number>(code.familiar.length !== 0 ? code.familiar[code.familiar.length - 1] : null)
 
-  const [editedReview, setEditedReview] = useState<boolean>(false)
-
   const [reviewCode, setReviewCode] = useState<ICode>(code)
   useEffect(() => {
     setReviewCode(code)
     setTempPeeped(code.hasPeeped.length !== 0 ? code.hasPeeped[code.hasPeeped.length - 1] : false)
     setTempFamiliar(code.familiar.length !== 0 ? code.familiar[code.familiar.length - 1] : null)
   }, [code])
-
-  const handleOnClearReview = () => {
-    setTempPeeped(code.hasPeeped.length !== 0 ? code.hasPeeped[code.hasPeeped.length - 1] : false)
-    setTempFamiliar(code.familiar.length !== 0 ? code.familiar[code.familiar.length - 1] : null)
-    setEditedReview(false)
-  }
 
   const [openAlert, setOpenAlert] = useState<boolean>(false)
 
@@ -117,6 +112,13 @@ export const CodeCard = ({ code }: { code: ICode }) => {
     setOpenConfirmDelete(false)
   }
 
+  const handleOnClose = (e: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => {
+    e.stopPropagation()
+    setEditable(false)
+    setOpenHistory(false)
+    setExpand(false)
+  }
+
   const handleOnDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
     setOpenConfirmDelete(true)
@@ -133,13 +135,11 @@ export const CodeCard = ({ code }: { code: ICode }) => {
   const handleOnClickMood = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, n: number) => {
     e.stopPropagation()
     setTempFamiliar(n)
-    setEditedReview(true)
   }
 
   const handleOnPeep = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation()
     setTempPeeped(() => e.target.checked)
-    setEditedReview(true)
   }
 
   const [tempHistory, setTempHistory] = useState<{
@@ -217,7 +217,6 @@ export const CodeCard = ({ code }: { code: ICode }) => {
     })
 
     setDeletedHistories([])
-    setEditedReview(false)
   }
 
   return (
@@ -239,32 +238,53 @@ export const CodeCard = ({ code }: { code: ICode }) => {
               <EditContent code={editCode} setCode={setEditCode} />
               <Divider />
               <div className='my-2'>
-                <List
-                  sx={{ width: '100%', backgroundColor: 'inherit' }}
-                  component="div"
-                  aria-labelledby="nested-list-subheader"
-                  subheader={
-                    <Typography sx={{
-                      ml: 2,
-                    }} component="div" variant='h6' align='center'>
-                      複習歷史
-                    </Typography>
-                  }
-                >
-                  {reviewCode.reviewTime.map((t, i) => (
-                    <ReviewHistoryList
-                      key={t}
-                      reviewTime={t}
-                      familiar={code.familiar[i]}
-                      hasPeeped={code.hasPeeped[i]}
-                      onDelete={handleOnDeleteHistory(i)}
-                      onUnDoDelete={handleOnUndoDeleteHistory(i)}
-                      onUpdate={handleOnUpdateHistory(i)}
-                      deleted={Boolean(deletedHistories[i])}
-                    />
-                  ))
-                  }
-                </List>
+                <Typography sx={{
+                  ml: 2,
+                }} component="div" variant='h6' align='center'>
+                  編輯歷史
+                </Typography>
+
+                {reviewCode.reviewTime.map((t, i) => (
+                  <ReviewHistoryList
+                    key={t}
+                    reviewTime={t}
+                    familiar={code.familiar[i]}
+                    hasPeeped={code.hasPeeped[i]}
+                    onDelete={handleOnDeleteHistory(i)}
+                    onUnDoDelete={handleOnUndoDeleteHistory(i)}
+                    onUpdate={handleOnUpdateHistory(i)}
+                    deleted={Boolean(deletedHistories[i])}
+                  />
+                ))
+                }
+              </div>
+
+              <div className='flex flex-row justify-between'>
+                <div className='flex flex-row'>
+                  <div className='mr-4'>
+                    <Button color='primary' variant='contained'
+                      onClick={handleOnSubmit}
+                    >
+                      確定
+                    </Button>
+                  </div>
+
+                  <div className='mr-4'>
+                    <Button color='warning' variant='contained'
+                      onClick={handleOnCancel}
+                    >
+                      取消
+                    </Button>
+                  </div>
+                </div>
+
+                <div>
+                  <Button color='error' variant='contained'
+                    onClick={handleOnDelete}
+                  >
+                    刪除
+                  </Button>
+                </div>
               </div>
             </>
           ) : (
@@ -274,6 +294,13 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                   padding: 2,
                 }}
                 className={'cursor-pointer'} onClick={editable ? undefined : handleOnClickTitle}>
+                <div className='flex flex-row'>
+                  {[0, 1, 2, 3, 4].map(n => (
+                    <IconButton size='small' color='warning' key={n}>
+                      {code.star <= n ? <StarOutlineIcon /> : <StarIcon />}
+                    </IconButton>
+                  ))}
+                </div>
                 <div className='my-2 flex-row flex'>
                   <Typography component="div" variant='body1'>【{code.law}】</Typography>
                   <Typography component="div" variant='body1'>{code.nums.map((ele: string, index) => (
@@ -284,160 +311,131 @@ export const CodeCard = ({ code }: { code: ICode }) => {
 
                 <div className='ml-2'>
                   <Typography component="div" variant='h6'>{code.title}</Typography>
-                  <Typography component='div' variant='caption'>{getReviewString(code)}</Typography>
-                  <div className='flex flex-row justify-end'>
-                    {[0, 1, 2, 3, 4].map(n => (
-                      <IconButton size='small' color='warning' key={n}>
-                        {code.star <= n ? <StarOutlineIcon /> : <StarIcon />}
-                      </IconButton>
-                    ))}
-                  </div>
-
+                  <Typography component='div' variant='caption' color='GrayText'>{getReviewString(code)}</Typography>
                 </div>
               </Paper>
 
               {!expand ? null : (
                 <div>
-                  <div className='my-4 overflow-x-hidden'>
-                    <Link className='text-ellipsis text-xs' href={code.link} target='_blank'>{code.link}</Link>
-                  </div>
-                  {code.note && code.note.trim() !== ''
-                    ? (
-                      <div className='my-2 mx-4'>
-                        <Typography component='div' variant='body1'>小叮嚀：</Typography>
-                        <Typography component='div' variant='body2'> {code.note} </Typography>
-                      </div>
-                    ) : null
-                  }
-
-                  {reviewCode.reviewTime.length !== 0
-                    ? (
-                      <div>
-                        <List
-                          sx={{ width: '100%', backgroundColor: 'inherit' }}
-                          component="div"
-                          aria-labelledby="nested-list-subheader"
-                          subheader={
-                            <Typography sx={{
-                              ml: 2,
-                              mt: 2,
-                            }} component="div" variant='h6' align='center'>
-                              複習歷史
-                            </Typography>
-                          }
-                        >
-                          {reviewCode.reviewTime.map((t, i) => {
-                            return (
-                              <ListItem sx={{ width: '100%' }} key={String(t) + String(i)}>
-                                <div className='grid grid-cols-12 gap-1 w-full'>
-                                  <div className='col-span-1 text-center' style={{ lineHeight: '46px' }}>
-                                    {i + 1}.
-                                  </div>
-                                  <div className='col-span-5' style={{ lineHeight: '46px' }}>
-                                    {timeParser(t)}
-                                  </div>
-                                  <div className='col-span-4 text-right' style={{ lineHeight: '46px' }}>
-                                    {code.hasPeeped[i] ? 'O 有偷看' : 'X 沒偷看'}
-                                  </div>
-                                  <div className='col-span-2 flex flex-col justify-center'>
-                                    {code.familiar[i] === 0
-                                      ? (
-                                        <IconButton sx={{ my: 'auto', display: 'block', cursor: 'default' }} size='small' color='error'>
-                                          <MoodBadIcon />
-                                        </IconButton>
-                                      )
-                                      : code.familiar[i] === 1
-                                        ? (
-                                          <IconButton sx={{ my: 'auto', display: 'block', cursor: 'default' }} size='small' color='success'>
-                                            <SentimentDissatisfiedIcon />
-                                          </IconButton>
-                                        )
-                                        : (
-                                          <IconButton sx={{ my: 'auto', display: 'block', cursor: 'default' }} size='small' color='primary'>
-                                            <SentimentSatisfiedAltIcon />
-                                          </IconButton>
-                                        )
-                                    }
-                                  </div>
-                                </div>
-                              </ListItem>
-                            )
-                          })
-                          }
-                        </List>
-                      </div>
-                    )
-                    : null}
-
-                  <div className='w-full px-4 py-2 flex flex-row justify-between bg-white rounded-sm shadow-md'>
+                  <div className='my-2 w-full px-2 py-2 flex flex-row justify-between'>
                     <div className='flex flex-row justify-start'>
                       <IconButton onClick={(e) => { handleOnClickMood(e, 0) }} size='small' color={tempFamiliar === 0 ? 'error' : 'default'} >
                         <MoodBadIcon />
                       </IconButton>
-                      <IconButton onClick={(e) => { handleOnClickMood(e, 1) }} size='small' color={tempFamiliar === 1 ? 'success' : 'default'} >
+                      <IconButton onClick={(e) => { handleOnClickMood(e, 1) }} size='small' color={tempFamiliar === 1 ? 'warning' : 'default'} >
                         <SentimentDissatisfiedIcon />
                       </IconButton>
-                      <IconButton onClick={(e) => { handleOnClickMood(e, 2) }} size='small' color={tempFamiliar === 2 ? 'primary' : 'default'} >
+                      <IconButton onClick={(e) => { handleOnClickMood(e, 2) }} size='small' color={tempFamiliar === 2 ? 'success' : 'default'} >
                         <SentimentSatisfiedAltIcon />
                       </IconButton>
                     </div>
                     <div className='flex flex-row justify-center'>
-                      <FormControlLabel control={<Checkbox onChange={handleOnPeep} checked={tempPeeped} />} label="有偷看" />
+                      <FormControlLabel control={<Checkbox onChange={handleOnPeep} checked={tempPeeped} />} label="偷看" />
                     </div>
                     <div>
                       <Button color='success' variant='contained'
                         onClick={() => setOpenConfirmReview(true)}
+                        startIcon={<CheckIcon />}
                       >
                         送出
                       </Button>
                     </div>
                   </div>
+
+                  <div className='my-2 overflow-x-hidden'>
+                    <Link className='text-ellipsis text-xs' href={code.link} target='_blank'>{code.link}</Link>
+                  </div>
+
+                  <div
+                    className={cx(
+                      'cursor-pointer w-full shadow-md rounded-2l py-2 text-center my-6',
+                      'hover:bg-white bg-yellow-100',
+                    )}
+                    onClick={() => { setOpenHistory(h => !h) }}
+                  >
+                    <TipsAndUpdatesIcon sx={{ my: 1 }} fontSize='medium' />
+                    {openHistory
+                      ? <>
+                        {code.note && code.note.trim() !== ''
+                          ? (
+                            <div className='my-2 mx-4 flex flex-row justify-center'>
+                              <Typography component='div' variant='body1' fontWeight='bold'>小叮嚀：</Typography>
+                              <Typography component='div' variant='body1'> {code.note} </Typography>
+                            </div>
+                          ) : null
+                        }
+
+                        {reviewCode.reviewTime.length !== 0
+                          ? (
+                            <List
+                              sx={{ width: '100%', backgroundColor: 'inherit' }}
+                              component="div"
+                              aria-labelledby="nested-list-subheader"
+                            >
+                              {reviewCode.reviewTime.map((t, i) => {
+                                return (
+                                  <ListItem sx={{ width: '100%' }} key={String(t) + String(i)}>
+                                    <div className='grid grid-cols-12 gap-1 w-full'>
+                                      <div className='col-span-1 text-center' style={{ lineHeight: '46px' }}>
+                                        {i + 1}.
+                                      </div>
+                                      <div className='col-span-5' style={{ lineHeight: '46px' }}>
+                                        {timeParser(t)}
+                                      </div>
+                                      <div className='col-span-4 text-right' style={{ lineHeight: '46px' }}>
+                                        {code.hasPeeped[i] ? '偷看！' : '沒偷看'}
+                                      </div>
+                                      <div className='col-span-2 flex flex-col justify-center'>
+                                        {code.familiar[i] === 0
+                                          ? (
+                                            <MoodBadIcon color='error' />
+                                          )
+                                          : code.familiar[i] === 1
+                                            ? (
+                                              <SentimentDissatisfiedIcon color='warning' />
+                                            )
+                                            : (
+                                              <SentimentSatisfiedAltIcon color='success' />
+                                            )
+                                        }
+                                      </div>
+                                    </div>
+                                  </ListItem>
+                                )
+                              })
+                              }
+                            </List>
+                          )
+                          : null}
+                      </>
+                      : null}
+                  </div>
+
+                  <div className='w-full flex flex-row justify-between'>
+                    <div>
+                      <Button color='primary' variant='contained'
+                        onClick={handleOnEdit}
+                      >
+                        編輯
+                      </Button>
+                    </div>
+
+                    <div>
+                      <Button color='secondary' variant='contained'
+                        onClick={handleOnClose}
+                      >
+                        關閉
+                      </Button>
+                    </div>
+                  </div>
+
                 </div>
               )}
             </>
           )}
 
         </CardContent>
-        {!expand ? null : (
-          <CardActions>
 
-            <div className='w-full flex flex-row mx-4 justify-between mb-4'>
-              {
-                <>
-                  <div className='flex flex-row'>
-                    <div className='mr-4'>
-                      <Button color='primary' variant='contained'
-                        onClick={editable ? handleOnSubmit : handleOnEdit}
-                      >
-                        {editable ? '確定' : '編輯'}
-                      </Button>
-                    </div>
-
-                    <div>
-                      <Button color={editable ? 'warning' : 'error'} variant='contained'
-                        onClick={editable ? handleOnCancel : handleOnDelete}
-                      >
-                        {editable ? '取消' : '刪除'}
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div>
-                    <Button color='secondary' variant='contained'
-                      onClick={() => {
-                        setExpand(false)
-                        setEditable(false)
-                      }}
-                    >
-                      關閉
-                    </Button>
-                  </div>
-                </>
-              }
-            </div>
-
-          </CardActions>
-        )}
       </div>
 
       <Snackbar sx={{ width: '90%' }} open={openAlert} autoHideDuration={6000} onClose={handleCloseAlert}>

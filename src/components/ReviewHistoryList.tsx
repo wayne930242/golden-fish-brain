@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import ListItem from '@mui/material/ListItem'
 import { IconButton, Button } from '@mui/material'
 import DatePicker from 'react-datepicker'
 
@@ -57,73 +56,72 @@ export const ReviewHistoryList = ({
   }
 
   return (
-    <>{
+    <div className='flex flex-col'>{
       deleted ?
-        <ListItem sx={{ width: '100%' }}>
+        <div>
           <div className='grid grid-cols-12 gap-1 w-full'>
+            <div className='col-span-5 text-gray-400 text-center' style={{ lineHeight: '46px' }}>
+              {timeParser(reviewTime)}
+            </div>
+            <div className='col-span-3 text-gray-400 text-center' style={{ lineHeight: '46px' }}>
+              {hasPeeped ? '偷看！' : '沒偷看'}
+            </div>
+            <div className='col-span-2 flex flex-col justify-center'>
+              {familiar === 0
+                ? (
+                  <MoodBadIcon color='error' />
+                )
+                : familiar === 1
+                  ? (
+                    <SentimentDissatisfiedIcon color='warning' />
+                  )
+                  : (
+                    <SentimentSatisfiedAltIcon color='success' />
+                  )
+              }
+            </div>
             <div className='col-span-2 flex flex-col justify-center'>
               <IconButton sx={{ my: 'auto', display: 'block' }} size='small' onClick={onUnDoDelete}>
                 <UndoIcon />
               </IconButton>
             </div>
-            <div className='col-span-5 text-gray-400 text-center' style={{ lineHeight: '46px' }}>
-              {timeParser(reviewTime)}
-            </div>
-            <div className='col-span-3 text-gray-400 text-center' style={{ lineHeight: '46px' }}>
-              {hasPeeped ? '有偷看' : '沒偷看'}
-            </div>
-            <div className='col-span-2 flex flex-col justify-center'>
-              {familiar === 0
-                ? (
-                  <IconButton sx={{ my: 'auto', display: 'block' }} size='small' color='error'>
-                    <MoodBadIcon />
-                  </IconButton>
-                )
-                : familiar === 1
-                  ? (
-                    <IconButton sx={{ my: 'auto', display: 'block' }} size='small' color='success'>
-                      <SentimentDissatisfiedIcon />
-                    </IconButton>
-                  )
-                  : (
-                    <IconButton sx={{ my: 'auto', display: 'block' }} size='small' color='primary'>
-                      <SentimentSatisfiedAltIcon />
-                    </IconButton>
-                  )
-              }
-            </div>
           </div>
-        </ListItem>
+        </div>
         :
-        <ListItem sx={{ width: '100%' }}>
-          <div className='grid grid-cols-12 gap-1 w-full'>
-            <div className='col-span-2 flex flex-col justify-center'>
-              <IconButton sx={{ my: 'auto', display: 'block' }} size='small' onClick={onDelete}>
-                <CloseIcon />
-              </IconButton>
+        <div className='my-2 bg-white rounded-lg px-6 py-4'>
+          <div className='w-full'>
+            <div className='flex flex-row justify-between'>
+              <div className='flex flex-col justify-center'>
+                <DatePicker className='bg-blue-600 hover:bg-blue-900 text-white text-center cursor-pointer my-3 py-1 rounded-md w-28' selected={startDate} onChange={handleOnPickDate} />
+              </div>
+
+              <div className='flex flex-row justify-center py-3' style={{ lineHeight: '46px' }}>
+                <Button onClick={handleOnClickPeeped} variant='outlined' color={tempPeeped ? 'warning' : 'success'} size='small'>
+                  {tempPeeped ? '偷看！' : '沒偷看'}
+                </Button>
+              </div>
             </div>
-            <div className='col-span-5 flex flex-col justify-center'>
-              <DatePicker className='text-center cursor-pointer my-3 w-40' selected={startDate} onChange={handleOnPickDate} />
-            </div>
-            <div className='col-span-3 flex flex-row justify-center' style={{ lineHeight: '46px' }}>
-              <Button onClick={handleOnClickPeeped} variant='text' color={tempPeeped ? 'primary' : 'secondary'} size='small'>
-                {tempPeeped ? '有偷看' : '沒偷看'}
-              </Button>
-            </div>
-            <div className='col-span-2 flex flex-col justify-center'>
-              <IconButton onClick={(e) => { handleOnClickMood(0) }} size='small' color={tempFamiliar === 0 ? 'error' : 'default'} >
-                <MoodBadIcon />
-              </IconButton>
-              <IconButton onClick={(e) => { handleOnClickMood(1) }} size='small' color={tempFamiliar === 1 ? 'success' : 'default'} >
-                <SentimentDissatisfiedIcon />
-              </IconButton>
-              <IconButton onClick={(e) => { handleOnClickMood(2) }} size='small' color={tempFamiliar === 2 ? 'primary' : 'default'} >
-                <SentimentSatisfiedAltIcon />
-              </IconButton>
+            <div className='flex flex-row justify-between'>
+              <div className='flex flex-row justify-center'>
+                <IconButton onClick={(e) => { handleOnClickMood(0) }} size='small' color={tempFamiliar === 0 ? 'error' : 'default'} >
+                  <MoodBadIcon />
+                </IconButton>
+                <IconButton onClick={(e) => { handleOnClickMood(1) }} size='small' color={tempFamiliar === 1 ? 'warning' : 'default'} >
+                  <SentimentDissatisfiedIcon />
+                </IconButton>
+                <IconButton onClick={(e) => { handleOnClickMood(2) }} size='small' color={tempFamiliar === 2 ? 'success' : 'default'} >
+                  <SentimentSatisfiedAltIcon />
+                </IconButton>
+              </div>
+              <div className='flex flex-col justify-center'>
+                <Button size='small' onClick={onDelete} startIcon={<CloseIcon />} variant='contained' color='error' >
+                  刪除歷史
+                </Button>
+              </div>
             </div>
           </div>
-        </ListItem>
+        </div>
     }
-    </>
+    </div>
   )
 }
