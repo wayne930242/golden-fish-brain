@@ -317,7 +317,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
 
               {!expand ? null : (
                 <div>
-                  <div className='my-2 w-full px-2 py-2 flex flex-row justify-between'>
+                  <div className='py-2 w-full px-2 flex flex-row justify-between'>
                     <div className='flex flex-row justify-start'>
                       <IconButton onClick={(e) => { handleOnClickMood(e, 0) }} size='small' color={tempFamiliar === 0 ? 'error' : 'default'} >
                         <MoodBadIcon />
@@ -348,7 +348,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
 
                   <div
                     className={cx(
-                      'cursor-pointer w-full shadow-md rounded-2l py-2 text-center my-6',
+                      'cursor-pointer w-full shadow-md rounded-2l py-1 text-center mb-6',
                       'hover:bg-white bg-yellow-100',
                     )}
                     onClick={() => { setOpenHistory(h => !h) }}
