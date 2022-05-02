@@ -189,7 +189,7 @@ export const Dashboard = () => {
                                           : (
                                             <>
                                               {[0, 1, 2].includes(code.familiar[code.familiar.length - 1]) ? FamiliarIcon[hasOld ? 'hasOld' : 'notHasOld'][code.familiar[code.familiar.length - 1]] : null}
-                                              {code.hasPeeped[code.hasPeeped.length - 1] ? <MenuBookIcon fontSize='small' color={hasOld ? 'secondary' : 'primary'} /> : null}
+                                              {code.hasPeeped[code.hasPeeped.length - 1] ? <MenuBookIcon sx={{ ml: 0.6 }} fontSize='small' color={hasOld ? 'secondary' : 'primary'} /> : null}
                                             </>
                                           )
                                         }

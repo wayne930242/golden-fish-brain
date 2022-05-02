@@ -66,7 +66,7 @@ export const ReviewHistoryList = ({
             </div>
             <div className='col-span-3 text-gray-400 text-center' style={{ lineHeight: '46px' }}>
               {hasPeeped ? <MenuBookIcon sx={{ mr: 1 }} fontSize='small' color='primary' /> : null}
-              {hasPeeped ? '偷看！' : '沒偷看'}
+              {hasPeeped ? '偷看' : '沒偷看'}
             </div>
             <div className='col-span-2 flex flex-col justify-center'>
               {familiar === 0
@@ -100,7 +100,7 @@ export const ReviewHistoryList = ({
               <div className='flex flex-row justify-center py-3' style={{ lineHeight: '46px' }}>
                 <Button onClick={handleOnClickPeeped} variant='contained' color='primary' size='small'>
                   {tempPeeped ? <MenuBookIcon sx={{ mr: 1, fill: 'white' }} fontSize='small' /> : null}
-                  {tempPeeped ? '偷看！' : '沒偷看'}
+                  {tempPeeped ? '偷看' : '沒偷看'}
                 </Button>
               </div>
 

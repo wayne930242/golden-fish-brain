@@ -401,7 +401,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                                       </div>
                                       <div className='col-span-4 text-right' style={{ lineHeight: '46px' }}>
                                         {code.hasPeeped[i] ? <MenuBookIcon sx={{ mr: 1 }} fontSize='small' color='primary' /> : null}
-                                        {code.hasPeeped[i] ? '偷看！' : '沒偷看'}
+                                        {code.hasPeeped[i] ? '偷看' : '沒偷看'}
                                       </div>
                                       <div className='col-span-2 text-right' style={{ lineHeight: '46px' }}>
                                         {[0, 1, 2].includes(Number(code.familiar[i]))
