@@ -314,7 +314,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                     {code.reviewTime.length === 0 ? null
                       : (<>
                         {[0, 1, 2].includes(code.familiar[code.familiar.length - 1]) ? FamiliarIcon[code.familiar[code.familiar.length - 1]] : null}
-                        {code.hasPeeped[code.hasPeeped.length - 1] ? <MenuBookIcon sx={{ ml: 1 }} fontSize='small' color='warning' /> : null}
+                        {code.hasPeeped[code.hasPeeped.length - 1] ? <MenuBookIcon sx={{ ml: 1 }} fontSize='small' color='primary' /> : null}
                       </>)
                     }
                   </div>
@@ -348,7 +348,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                       </IconButton>
                     </div>
                     <div className='flex flex-row justify-center'>
-                      <FormControlLabel control={<Checkbox onChange={handleOnPeep} checked={tempPeeped} />} label={<><MenuBookIcon sx={{ mr: 1, fontSize: '1.45rem' }} /><span>偷看</span></>} />
+                      <FormControlLabel control={<Checkbox onChange={handleOnPeep} checked={tempPeeped} />} label={<><MenuBookIcon sx={{ mr: 1, fontSize: '1.45rem' }} color='primary' /><span>偷看</span></>} />
                     </div>
                     <div>
                       <Button color='success' variant='contained'
@@ -371,7 +371,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                     )}
                     onClick={() => { setOpenHistory(h => !h) }}
                   >
-                    <TipsAndUpdatesIcon sx={{ my: 1 }} fontSize='medium' />
+                    <TipsAndUpdatesIcon sx={{ my: 1 }} fontSize='medium' color='warning' />
                     {openHistory
                       ? <>
                         {code.note && code.note.trim() !== ''
@@ -400,7 +400,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                                         {timeParser(t)}
                                       </div>
                                       <div className='col-span-4 text-right' style={{ lineHeight: '46px' }}>
-                                        {code.hasPeeped[i] ? <MenuBookIcon sx={{ mr: 1 }} fontSize='small' /> : null}
+                                        {code.hasPeeped[i] ? <MenuBookIcon sx={{ mr: 1 }} fontSize='small' color='primary' /> : null}
                                         {code.hasPeeped[i] ? '偷看！' : '沒偷看'}
                                       </div>
                                       <div className='col-span-2 flex flex-col justify-center'>

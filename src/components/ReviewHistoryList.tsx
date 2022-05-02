@@ -65,7 +65,7 @@ export const ReviewHistoryList = ({
               {timeParser(reviewTime)}
             </div>
             <div className='col-span-3 text-gray-400 text-center' style={{ lineHeight: '46px' }}>
-              {hasPeeped ? <MenuBookIcon sx={{ mr: 1 }} fontSize='small' /> : null}
+              {hasPeeped ? <MenuBookIcon sx={{ mr: 1 }} fontSize='small' color='primary' /> : null}
               {hasPeeped ? '偷看！' : '沒偷看'}
             </div>
             <div className='col-span-2 flex flex-col justify-center'>
@@ -90,7 +90,7 @@ export const ReviewHistoryList = ({
           </div>
         </div>
         :
-        <div className='my-2 bg-white rounded-lg px-6 py-4'>
+        <div className='my-2 px-2 py-4'>
           <div className='w-full'>
             <div className='flex flex-row justify-between'>
               <div className='flex flex-col justify-center'>
@@ -98,13 +98,12 @@ export const ReviewHistoryList = ({
               </div>
 
               <div className='flex flex-row justify-center py-3' style={{ lineHeight: '46px' }}>
-                <Button onClick={handleOnClickPeeped} variant='outlined' color={tempPeeped ? 'warning' : 'success'} size='small'>
-                  {tempPeeped ? <MenuBookIcon sx={{ mr: 1 }} fontSize='small' /> : null}
+                <Button onClick={handleOnClickPeeped} variant='contained' color='primary' size='small'>
+                  {tempPeeped ? <MenuBookIcon sx={{ mr: 1, fill: 'white' }} fontSize='small' /> : null}
                   {tempPeeped ? '偷看！' : '沒偷看'}
                 </Button>
               </div>
-            </div>
-            <div className='flex flex-row justify-between'>
+
               <div className='flex flex-row justify-center'>
                 <IconButton onClick={(e) => { handleOnClickMood(0) }} size='small' color={tempFamiliar === 0 ? 'error' : 'default'} >
                   <MoodBadIcon />
@@ -116,9 +115,10 @@ export const ReviewHistoryList = ({
                   <SentimentSatisfiedAltIcon />
                 </IconButton>
               </div>
-              <div className='flex flex-col justify-center'>
+
+              <div className='flex flex-row justify-center py-3' style={{ lineHeight: '46px' }}>
                 <Button size='small' onClick={onDelete} startIcon={<CloseIcon />} variant='contained' color='error' >
-                  刪除歷史
+                  刪除
                 </Button>
               </div>
             </div>
