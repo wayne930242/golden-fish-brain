@@ -15,7 +15,12 @@ import {
   ListItem,
   List,
   Divider,
+  Pagination,
+  PaginationItem,
 } from '@mui/material'
+
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 
 import { makeCodesHistory, TypeHistory } from '../helper/data'
 import { CodesCardsDialog } from '../components/dialogs/CodesCardsDialog'
@@ -39,6 +44,14 @@ export const Dashboard = () => {
   const [openDialog, setOpenDialog] = useState<boolean>(false)
   const [reviewCodes, setReviewCodes] = useState<ICode[]>([])
   const [reviewTitle, setReviewTitle] = useState<string>('尚未選取法條')
+
+  const LIMIT = 5
+  const totalPage = ~~(Object.keys(history).length / LIMIT)
+  const [page, setPage] = useState<number>(1)
+
+  const handleChange = (_event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value)
+  }
 
   useEffect(() => {
     if (!codes) return
@@ -116,12 +129,16 @@ export const Dashboard = () => {
                 </TableContainer>
               )
               : (
-                <div>
+                <div className='py-1'>
+                  <Typography align='right' variant='body2' sx={{ mr: 2, mt: 3 }}>
+                    共有 {totalPage} 頁，目前在第 {page} 頁
+                  </Typography>
                   {
                     Object.keys(history)
                       .sort((t1, t2) => (
                         history[t2].time - history[t1].time
                       ))
+                      .slice((page - 1) * LIMIT, page * LIMIT)
                       .map((time: string) => {
                         return (
                           <div key={time} className='pt-4'>
@@ -144,6 +161,19 @@ export const Dashboard = () => {
                         )
                       })
                   }
+                  <div className='flex flex-row justify-center pt-6'>
+                    <Stack spacing={2}>
+                      <Pagination count={totalPage}
+                        color="primary"
+                        onChange={handleChange}
+                        renderItem={(item) => (
+                          <PaginationItem
+                            components={{ previous: ArrowBackIosIcon, next: ArrowForwardIosIcon }}
+                            {...item}
+                          />
+                        )} />
+                    </Stack>
+                  </div>
                 </div>
               )
           }

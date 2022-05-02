@@ -13,9 +13,9 @@ import {
 import FormControl from '@mui/material/FormControl'
 
 import { GlobalContext } from '../App'
+import { CardsList } from '../components/CardsList'
 import { Loading } from '../components/Loading'
 import { LuckyCodes } from '../helper/data'
-import CodeCard from '../components/CodeCard'
 import { ICode } from '../interface'
 
 const startTime: TypeStartTime = {
@@ -137,20 +137,9 @@ export const Home = () => {
       {isFetching || codes === null
         ? <Loading />
         : mode === 'review'
-          ? reviewCards !== null && reviewCards.length !== 0
-            ? reviewCards
-              .map(code => (
-                <CodeCard code={code} key={code.id} />
-              ))
-            : <div className='my-10'><Typography component='p' variant='body1'>沒有需要複習的複習卡。</Typography></div>
-          : filteredCodes.length !== 0
-            ? filteredCodes
-              .map(code => (
-                <CodeCard code={code} key={code.id} />
-              ))
-            : <div className='my-10'><Typography component='p' variant='body1'>沒有可供檢視的複習卡。</Typography></div>
+          ? <CardsList codes={reviewCards} noCardsString="沒有需要複習的複習卡。" />
+          : <CardsList codes={filteredCodes} />
       }
     </main>
-
   )
 }
