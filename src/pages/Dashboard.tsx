@@ -77,14 +77,14 @@ export const Dashboard = () => {
         <Stack sx={{ marginBottom: 6 }} direction='row' spacing={2}>
           <Button
             color='primary'
-            variant={mode === 'byLaw' ? 'outlined' : 'contained'}
+            variant={mode === 'byHistory' ? 'outlined' : 'contained'}
             onClick={() => { setMode('byLaw') }}
           >
             一覽
           </Button>
           <Button
-            color='info'
-            variant={mode === 'byHistory' ? 'outlined' : 'contained'}
+            color='primary'
+            variant={mode === 'byLaw' ? 'outlined' : 'contained'}
             onClick={() => { setMode('byHistory') }}
           >
             歷史
