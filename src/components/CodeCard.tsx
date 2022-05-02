@@ -17,13 +17,13 @@ import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates'
 
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
-import MenuBookIcon from '@mui/icons-material/MenuBook'
 
 import { Divider, Link } from '@mui/material'
 
+import MenuBookIcon from '@mui/icons-material/MenuBook'
 import MoodBadIcon from '@mui/icons-material/MoodBad'
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied'
-import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
+import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt'
 
 import { timeParser } from '../helper/view'
 import { ReviewHistoryList } from './ReviewHistoryList'
@@ -311,7 +311,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                   </div>
 
                   <div>
-                    {code.reviewTime.length === 0 ? null
+                  {code.reviewTime.length === 0 ? null
                       : (<>
                         {[0, 1, 2].includes(code.familiar[code.familiar.length - 1]) ? FamiliarIcon[code.familiar[code.familiar.length - 1]] : null}
                         {code.hasPeeped[code.hasPeeped.length - 1] ? <MenuBookIcon sx={{ ml: 1 }} fontSize='small' color='primary' /> : null}
@@ -320,7 +320,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                   </div>
                 </div>
                 <div className='my-2 flex-row flex'>
-                  <Typography component="div" variant='body1'>【{code.law}】</Typography>
+                  <Typography component="div" variant='body1' fontWeight='bold'>【{code.law}】</Typography>
                   <Typography component="div" variant='body1'>{code.nums.map((ele: string, index) => (
                     <span key={ele + Math.random()}>{index === 0 ? null : ", "}#{ele}</span>
                   ))}

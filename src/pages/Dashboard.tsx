@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from 'react'
-import BatteryCharging80Icon from '@mui/icons-material/BatteryCharging80'
 
 import {
   Typography,
@@ -21,6 +20,11 @@ import {
 
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
+import BatteryCharging80Icon from '@mui/icons-material/BatteryCharging80'
+import MenuBookIcon from '@mui/icons-material/MenuBook'
+import MoodBadIcon from '@mui/icons-material/MoodBad'
+import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied'
+import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt'
 
 import { makeCodesHistory, TypeHistory } from '../helper/data'
 import { CodesCardsDialog } from '../components/dialogs/CodesCardsDialog'
@@ -33,6 +37,19 @@ const head = [
   <BatteryCharging80Icon fontSize='inherit' />,
 ]
 
+const FamiliarIcon: { hasOld: React.ReactNode[], notHasOld: React.ReactNode[] } = {
+  hasOld: [
+    <MoodBadIcon sx={{ fill: '#C65D7B'}} />,
+    <SentimentDissatisfiedIcon sx={{ fill: '#ebd2be'}} />,
+    <SentimentSatisfiedAltIcon sx={{ fill: '#bad6bc'}} />,
+  ],
+  notHasOld: [
+    <MoodBadIcon color='error' />,
+    <SentimentDissatisfiedIcon color='warning' />,
+    <SentimentSatisfiedAltIcon color='success' />,
+  ],
+}
+
 export const Dashboard = () => {
   const { codes, isFetching } = useContext(GlobalContext)
   const [progress, setProgress] = useState<TypeProgress>({})
@@ -44,6 +61,8 @@ export const Dashboard = () => {
   const [openDialog, setOpenDialog] = useState<boolean>(false)
   const [reviewCodes, setReviewCodes] = useState<ICode[]>([])
   const [reviewTitle, setReviewTitle] = useState<string>('尚未選取法條')
+
+  const oldCodes: string[] = []
 
   const LIMIT = 5
   const totalPage = ~~(Object.keys(history).length / LIMIT)
@@ -147,15 +166,39 @@ export const Dashboard = () => {
                             </Typography>
                             <Divider />
                             <List>
-                              {history[time].codes.map((code) => (
-                                <ListItem key={code.id} button onClick={() => {
-                                  setReviewTitle(null)
-                                  setOpenDialog(true)
-                                  setReviewCodes([code])
-                                }}>
-                                  【{code.law}】{code.nums.map(num => '#' + num).join(', ')}——{code.title}
-                                </ListItem>
-                              ))}
+                              {history[time].codes.map((code) => {
+                                let hasOld: boolean = false
+                                if (oldCodes.includes(code.id)) {
+                                  hasOld = true
+                                } else {
+                                  oldCodes.push(code.id)
+                                }
+
+                                return (
+                                  <ListItem
+                                    key={code.id}
+                                    button onClick={() => {
+                                      setReviewTitle(null)
+                                      setOpenDialog(true)
+                                      setReviewCodes([code])
+                                    }}>
+                                    <div className='flex flex-row justify-between w-full'>
+                                      <Typography color={hasOld ? 'GrayText' : 'black'} component='div'>【{code.law}】{code.nums.map(num => '#' + num).join(', ')}——{code.title}</Typography>
+                                      <div>
+                                        {code.reviewTime.length === 0 ? null
+                                          : (
+                                            <>
+                                              {[0, 1, 2].includes(code.familiar[code.familiar.length - 1]) ? FamiliarIcon[hasOld ? 'hasOld' : 'notHasOld'][code.familiar[code.familiar.length - 1]] : null}
+                                              {code.hasPeeped[code.hasPeeped.length - 1] ? <MenuBookIcon sx={{ ml: 1 }} fontSize='small' color={hasOld ? 'secondary' : 'primary'} /> : null}
+                                            </>
+                                          )
+                                        }
+                                      </div>
+                                    </div>
+
+                                  </ListItem>
+                                )
+                              })}
                             </List>
                           </div>
                         )
