@@ -137,7 +137,7 @@ export const Home = () => {
       {isFetching || codes === null
         ? <Loading />
         : mode === 'review'
-          ? <CardsList codes={reviewCards} noCardsString="沒有需要複習的複習卡。" />
+          ? <CardsList codes={reviewCards} withoutPagination noCardsString="沒有需要複習的複習卡。" />
           : <CardsList codes={filteredCodes} />
       }
     </main>
