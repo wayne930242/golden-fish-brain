@@ -328,7 +328,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                 </div>
 
                 <div className='ml-2'>
-                  <Typography component="div" variant='h6'>{code.title}</Typography>
+                  <Typography sx={{mb: 0.3}} fontWeight='bold' component="div" variant='h6' color='primary'>{code.title}</Typography>
                   <Typography component='div' variant='caption' color='GrayText'>{getReviewString(code)}</Typography>
                 </div>
               </Paper>
