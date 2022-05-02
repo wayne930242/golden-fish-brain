@@ -311,7 +311,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                   </div>
 
                   <div>
-                  {code.reviewTime.length === 0 ? null
+                    {code.reviewTime.length === 0 ? null
                       : (<>
                         {[0, 1, 2].includes(code.familiar[code.familiar.length - 1]) ? FamiliarIcon[code.familiar[code.familiar.length - 1]] : null}
                         {code.hasPeeped[code.hasPeeped.length - 1] ? <MenuBookIcon sx={{ ml: 1 }} fontSize='small' color='primary' /> : null}
@@ -328,7 +328,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                 </div>
 
                 <div className='ml-2'>
-                  <Typography sx={{mb: 0.3}} fontWeight='bold' component="div" variant='h6' color='primary'>{code.title}</Typography>
+                  <Typography sx={{ mb: 0.3 }} fontWeight='bold' component="div" variant='h6' color='primary'>{code.title}</Typography>
                   <Typography component='div' variant='caption' color='GrayText'>{getReviewString(code)}</Typography>
                 </div>
               </Paper>
@@ -390,6 +390,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                               aria-labelledby="nested-list-subheader"
                             >
                               {reviewCode.reviewTime.map((t, i) => {
+                                console.log(i, code.familiar[i], [0, 1, 2].includes(Number(code.familiar[i])),)
                                 return (
                                   <ListItem sx={{ width: '100%' }} key={String(t) + String(i)}>
                                     <div className='grid grid-cols-12 gap-1 w-full'>
@@ -403,9 +404,9 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                                         {code.hasPeeped[i] ? <MenuBookIcon sx={{ mr: 1 }} fontSize='small' color='primary' /> : null}
                                         {code.hasPeeped[i] ? '偷看！' : '沒偷看'}
                                       </div>
-                                      <div className='col-span-2 flex flex-col justify-center'>
-                                        {[0, 1, 2].includes(code.familiar[i])
-                                          ? FamiliarIcon[code.familiar[i]] === 0
+                                      <div className='col-span-2 text-right' style={{ lineHeight: '46px' }}>
+                                        {[0, 1, 2].includes(Number(code.familiar[i]))
+                                          ? FamiliarIcon[Number(code.familiar[i])]
                                           : null}
                                       </div>
                                     </div>
