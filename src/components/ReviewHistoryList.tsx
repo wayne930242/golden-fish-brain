@@ -9,7 +9,8 @@ import { timeParser } from '../helper/view'
 
 import MoodBadIcon from '@mui/icons-material/MoodBad'
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied'
-import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
+import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt'
+import MenuBookIcon from '@mui/icons-material/MenuBook'
 
 export const ReviewHistoryList = ({
   reviewTime,
@@ -64,6 +65,7 @@ export const ReviewHistoryList = ({
               {timeParser(reviewTime)}
             </div>
             <div className='col-span-3 text-gray-400 text-center' style={{ lineHeight: '46px' }}>
+              {hasPeeped ? <MenuBookIcon sx={{ mr: 1 }} fontSize='small' /> : null}
               {hasPeeped ? '偷看！' : '沒偷看'}
             </div>
             <div className='col-span-2 flex flex-col justify-center'>
@@ -97,6 +99,7 @@ export const ReviewHistoryList = ({
 
               <div className='flex flex-row justify-center py-3' style={{ lineHeight: '46px' }}>
                 <Button onClick={handleOnClickPeeped} variant='outlined' color={tempPeeped ? 'warning' : 'success'} size='small'>
+                  {tempPeeped ? <MenuBookIcon sx={{ mr: 1 }} fontSize='small' /> : null}
                   {tempPeeped ? '偷看！' : '沒偷看'}
                 </Button>
               </div>

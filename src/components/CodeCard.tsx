@@ -17,6 +17,7 @@ import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates'
 
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
+import MenuBookIcon from '@mui/icons-material/MenuBook'
 
 import { Divider, Link } from '@mui/material'
 
@@ -32,6 +33,12 @@ import { EditContent } from './EditContent'
 import { GlobalContext } from '../App'
 import { ICode } from "../interface"
 import { ConfirmDialog } from './dialogs/ConfirmDislog'
+
+const FamiliarIcon: React.ReactNode[] = [
+  <MoodBadIcon color='error' />,
+  <SentimentDissatisfiedIcon color='warning' />,
+  <SentimentSatisfiedAltIcon color='success' />,
+]
 
 export const CodeCard = ({ code }: { code: ICode }) => {
   const { dispatch } = useContext(GlobalContext)
@@ -294,12 +301,23 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                   padding: 2,
                 }}
                 className={'cursor-pointer'} onClick={editable ? undefined : handleOnClickTitle}>
-                <div className='flex flex-row'>
-                  {[0, 1, 2, 3, 4].map(n => (
-                    <IconButton size='small' color='warning' key={n}>
-                      {code.star <= n ? <StarOutlineIcon /> : <StarIcon />}
-                    </IconButton>
-                  ))}
+                <div className='flex flex-row justify-between'>
+                  <div className='flex flex-row'>
+                    {[0, 1, 2, 3, 4].map(n => (
+                      <IconButton size='small' color='warning' key={n}>
+                        {code.star <= n ? <StarOutlineIcon /> : <StarIcon />}
+                      </IconButton>
+                    ))}
+                  </div>
+
+                  <div>
+                    {code.reviewTime.length === 0 ? null
+                      : (<>
+                        {[0, 1, 2].includes(code.familiar[code.familiar.length - 1]) ? FamiliarIcon[code.familiar[code.familiar.length - 1]] : null}
+                        {code.hasPeeped[code.hasPeeped.length - 1] ? <MenuBookIcon sx={{ ml: 1 }} fontSize='small' color='warning' /> : null}
+                      </>)
+                    }
+                  </div>
                 </div>
                 <div className='my-2 flex-row flex'>
                   <Typography component="div" variant='body1'>【{code.law}】</Typography>
@@ -330,7 +348,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                       </IconButton>
                     </div>
                     <div className='flex flex-row justify-center'>
-                      <FormControlLabel control={<Checkbox onChange={handleOnPeep} checked={tempPeeped} />} label="偷看" />
+                      <FormControlLabel control={<Checkbox onChange={handleOnPeep} checked={tempPeeped} />} label={<><MenuBookIcon sx={{ mr: 1, fontSize: '1.45rem' }} /><span>偷看</span></>} />
                     </div>
                     <div>
                       <Button color='success' variant='contained'
@@ -348,8 +366,8 @@ export const CodeCard = ({ code }: { code: ICode }) => {
 
                   <div
                     className={cx(
-                      'cursor-pointer w-full shadow-md rounded-2l py-1 text-center mb-6',
-                      'hover:bg-white bg-yellow-100',
+                      'cursor-pointer w-full shadow-md rounded-2l py-0.5 text-center mb-6',
+                      'bg-white hover:bg-zinc-100',
                     )}
                     onClick={() => { setOpenHistory(h => !h) }}
                   >
@@ -359,7 +377,6 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                         {code.note && code.note.trim() !== ''
                           ? (
                             <div className='my-2 mx-4 flex flex-row justify-center'>
-                              <Typography component='div' variant='body1' fontWeight='bold'>小叮嚀：</Typography>
                               <Typography component='div' variant='body1'> {code.note} </Typography>
                             </div>
                           ) : null
@@ -383,21 +400,13 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                                         {timeParser(t)}
                                       </div>
                                       <div className='col-span-4 text-right' style={{ lineHeight: '46px' }}>
+                                        {code.hasPeeped[i] ? <MenuBookIcon sx={{ mr: 1 }} fontSize='small' /> : null}
                                         {code.hasPeeped[i] ? '偷看！' : '沒偷看'}
                                       </div>
                                       <div className='col-span-2 flex flex-col justify-center'>
-                                        {code.familiar[i] === 0
-                                          ? (
-                                            <MoodBadIcon color='error' />
-                                          )
-                                          : code.familiar[i] === 1
-                                            ? (
-                                              <SentimentDissatisfiedIcon color='warning' />
-                                            )
-                                            : (
-                                              <SentimentSatisfiedAltIcon color='success' />
-                                            )
-                                        }
+                                        {[0, 1, 2].includes(code.familiar[i])
+                                          ? FamiliarIcon[code.familiar[i]] === 0
+                                          : null}
                                       </div>
                                     </div>
                                   </ListItem>
