@@ -39,9 +39,9 @@ const head = [
 
 const FamiliarIcon: { hasOld: React.ReactNode[], notHasOld: React.ReactNode[] } = {
   hasOld: [
-    <MoodBadIcon sx={{ fill: '#C65D7B'}} />,
-    <SentimentDissatisfiedIcon sx={{ fill: '#ebd2be'}} />,
-    <SentimentSatisfiedAltIcon sx={{ fill: '#bad6bc'}} />,
+    <MoodBadIcon sx={{ fill: '#C65D7B' }} />,
+    <SentimentDissatisfiedIcon sx={{ fill: '#ebd2be' }} />,
+    <SentimentSatisfiedAltIcon sx={{ fill: '#bad6bc' }} />,
   ],
   notHasOld: [
     <MoodBadIcon color='error' />,
@@ -183,13 +183,13 @@ export const Dashboard = () => {
                                       setReviewCodes([code])
                                     }}>
                                     <div className='flex flex-row justify-between w-full'>
-                                      <Typography color={hasOld ? 'GrayText' : 'black'} component='div'>【{code.law}】{code.nums.map(num => '#' + num).join(', ')}——{code.title}</Typography>
-                                      <div>
+                                      <Typography sx={{ mr: 1 }} color={hasOld ? 'GrayText' : 'black'} component='div'>【{code.law}】{code.nums.map(num => '#' + num).join(', ')}——{code.title}</Typography>
+                                      <div className='flex-shrink-0'>
                                         {code.reviewTime.length === 0 ? null
                                           : (
                                             <>
                                               {[0, 1, 2].includes(code.familiar[code.familiar.length - 1]) ? FamiliarIcon[hasOld ? 'hasOld' : 'notHasOld'][code.familiar[code.familiar.length - 1]] : null}
-                                              {code.hasPeeped[code.hasPeeped.length - 1] ? <MenuBookIcon sx={{ ml: 1 }} fontSize='small' color={hasOld ? 'secondary' : 'primary'} /> : null}
+                                              {code.hasPeeped[code.hasPeeped.length - 1] ? <MenuBookIcon fontSize='small' color={hasOld ? 'secondary' : 'primary'} /> : null}
                                             </>
                                           )
                                         }

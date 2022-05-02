@@ -390,7 +390,6 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                               aria-labelledby="nested-list-subheader"
                             >
                               {reviewCode.reviewTime.map((t, i) => {
-                                console.log(i, code.familiar[i], [0, 1, 2].includes(Number(code.familiar[i])),)
                                 return (
                                   <ListItem sx={{ width: '100%' }} key={String(t) + String(i)}>
                                     <div className='grid grid-cols-12 gap-1 w-full'>
