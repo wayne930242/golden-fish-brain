@@ -71,7 +71,7 @@ export const Home = () => {
           <Button onClick={() => {
             if (mode === 'review') setMode('achive')
             if (mode === 'achive') setMode('review')
-          }} variant={mode === 'review' ? 'outlined' : 'contained'} color={mode === 'review' ? 'success' : 'info'}>
+          }} variant={mode === 'review' ? 'outlined' : 'contained'} color={'primary'}>
             {mode === 'review' ? '查看新卡' : '開始複習'}
           </Button>
 
@@ -100,7 +100,7 @@ export const Home = () => {
               </>
             ) :
               Object.keys(startTimeText).map((key: keyof TypeStartTimeText) => (
-                <Button onClick={() => handleOnFilter(key)} variant={filter !== key ? 'outlined' : 'contained'} color='primary' size='small' key={key}>
+                <Button onClick={() => handleOnFilter(key)} variant={filter !== key ? 'outlined' : 'contained'} color='info' size='small' key={key}>
                   {startTimeText[key]}
                 </Button>
               ))

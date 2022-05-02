@@ -51,8 +51,12 @@ export const CardsList = ({
               </Stack>
             </div>
           </>
-          : <div className='my-10'><Typography component='p' variant='body1'>
-            {noCardsString}</Typography></div>
+          : (
+            <div className='my-10'>
+              <Typography component='p' variant='body1' align='center'>
+                {noCardsString}</Typography>
+            </div>
+          )
       }
     </div>
   )
