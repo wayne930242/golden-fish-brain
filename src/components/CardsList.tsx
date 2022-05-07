@@ -45,7 +45,7 @@ export const CardsList = ({
             {withoutPagination ? null : (
               <div className='flex flex-row justify-center py-6'>
                 <Stack spacing={2}>
-                  <Pagination count={~~(codes.length / LIMIT)}
+                  <Pagination count={Math.ceil(codes.length / LIMIT)}
                     color="primary"
                     onChange={handleChange}
                     renderItem={(item) => (
