@@ -65,7 +65,7 @@ export const Dashboard = () => {
   const oldCodes: string[] = []
 
   const LIMIT = 5
-  const totalPage = ~~(Object.keys(history).length / LIMIT)
+  const totalPage = Math.ceil(Object.keys(history).length / LIMIT)
   const [page, setPage] = useState<number>(1)
 
   const handleChange = (_event: React.ChangeEvent<unknown>, value: number) => {
