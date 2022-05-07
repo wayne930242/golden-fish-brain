@@ -9,6 +9,7 @@ import StarIcon from '@mui/icons-material/Star'
 import Typography from '@mui/material/Typography'
 import Autocomplete from '@mui/material/Autocomplete'
 import { getLastLaw, setLastLaw } from '../actions/loccalStorage'
+import { MySnackbarAlert } from './alert/MySnackbarAlert'
 
 import "react-datepicker/dist/react-datepicker.css"
 
@@ -23,6 +24,7 @@ export const EditContent = ({
   setCode: React.Dispatch<React.SetStateAction<ICode>>,
 }) => {
   const lastLaw = useMemo(() => getLastLaw(), [])
+  const [codeNumberAlert, setCodeNumberAlert] = useState<boolean>(false)
 
   const handleOnInput = (e: React.ChangeEvent<HTMLInputElement>, key: keyof ICode) => {
     setCode((c) => ({
@@ -33,16 +35,21 @@ export const EditContent = ({
 
   const [tempNums, setTempNums] = useState<string>('')
   const handleOnChangeChip = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value.match(/,$/)) {
+    if (e.target.value.match(/[\s,]$/)) {
+      const value = e.target.value.replace(/[\s,]$/, '')
       if (!code.nums.includes(tempNums)) {
-        setCode((c) => {
-          const newNums = [...c.nums]
-          newNums.push(tempNums)
-          return ({
-            ...c,
-            nums: newNums,
+        if (value.match(/^\d+(-\d+)?$/gm)) {
+          setCode((c) => {
+            const newNums = [...c.nums]
+            newNums.push(tempNums)
+            return ({
+              ...c,
+              nums: newNums,
+            })
           })
-        })
+        } else {
+          setCodeNumberAlert(true)
+        }
       }
       setTempNums(() => '')
     } else {
@@ -68,6 +75,9 @@ export const EditContent = ({
 
   return (
     <div className='flex flex-col'>
+      <MySnackbarAlert open={codeNumberAlert} onClose={() => { setCodeNumberAlert(false) }}>
+        法條的格式必須是以 "-" 分隔的數字哦！
+      </MySnackbarAlert>
 
       <div className='my-2 flex-row flex justify-between'>
         <Autocomplete
@@ -98,7 +108,7 @@ export const EditContent = ({
             }}
           />
           <Typography component='p' variant="caption" align='right'>
-            輸入 , 來分隔
+            以 "," 分隔多條法條
           </Typography>
         </div>
       </div>
