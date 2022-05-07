@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 
 import TextField from '@mui/material/TextField'
 import Chip from '@mui/material/Chip'
@@ -8,12 +8,11 @@ import StarOutlineIcon from '@mui/icons-material/StarOutline'
 import StarIcon from '@mui/icons-material/Star'
 import Typography from '@mui/material/Typography'
 import Autocomplete from '@mui/material/Autocomplete'
-import { Divider } from '@mui/material'
+import { getLastLaw, setLastLaw } from '../actions/loccalStorage'
 
-import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 
-import { LAWS } from '../data/laws'
+import { LAWS, TypeLaws } from '../data/laws'
 import { ICode } from '../interface'
 
 export const EditContent = ({
@@ -23,7 +22,7 @@ export const EditContent = ({
   code: ICode,
   setCode: React.Dispatch<React.SetStateAction<ICode>>,
 }) => {
-  const [startDate, setStartDate] = useState<Date>(new Date(code.createTime))
+  const lastLaw = useMemo(() => getLastLaw(), [])
 
   const handleOnInput = (e: React.ChangeEvent<HTMLInputElement>, key: keyof ICode) => {
     setCode((c) => ({
@@ -59,6 +58,7 @@ export const EditContent = ({
   }
 
   const handleOnChangeLaw = (_: any, value: string) => {
+    setLastLaw(value as TypeLaws)
     setCode(c => ({
       ...c,
       law: value,
@@ -75,9 +75,9 @@ export const EditContent = ({
           options={LAWS}
           getOptionLabel={(option) => option}
           onChange={handleOnChangeLaw}
-          value={code.law}
           sx={{ width: '100%' }}
           renderInput={(params) => <TextField {...params} label="法律" size='small' />}
+          defaultValue={lastLaw}
         />
 
         <div>

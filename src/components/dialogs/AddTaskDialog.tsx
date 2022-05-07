@@ -23,7 +23,7 @@ export const AddTaskDialog = ({
   newCode: ICode,
   setNewCode: React.Dispatch<React.SetStateAction<ICode>>,
 }) => {
-  const { codes, dispatch, isFetching } = useContext(GlobalContext)
+  const { dispatch } = useContext(GlobalContext)
   const [openAlert, setOpenAlert] = useState<boolean>(false)
 
   const handleClose = () => {

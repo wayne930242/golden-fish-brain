@@ -29,4 +29,4 @@ export const LAWS = [
   "建築技術規則建築設備編",
 ]
 
-export type TypeLaws = typeof LAWS
+export type TypeLaws = typeof LAWS[number]
