@@ -42,7 +42,7 @@ export const CodesCardsDialog = ({
       <DialogContent sx={{ padding: 0 }}>
         {codes.length === 0
           ? (
-            <Typography component='p'>
+            <Typography component='p' sx={{ mx: 3 }}>
               還沒有這個法規的複習卡，趕快新增吧！
             </Typography>
           )
