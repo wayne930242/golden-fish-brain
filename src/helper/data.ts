@@ -2,7 +2,7 @@ import { ICode } from "../interface"
 import { timeParser } from "./view"
 
 export const LuckyCodes = (codes: ICode[], num: number, type: string = 'memoCurve'): ICode[] => {
-  if (num === NaN) return []
+  if (isNaN(num)) return []
   const groupsCode: [ICode[], ICode[], ICode[], ICode[], ICode[]] = [[], [], [], [], []]
 
   switch (type) {
