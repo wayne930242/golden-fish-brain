@@ -41,7 +41,7 @@ export const EditContent = ({
         if (value.match(/^\d+(-\d+)?$/gm)) {
           setCode((c) => {
             const newNums = [...c.nums]
-            newNums.push(tempNums)
+            if (!newNums.includes(value)) newNums.push(tempNums)
             return ({
               ...c,
               nums: newNums,
@@ -94,15 +94,18 @@ export const EditContent = ({
           <TextField sx={{ width: '100%', ml: 2 }} label="法條編號" size='small' variant="outlined"
             onChange={handleOnChangeChip} value={tempNums}
             onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-              if (e.target.value.trim()) {
+              const value = e.target.value.replace(/\s*$/, '')
+              if (value && value.match(/^\d+(-\d+)?$/gm)) {
                 setCode((c) => {
                   const newNums = [...c.nums]
-                  newNums.push(e.target.value)
+                  if (!newNums.includes(value)) newNums.push(value)
                   return ({
                     ...c,
                     nums: newNums,
                   })
                 })
+              } else {
+                setCodeNumberAlert(true)
               }
               setTempNums(() => '')
             }}
