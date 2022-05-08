@@ -48,7 +48,7 @@ export const EditContent = ({
             })
           })
         } else {
-          setCodeNumberAlert(true)
+          if (value) setCodeNumberAlert(true)
         }
       }
       setTempNums(() => '')
@@ -105,7 +105,7 @@ export const EditContent = ({
                   })
                 })
               } else {
-                setCodeNumberAlert(true)
+                if (value) setCodeNumberAlert(true)
               }
               setTempNums(() => '')
             }}
