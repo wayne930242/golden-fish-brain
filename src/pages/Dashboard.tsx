@@ -12,6 +12,7 @@ import { CodesCardsDialog } from '../components/dialogs/CodesCardsDialog'
 
 import { History } from '../components/Dashboard/History'
 import { LawTable } from '../components/Dashboard/LawTable'
+import { SumTable } from '../components/Dashboard/SumTable'
 
 import { GlobalContext } from '../App'
 import { ICode } from '../interface'
@@ -55,6 +56,16 @@ export const Dashboard = () => {
         }}
       />
     ),
+    table: (
+      <SumTable
+        codes={codes}
+        onClickItem={(code: ICode) => {
+          setReviewTitle(null)
+          setOpenDialog(true)
+          setReviewCodes([code])
+        }}
+      />
+    )
   }
 
   return (
@@ -86,7 +97,7 @@ export const Dashboard = () => {
 
         <Typography component='h2' align='center' variant='h4' sx={{ marginBottom: 2 }}>{mode === 'byLaw' ? '一覽' : '複習歷史'} </Typography>
 
-        <Paper sx={{ px: 2, pb: 4 }}>
+        <Paper sx={{ px: 2, pb: 4, overflowX: 'auto' }}>
           {codes === null || isFetching
             ? null
             : components[mode] ?? null
