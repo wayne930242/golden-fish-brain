@@ -7,10 +7,6 @@ import {
   Table,
 } from '@mui/material'
 
-import MenuBookIcon from '@mui/icons-material/MenuBook'
-import MoodBadIcon from '@mui/icons-material/MoodBad'
-import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied'
-import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt'
 
 import { timeParser } from '../../helper/view'
 import { ICode } from '../../interface'
@@ -36,12 +32,6 @@ const simpleHead: React.ReactNode[] = [
   '7d',
   '15d',
   '>30d',
-]
-
-const FamiliarIcon: React.ReactNode[] = [
-  <MoodBadIcon color='error' />,
-  <SentimentDissatisfiedIcon color='warning' />,
-  <SentimentSatisfiedAltIcon color='success' />,
 ]
 
 export const SumTable = ({
