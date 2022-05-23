@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 
 import TextField from '@mui/material/TextField'
 import Chip from '@mui/material/Chip'
@@ -63,6 +63,13 @@ export const EditContent = ({
       star: n,
     }))
   }
+
+  useEffect(() => {
+    setCode(c => ({
+      ...c,
+      law: lastLaw,
+    }))
+  }, [lastLaw, setCode])
 
   const handleOnChangeLaw = (_: any, value: string) => {
     setLastLaw(value as TypeLaws)
