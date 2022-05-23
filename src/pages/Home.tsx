@@ -137,8 +137,8 @@ export const Home = () => {
       {isFetching || codes === null
         ? <Loading />
         : mode === 'review'
-          ? <CardsList codes={reviewCards.sort((c1, c2) => c2.createTime - c1.createTime)} withoutPagination noCardsString="沒有需要複習的複習卡。" />
-          : <CardsList codes={filteredCodes.sort((c1, c2) => c2.createTime - c1.createTime)} />
+          ? <CardsList codes={Array.isArray(reviewCards) ? reviewCards.sort((c1, c2) => c2.createTime - c1.createTime) : null} withoutPagination noCardsString="沒有需要複習的複習卡。" />
+          : <CardsList codes={Array.isArray(filteredCodes) ? filteredCodes.sort((c1, c2) => c2.createTime - c1.createTime) : null} />
       }
     </main>
   )
