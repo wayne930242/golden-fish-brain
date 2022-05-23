@@ -11,18 +11,32 @@ const FamiliarIcon: React.ReactNode[] = [
   <SentimentSatisfiedAltIcon color='success' />,
 ]
 
-export const ReviewIcons = ({
+export const ReviewIcon = ({ familiar, hasPeeped, time }: { familiar: number, hasPeeped: boolean, time?: number }) => {
+  if (familiar === undefined || hasPeeped === undefined) return null
+  return (
+    <>
+      {[0, 1, 2].includes(familiar) ? FamiliarIcon[familiar] : null}
+      {hasPeeped ? <MenuBookIcon sx={{ ml: 1 }} fontSize='small' color='primary' /> : null}
+      {time >= 2 ? <span>x {time}</span> : null}
+    </>
+  )
+}
+
+export const ReviewLastIcons = ({
   code,
 }: {
   code: ICode,
 }) => {
   return (
     <div>
-      {code.reviewTime.length === 0 ? null
-        : (<>
-          {[0, 1, 2].includes(code.familiar[code.familiar.length - 1]) ? FamiliarIcon[code.familiar[code.familiar.length - 1]] : null}
-          {code.hasPeeped[code.hasPeeped.length - 1] ? <MenuBookIcon sx={{ ml: 1 }} fontSize='small' color='primary' /> : null}
-        </>)
+      {code.reviewTime.length === 0
+        ? null
+        : (
+          <ReviewIcon
+            familiar={code.familiar[code.familiar.length - 1]}
+            hasPeeped={code.hasPeeped[code.hasPeeped.length - 1]}
+          />
+        )
       }
     </div>
   )

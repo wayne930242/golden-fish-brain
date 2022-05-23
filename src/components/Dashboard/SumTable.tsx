@@ -7,11 +7,7 @@ import {
   Table,
 } from '@mui/material'
 
-import MenuBookIcon from '@mui/icons-material/MenuBook'
-import MoodBadIcon from '@mui/icons-material/MoodBad'
-import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied'
-import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt'
-
+import { ReviewIcon } from '../ReviewIcons'
 import { timeParser } from '../../helper/view'
 import { ICode } from '../../interface'
 
@@ -31,18 +27,36 @@ const fullHead: React.ReactNode[] = [
 const simpleHead: React.ReactNode[] = [
   '日期',
   '內容',
-  '2d',
-  '4d',
-  '7d',
-  '15d',
-  '>30d',
+  <>1<span className='text-xs font-bold ml-3'>(2天)</span></>,
+  <>2<span className='text-xs font-bold ml-3'>(4天)</span></>,
+  <>3<span className='text-xs font-bold ml-3'>(7天)</span></>,
+  <>4<span className='text-xs font-bold ml-3'>(15天)</span></>,
+  <>5<span className='text-xs font-bold ml-3'>({'>'}30天)</span></>,
 ]
 
-const FamiliarIcon: React.ReactNode[] = [
-  <MoodBadIcon color='error' />,
-  <SentimentDissatisfiedIcon color='warning' />,
-  <SentimentSatisfiedAltIcon color='success' />,
-]
+const getOnInteval = (from: number, to: number, code: ICode): {
+  familiar: number,
+  hasPeeped: boolean,
+  time?: number,
+} => {
+  let index: number = null
+  let time: number = 1
+
+  for (let i = 0; i < code.reviewTime.length; i++) {
+    if (code.reviewTime[i] >= code.createTime + from && code.reviewTime[i] < code.createTime + to) {
+      index = i
+      time++
+    }
+  }
+
+  return {
+    familiar: index !== null && code.familiar[index] ? code.familiar[index] : null,
+    hasPeeped: index !== null && code.hasPeeped[index] ? code.hasPeeped[index] : null,
+    time,
+  }
+}
+
+
 
 export const SumTable = ({
   codes,
@@ -52,7 +66,7 @@ export const SumTable = ({
   const head: React.ReactNode[] = mode === 'full' ? fullHead : simpleHead
 
   return (
-    <Table stickyHeader size='small' sx={{ width: mode === 'simple' ? 515 : 800 }}>
+    <Table stickyHeader size='small' sx={{ width: mode === 'simple' ? 800 : 1000 }}>
       <TableHead>
         <TableRow>
           {head.map((h, i) => (
@@ -75,14 +89,19 @@ export const SumTable = ({
                 {code.title}
               </TableCell>
               <TableCell>
+                <ReviewIcon familiar={code.familiar[0]} hasPeeped={code.hasPeeped[0]} />
               </TableCell>
               <TableCell>
+                <ReviewIcon familiar={code.familiar[1]} hasPeeped={code.hasPeeped[1]} />
               </TableCell>
               <TableCell>
+                <ReviewIcon familiar={code.familiar[2]} hasPeeped={code.hasPeeped[2]} />
               </TableCell>
               <TableCell>
+                <ReviewIcon familiar={code.familiar[3]} hasPeeped={code.hasPeeped[3]} />
               </TableCell>
               <TableCell>
+                <ReviewIcon familiar={code.familiar[4]} hasPeeped={code.hasPeeped[4]} />
               </TableCell>
             </TableRow>
           )

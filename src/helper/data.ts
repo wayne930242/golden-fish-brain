@@ -38,7 +38,7 @@ export const LuckyCodes = (codes: ICode[], num: number, type: string = 'memoCurv
         if (times === 0) {
           groupsCode[0].push(code)
         }
-        else if (code.reviewTime[code.reviewTime.length - 1] + division[times - 1] <= now) groupsCode[times].push(code)
+        else if (code.reviewTime[code.reviewTime.length - 1] + timeDivision[times - 1] <= now) groupsCode[times].push(code)
       }
   }
 
@@ -62,14 +62,14 @@ export const getReviewString = (code: ICode): string => {
   if (times === 0) return '還沒複習過'
 
   return '已經複習' + code.reviewTime.length + '次，' +
-    '下次複習：' + timeParser(code.reviewTime[code.reviewTime.length - 1] + division[times - 1]) + ' 以後'
+    '下次複習：' + timeParser(code.reviewTime[code.reviewTime.length - 1] + timeDivision[times - 1]) + ' 以後'
 }
 
 const day: number = 1000 * 60 * 50 * 24
 const longTime = 30 * day
 
 // Index is the 'should review' number 
-const division = [
+export const timeDivision = [
   2 * day,
   4 * day,
   8 * day,

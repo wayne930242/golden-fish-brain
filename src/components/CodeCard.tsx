@@ -25,6 +25,7 @@ import MoodBadIcon from '@mui/icons-material/MoodBad'
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied'
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt'
 
+import { ReviewLastIcons } from './ReviewIcons'
 import { timeParser } from '../helper/view'
 import { ReviewHistoryList } from './ReviewHistoryList'
 import { getReviewString } from '../helper/data'
@@ -310,14 +311,7 @@ export const CodeCard = ({ code }: { code: ICode }) => {
                     ))}
                   </div>
 
-                  <div>
-                    {code.reviewTime.length === 0 ? null
-                      : (<>
-                        {[0, 1, 2].includes(code.familiar[code.familiar.length - 1]) ? FamiliarIcon[code.familiar[code.familiar.length - 1]] : null}
-                        {code.hasPeeped[code.hasPeeped.length - 1] ? <MenuBookIcon sx={{ ml: 1 }} fontSize='small' color='primary' /> : null}
-                      </>)
-                    }
-                  </div>
+                  <ReviewLastIcons code={code} />
                 </div>
                 <div className='my-2 flex-row flex'>
                   <Typography component="div" variant='body1' fontWeight='bold'>【{code.law}】</Typography>
